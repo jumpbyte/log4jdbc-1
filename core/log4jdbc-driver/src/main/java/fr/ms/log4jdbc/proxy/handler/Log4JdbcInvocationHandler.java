@@ -9,7 +9,7 @@ import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationLogger;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 
-public class ConnectionContextInvocationHandler implements InvocationHandler {
+public class Log4JdbcInvocationHandler implements InvocationHandler {
 
     private final TimeInvocationHandler invocationHandler;
 
@@ -17,13 +17,14 @@ public class ConnectionContextInvocationHandler implements InvocationHandler {
 
     private final SqlOperationLogger[] logs;
 
-    private OperationContextFactory factory;
+    private final Log4JdbcOperationFactory factory;
 
-    public ConnectionContextInvocationHandler(final Object implementation, final ConnectionContext connectionContext,
-	    final SqlOperationLogger[] logs) {
+    public Log4JdbcInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
+	    final Log4JdbcOperationFactory factory) {
 	this.invocationHandler = new TimeInvocationHandler(implementation);
 	this.connectionContext = connectionContext;
 	this.logs = logs;
+	this.factory = factory;
     }
 
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -32,27 +33,33 @@ public class ConnectionContextInvocationHandler implements InvocationHandler {
 	final Object invoke = timeInvocation.getInvoke();
 	final Throwable targetException = timeInvocation.getTargetException();
 
-	final OperationContext operationContext = factory.newOperationContext(connectionContext, timeInvocation, proxy,
-		method, args);
+	final Log4JdbcOperation operationContext = factory.newLog4JdbcOperation(connectionContext, timeInvocation, proxy, method, args);
 
 	if (logs != null && logs.length != 0) {
-	    final SqlOperation sqlOperation = operationContext.newSqlOperation();
+	    SqlOperation sqlOperation = null;
 
 	    for (int i = 0; i < logs.length; i++) {
 		final SqlOperationLogger log = logs[i];
 
-		try {
-		    if (targetException == null) {
-			log.buildLog(sqlOperation, method, args, invoke);
-		    } else {
-			log.buildLog(sqlOperation, method, args, targetException);
+		if (log != null && log.isEnabled()) {
+		    if (sqlOperation == null) {
+			sqlOperation = operationContext.newSqlOperation();
 		    }
-		} catch (final Throwable t) {
-		    t.printStackTrace();
+		    try {
+			if (targetException == null) {
+			    log.buildLog(sqlOperation, method, args, invoke);
+			} else {
+			    log.buildLog(sqlOperation, method, args, targetException);
+			}
+		    } catch (final Throwable t) {
+			t.printStackTrace();
+		    }
 		}
 	    }
 	}
 
-	return operationContext.wrapInvoke();
+	final Object wrapInvoke = operationContext.wrapInvoke();
+
+	return wrapInvoke;
     }
 }
