@@ -4,7 +4,9 @@ import fr.ms.log4jdbc.SqlOperation;
 
 public interface Log4JdbcOperation {
 
-    SqlOperation newSqlOperation();
+    void buildSqlOperation();
 
-    Object wrapInvoke();
+    SqlOperation getSqlOperation();
+
+    Object getInvoke();
 }

@@ -36,16 +36,18 @@ public class Log4JdbcInvocationHandler implements InvocationHandler {
 	final Log4JdbcOperation operationContext = factory.newLog4JdbcOperation(connectionContext, timeInvocation, proxy, method, args);
 
 	if (logs != null && logs.length != 0) {
-	    SqlOperation sqlOperation = null;
 
+	    boolean buildSqlOperation = false;
 	    for (int i = 0; i < logs.length; i++) {
 		final SqlOperationLogger log = logs[i];
 
 		if (log != null && log.isEnabled()) {
-		    if (sqlOperation == null) {
-			sqlOperation = operationContext.newSqlOperation();
+		    if (!buildSqlOperation) {
+			operationContext.buildSqlOperation();
+			buildSqlOperation = true;
 		    }
 		    try {
+			final SqlOperation sqlOperation = operationContext.getSqlOperation();
 			if (targetException == null) {
 			    log.buildLog(sqlOperation, method, args, invoke);
 			} else {
@@ -58,7 +60,7 @@ public class Log4JdbcInvocationHandler implements InvocationHandler {
 	    }
 	}
 
-	final Object wrapInvoke = operationContext.wrapInvoke();
+	final Object wrapInvoke = operationContext.getInvoke();
 
 	return wrapInvoke;
     }

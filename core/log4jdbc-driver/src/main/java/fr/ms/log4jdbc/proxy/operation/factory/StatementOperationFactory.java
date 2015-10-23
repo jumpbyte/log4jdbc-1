@@ -9,11 +9,16 @@ import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperationFactory;
 import fr.ms.log4jdbc.proxy.operation.StatementOperation;
 import fr.ms.log4jdbc.sql.QueryFactory;
+import fr.ms.log4jdbc.sql.QueryImpl;
 import fr.ms.log4jdbc.sql.QuerySQLFactory;
 
 public class StatementOperationFactory implements Log4JdbcOperationFactory {
 
-    private final Statement statement;
+    public final Statement statement;
+
+    public final QueryFactory queryFactory = QuerySQLFactory.getInstance();
+
+    public QueryImpl query;
 
     public StatementOperationFactory(final Statement statement) {
 	this.statement = statement;
