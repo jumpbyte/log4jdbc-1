@@ -26,10 +26,22 @@ public class ResultSetOperationFactory implements Log4JdbcOperationFactory {
 	this.query = query;
     }
 
-    public Log4JdbcOperation newLog4JdbcOperation(final ConnectionContext connectionContext, final TimeInvocation timeInvocation, final Object proxy,
+    public Log4JdbcOperation newLog4JdbcOperation(
+	    final ConnectionContext connectionContext,
+	    final TimeInvocation timeInvocation, final Object proxy,
 	    final Method method, final Object[] args) {
-	final Log4JdbcOperation operation = new ResultSetOperation(this, connectionContext, timeInvocation, proxy, method, args);
+
+	final Log4JdbcOperation operation = new ResultSetOperation(this,
+		connectionContext, timeInvocation, proxy, method, args);
 
 	return operation;
+    }
+
+    public int getPosition() {
+	return position;
+    }
+
+    public void setPosition(final int position) {
+	this.position = position;
     }
 }

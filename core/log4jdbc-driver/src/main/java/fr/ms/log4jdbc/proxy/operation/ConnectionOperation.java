@@ -7,30 +7,15 @@ import java.sql.Statement;
 
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
-import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
-import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 
-public class ConnectionOperation implements Log4JdbcOperation {
+public class ConnectionOperation extends AbstractOperation {
 
-    private final ConnectionContext connectionContext;
-    private final TimeInvocation timeInvocation;
-    private final Object proxy;
-    private final Method method;
-    private final Object[] args;
-
-    private final SqlOperationImpl sqlOperation;
-
-    public ConnectionOperation(final ConnectionContext connectionContext, final TimeInvocation timeInvocation, final Object proxy, final Method method,
-	    final Object[] args) {
-	this.connectionContext = connectionContext;
-	this.timeInvocation = timeInvocation;
-	this.proxy = proxy;
-	this.method = method;
-	this.args = args;
-
-	sqlOperation = new SqlOperationImpl(timeInvocation, connectionContext);
+    public ConnectionOperation(final ConnectionContext connectionContext,
+	    final TimeInvocation timeInvocation, final Object proxy,
+	    final Method method, final Object[] args) {
+	super(connectionContext, timeInvocation, proxy, method, args);
     }
 
     public SqlOperation newSqlOperation() {
@@ -74,7 +59,6 @@ public class ConnectionOperation implements Log4JdbcOperation {
 	if (closeMethod) {
 	    connectionContext.getOpenConnection().decrementAndGet();
 	}
-
 	return sqlOperation;
     }
 
@@ -84,14 +68,17 @@ public class ConnectionOperation implements Log4JdbcOperation {
 	    if (invoke instanceof CallableStatement) {
 		final CallableStatement callableStatement = (CallableStatement) invoke;
 		final String sql = (String) args[0];
-		return Log4JdbcProxy.proxyCallableStatement(callableStatement, connectionContext, sql);
+		return Log4JdbcProxy.proxyCallableStatement(callableStatement,
+			connectionContext, sql);
 	    } else if (invoke instanceof PreparedStatement) {
 		final PreparedStatement preparedStatement = (PreparedStatement) invoke;
 		final String sql = (String) args[0];
-		return Log4JdbcProxy.proxyPreparedStatement(preparedStatement, connectionContext, sql);
+		return Log4JdbcProxy.proxyPreparedStatement(preparedStatement,
+			connectionContext, sql);
 	    } else if (invoke instanceof Statement) {
 		final Statement statement = (Statement) invoke;
-		return Log4JdbcProxy.proxyStatement(statement, connectionContext);
+		return Log4JdbcProxy.proxyStatement(statement,
+			connectionContext);
 	    }
 	}
 	return invoke;

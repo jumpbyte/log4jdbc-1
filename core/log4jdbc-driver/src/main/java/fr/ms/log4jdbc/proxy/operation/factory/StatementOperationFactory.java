@@ -14,22 +14,38 @@ import fr.ms.log4jdbc.sql.QuerySQLFactory;
 
 public class StatementOperationFactory implements Log4JdbcOperationFactory {
 
-    public final Statement statement;
+    private final Statement statement;
 
-    public final QueryFactory queryFactory = QuerySQLFactory.getInstance();
-
-    public QueryImpl query;
+    protected QueryImpl query;
 
     public StatementOperationFactory(final Statement statement) {
 	this.statement = statement;
     }
 
-    public Log4JdbcOperation newLog4JdbcOperation(final ConnectionContext connectionContext, final TimeInvocation timeInvocation, final Object proxy,
+    public Log4JdbcOperation newLog4JdbcOperation(
+	    final ConnectionContext connectionContext,
+	    final TimeInvocation timeInvocation, final Object proxy,
 	    final Method method, final Object[] args) {
 
-	final QueryFactory queryFactory = QuerySQLFactory.getInstance();
-	final Log4JdbcOperation operation = new StatementOperation(statement, queryFactory, connectionContext, timeInvocation, proxy, method, args);
+	final Log4JdbcOperation operation = new StatementOperation(this,
+		connectionContext, timeInvocation, proxy, method, args);
 
 	return operation;
+    }
+
+    public QueryImpl getQuery() {
+	return query;
+    }
+
+    public void setQuery(final QueryImpl query) {
+	this.query = query;
+    }
+
+    public Statement getStatement() {
+	return statement;
+    }
+
+    public QueryFactory getQueryFactory() {
+	return QuerySQLFactory.getInstance();
     }
 }

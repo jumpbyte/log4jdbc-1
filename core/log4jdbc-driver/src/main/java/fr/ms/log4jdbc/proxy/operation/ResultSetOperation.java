@@ -6,46 +6,31 @@ import java.sql.ResultSetMetaData;
 
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
-import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
-import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.log4jdbc.proxy.operation.factory.ResultSetOperationFactory;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
 import fr.ms.log4jdbc.sql.Query;
 
-public class ResultSetOperation implements Log4JdbcOperation {
+public class ResultSetOperation extends AbstractOperation {
 
-    private final ResultSetOperationFactory factory;
+    private final ResultSetOperationFactory context;
 
-    public final Query query;
+    private final Query query;
 
     private final ResultSetCollectorImpl resultSetCollector;
 
     private final ResultSet rs;
 
-    private final ConnectionContext connectionContext;
-    private final TimeInvocation timeInvocation;
-    private final Object proxy;
-    private final Method method;
-    private final Object[] args;
-
-    private final SqlOperationImpl sqlOperation;
-
-    public ResultSetOperation(final ResultSetOperationFactory factory, final ConnectionContext connectionContext, final TimeInvocation timeInvocation,
-	    final Object proxy, final Method method, final Object[] args) {
-	this.factory = factory;
-
-	this.query = factory.query;
-	this.rs = factory.rs;
-	this.resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();
-
-	this.connectionContext = connectionContext;
-	this.timeInvocation = timeInvocation;
-	this.proxy = proxy;
-	this.method = method;
-	this.args = args;
-
-	sqlOperation = new SqlOperationImpl(timeInvocation, connectionContext);
+    public ResultSetOperation(final ResultSetOperationFactory context,
+	    final ConnectionContext connectionContext,
+	    final TimeInvocation timeInvocation, final Object proxy,
+	    final Method method, final Object[] args) {
+	super(connectionContext, timeInvocation, proxy, method, args);
+	this.context = context;
+	this.query = context.query;
+	this.rs = context.rs;
+	this.resultSetCollector = (ResultSetCollectorImpl) query
+		.getResultSetCollector();
     }
 
     public SqlOperation newSqlOperation() {
@@ -54,20 +39,21 @@ public class ResultSetOperation implements Log4JdbcOperation {
 	final Throwable targetException = timeInvocation.getTargetException();
 	final String nameMethod = method.getName();
 
-	final boolean nextMethod = nameMethod.equals("next") && invoke != null && ((Boolean) invoke).booleanValue();
+	final boolean nextMethod = nameMethod.equals("next") && invoke != null
+		&& ((Boolean) invoke).booleanValue();
 	if (nextMethod) {
-	    if (factory.position == -1) {
+	    if (context.position == -1) {
 		try {
 		    if (targetException == null) {
-			factory.position = rs.getRow();
+			context.position = rs.getRow();
 		    } else {
-			factory.position = Integer.MAX_VALUE;
+			context.position = Integer.MAX_VALUE;
 		    }
 		} catch (final Throwable e) {
-		    factory.position = Integer.MAX_VALUE;
+		    context.position = Integer.MAX_VALUE;
 		}
 	    } else {
-		factory.position++;
+		context.position++;
 	    }
 
 	    if (!resultSetCollector.isClosed()) {
@@ -77,20 +63,21 @@ public class ResultSetOperation implements Log4JdbcOperation {
 	    return sqlOperation;
 	}
 
-	final boolean previousMethod = nameMethod.equals("previous") && invoke != null && ((Boolean) invoke).booleanValue();
+	final boolean previousMethod = nameMethod.equals("previous")
+		&& invoke != null && ((Boolean) invoke).booleanValue();
 	if (previousMethod) {
-	    if (factory.position == -1) {
+	    if (context.position == -1) {
 		try {
 		    if (targetException == null) {
-			factory.position = rs.getRow();
+			context.position = rs.getRow();
 		    } else {
-			factory.position = Integer.MAX_VALUE;
+			context.position = Integer.MAX_VALUE;
 		    }
 		} catch (final Throwable e) {
-		    factory.position = Integer.MAX_VALUE;
+		    context.position = Integer.MAX_VALUE;
 		}
 	    } else {
-		factory.position--;
+		context.position--;
 	    }
 
 	    if (!resultSetCollector.isClosed()) {
@@ -100,9 +87,10 @@ public class ResultSetOperation implements Log4JdbcOperation {
 	    return sqlOperation;
 	}
 
-	final boolean firstMethod = nameMethod.equals("first") && invoke != null && ((Boolean) invoke).booleanValue();
+	final boolean firstMethod = nameMethod.equals("first")
+		&& invoke != null && ((Boolean) invoke).booleanValue();
 	if (firstMethod) {
-	    factory.position = 1;
+	    context.position = 1;
 
 	    if (!resultSetCollector.isClosed()) {
 		sqlOperation.setQuery(query);
@@ -111,16 +99,17 @@ public class ResultSetOperation implements Log4JdbcOperation {
 	    return sqlOperation;
 	}
 
-	final boolean lastMethod = nameMethod.equals("last") && invoke != null && ((Boolean) invoke).booleanValue();
+	final boolean lastMethod = nameMethod.equals("last") && invoke != null
+		&& ((Boolean) invoke).booleanValue();
 	if (lastMethod) {
 	    try {
 		if (targetException == null) {
-		    factory.position = rs.getRow();
+		    context.position = rs.getRow();
 		} else {
-		    factory.position = Integer.MAX_VALUE;
+		    context.position = Integer.MAX_VALUE;
 		}
 	    } catch (final Throwable e) {
-		factory.position = Integer.MAX_VALUE;
+		context.position = Integer.MAX_VALUE;
 	    }
 
 	    if (!resultSetCollector.isClosed()) {
@@ -132,7 +121,7 @@ public class ResultSetOperation implements Log4JdbcOperation {
 
 	final boolean beforeFirstMethod = nameMethod.equals("beforeFirst");
 	if (beforeFirstMethod) {
-	    factory.position = 0;
+	    context.position = 0;
 
 	    if (!resultSetCollector.isClosed()) {
 		sqlOperation.setQuery(query);
@@ -143,7 +132,7 @@ public class ResultSetOperation implements Log4JdbcOperation {
 
 	final boolean afterLastMethod = nameMethod.equals("afterLast");
 	if (afterLastMethod) {
-	    factory.position = -1;
+	    context.position = -1;
 
 	    if (!resultSetCollector.isClosed()) {
 		sqlOperation.setQuery(query);
@@ -152,13 +141,16 @@ public class ResultSetOperation implements Log4JdbcOperation {
 	    return sqlOperation;
 	}
 
-	final boolean wasNullMethod = nameMethod.equals("wasNull") && factory.lastCell != null && invoke != null && ((Boolean) invoke).booleanValue();
+	final boolean wasNullMethod = nameMethod.equals("wasNull")
+		&& context.lastCell != null && invoke != null
+		&& ((Boolean) invoke).booleanValue();
 	if (wasNullMethod) {
-	    factory.lastCell.wasNull();
+	    context.lastCell.wasNull();
 	    return sqlOperation;
 	}
 
-	final boolean getMetaDataMethod = nameMethod.startsWith("getMetaData") && invoke != null;
+	final boolean getMetaDataMethod = nameMethod.startsWith("getMetaData")
+		&& invoke != null;
 	if (getMetaDataMethod) {
 
 	    if (resultSetCollector.getColumns().length == 0) {
@@ -168,22 +160,26 @@ public class ResultSetOperation implements Log4JdbcOperation {
 	    return sqlOperation;
 	}
 
-	final boolean closeMethod = nameMethod.startsWith("close") && !resultSetCollector.isClosed();
+	final boolean closeMethod = nameMethod.startsWith("close")
+		&& !resultSetCollector.isClosed();
 	if (closeMethod) {
 	    sqlOperation.setQuery(query);
 	    resultSetCollector.close();
 	    return sqlOperation;
 	}
 
-	final boolean getValueColumn = nameMethod.startsWith("get") && targetException == null && args != null && args.length > 0;
+	final boolean getValueColumn = nameMethod.startsWith("get")
+		&& targetException == null && args != null && args.length > 0;
 	if (getValueColumn) {
 	    final Class arg0Type = method.getParameterTypes()[0];
 	    if (Integer.class.equals(arg0Type) || Integer.TYPE.equals(arg0Type)) {
 		final Integer arg = (Integer) args[0];
-		factory.lastCell = resultSetCollector.addValueColumn(factory.position, invoke, arg.intValue());
+		context.lastCell = resultSetCollector.addValueColumn(
+			context.position, invoke, arg.intValue());
 	    } else if (String.class.equals(arg0Type)) {
 		final String arg = (String) args[0];
-		factory.lastCell = resultSetCollector.addValueColumn(factory.position, invoke, arg);
+		context.lastCell = resultSetCollector.addValueColumn(
+			context.position, invoke, arg);
 	    }
 	    return sqlOperation;
 	}

@@ -7,6 +7,7 @@ import fr.ms.log4jdbc.context.internal.ConnectionContext;
 
 public interface Log4JdbcOperationFactory {
 
-    Log4JdbcOperation newLog4JdbcOperation(ConnectionContext connectionContext, TimeInvocation timeInvocation, Object proxy, Method method, Object[] args);
-
+    Log4JdbcOperation newLog4JdbcOperation(ConnectionContext connectionContext,
+	    TimeInvocation timeInvocation, Object proxy, Method method,
+	    Object[] args);
 }
