@@ -20,6 +20,7 @@ package fr.ms.lang.reflect;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 /**
  *
@@ -31,6 +32,16 @@ import java.lang.reflect.Method;
  */
 public class TimeInvocationHandler implements InvocationHandler {
 
+    private static final Method OBJECT_EQUALS;
+
+    static {
+	try {
+	    OBJECT_EQUALS = Object.class.getMethod("equals", new Class[] { Object.class });
+	} catch (final NoSuchMethodException e) {
+	    throw new IllegalArgumentException(e);
+	}
+    }
+
     private final Object implementation;
 
     public TimeInvocationHandler(final Object implementation) {
@@ -40,7 +51,19 @@ public class TimeInvocationHandler implements InvocationHandler {
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 	final TimeInvocation timeInvoke = new TimeInvocation();
 	try {
-	    final Object invoke = method.invoke(implementation, args);
+	    Object invoke = null;
+
+	    if (OBJECT_EQUALS.equals(method) && Proxy.isProxyClass(args[0].getClass())) {
+		final boolean isEquals = (proxy == args[0]);
+		if (isEquals) {
+		    invoke = Boolean.valueOf(isEquals);
+		}
+	    }
+
+	    if (invoke == null) {
+		invoke = method.invoke(implementation, args);
+	    }
+
 	    timeInvoke.setInvoke(invoke);
 	} catch (final InvocationTargetException s) {
 	    final Throwable targetException = s.getTargetException();
