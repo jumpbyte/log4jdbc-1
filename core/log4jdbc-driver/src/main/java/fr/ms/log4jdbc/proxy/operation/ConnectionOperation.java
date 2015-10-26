@@ -12,9 +12,8 @@ import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 
 public class ConnectionOperation extends AbstractOperation {
 
-    public ConnectionOperation(final ConnectionContext connectionContext,
-	    final TimeInvocation timeInvocation, final Object proxy,
-	    final Method method, final Object[] args) {
+    public ConnectionOperation(final ConnectionContext connectionContext, final TimeInvocation timeInvocation, final Object proxy, final Method method,
+	    final Object[] args) {
 	super(connectionContext, timeInvocation, proxy, method, args);
     }
 
@@ -62,23 +61,20 @@ public class ConnectionOperation extends AbstractOperation {
 	return sqlOperation;
     }
 
-    public Object wrapInvoke() {
+    public Object newResultMethod() {
 	final Object invoke = timeInvocation.getInvoke();
 	if (invoke != null) {
 	    if (invoke instanceof CallableStatement) {
 		final CallableStatement callableStatement = (CallableStatement) invoke;
 		final String sql = (String) args[0];
-		return Log4JdbcProxy.proxyCallableStatement(callableStatement,
-			connectionContext, sql);
+		return Log4JdbcProxy.proxyCallableStatement(callableStatement, connectionContext, sql);
 	    } else if (invoke instanceof PreparedStatement) {
 		final PreparedStatement preparedStatement = (PreparedStatement) invoke;
 		final String sql = (String) args[0];
-		return Log4JdbcProxy.proxyPreparedStatement(preparedStatement,
-			connectionContext, sql);
+		return Log4JdbcProxy.proxyPreparedStatement(preparedStatement, connectionContext, sql);
 	    } else if (invoke instanceof Statement) {
 		final Statement statement = (Statement) invoke;
-		return Log4JdbcProxy.proxyStatement(statement,
-			connectionContext);
+		return Log4JdbcProxy.proxyStatement(statement, connectionContext);
 	    }
 	}
 	return invoke;

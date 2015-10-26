@@ -34,66 +34,66 @@ public class StatementOperation extends AbstractOperation {
 	final String nameMethod = method.getName();
 
 	final boolean addBatchMethod = nameMethod.equals("addBatch") && args != null && args.length >= 1;
-		if (addBatchMethod) {
-		    final String sql = (String) args[0];
+	if (addBatchMethod) {
+	    final String sql = (String) args[0];
 
-		    query = queryFactory.newQuery(connectionContext, sql);
-		    query.setMethodQuery(Query.METHOD_BATCH);
-		    query.setTimeInvocation(timeInvocation);
+	    query = queryFactory.newQuery(connectionContext, sql);
+	    query.setMethodQuery(Query.METHOD_BATCH);
+	    query.setTimeInvocation(timeInvocation);
 
-		    connectionContext.addQuery(query, true);
+	    connectionContext.addQuery(query, true);
 
-		    query.execute();
-		    sqlOperation.setQuery(query);
-		    return sqlOperation;
+	    query.execute();
+	    sqlOperation.setQuery(query);
+	    return sqlOperation;
+	}
+
+	final boolean executeBatchMethod = nameMethod.equals("executeBatch") && args == null;
+	if (executeBatchMethod) {
+	    final Object invoke = timeInvocation.getInvoke();
+	    int[] updateCounts = null;
+
+	    final Class returnType = method.getReturnType();
+	    if (invoke != null) {
+		if (int[].class.equals(returnType)) {
+		    updateCounts = (int[]) invoke;
 		}
+	    }
 
-		final boolean executeBatchMethod = nameMethod.equals("executeBatch") && args == null;
-		if (executeBatchMethod) {
-		    final Object invoke = timeInvocation.getInvoke();
-		    int[] updateCounts = null;
+	    connectionContext.getBatchContext().executeBatch(updateCounts);
+	    connectionContext.resetBatch();
+	    return sqlOperation;
+	}
 
-		    final Class returnType = method.getReturnType();
-		    if (invoke != null) {
-			if (int[].class.equals(returnType)) {
-			    updateCounts = (int[]) invoke;
-			}
-		    }
+	final boolean executeMethod = nameMethod.startsWith("execute") && args != null && args.length >= 1;
+	if (executeMethod) {
+	    final String sql = (String) args[0];
 
-		    connectionContext.getBatchContext().executeBatch(updateCounts);
-		    connectionContext.resetBatch();
-		    return sqlOperation;
+	    query = queryFactory.newQuery(connectionContext, sql);
+	    query.setMethodQuery(Query.METHOD_EXECUTE);
+	    query.setTimeInvocation(timeInvocation);
+	    final Integer updateCount = getUpdateCount(method);
+	    query.setUpdateCount(updateCount);
+
+	    connectionContext.addQuery(query, false);
+
+	    query.execute();
+	    sqlOperation.setQuery(query);
+
+	    // execute retourne true boolean - GetResultSet
+	    final Class returnType = method.getReturnType();
+	    if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
+		final Boolean invokeBoolean = (Boolean) timeInvocation.getInvoke();
+		if (invokeBoolean.booleanValue()) {
+		    query.initResultSetCollector(connectionContext);
+		    context.setQuery(query);
 		}
-
-		final boolean executeMethod = nameMethod.startsWith("execute") && args != null && args.length >= 1;
-			if (executeMethod) {
-			    final String sql = (String) args[0];
-
-			    query = queryFactory.newQuery(connectionContext, sql);
-			    query.setMethodQuery(Query.METHOD_EXECUTE);
-			    query.setTimeInvocation(timeInvocation);
-			    final Integer updateCount = getUpdateCount(method);
-			    query.setUpdateCount(updateCount);
-
-			    connectionContext.addQuery(query, false);
-
-			    query.execute();
-			    sqlOperation.setQuery(query);
-
-			    // execute retourne true boolean - GetResultSet
-			    final Class returnType = method.getReturnType();
-			    if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
-				final Boolean invokeBoolean = (Boolean) timeInvocation.getInvoke();
-				if (invokeBoolean.booleanValue()) {
-				    query.initResultSetCollector(connectionContext);
-				    context.setQuery(query);
-				}
-			    }
-			}
-			return sqlOperation;
+	    }
+	}
+	return sqlOperation;
     }
 
-    public Object getInvoke() {
+    public Object newResultMethod() {
 	final Object invoke = timeInvocation.getInvoke();
 
 	if (invoke != null) {

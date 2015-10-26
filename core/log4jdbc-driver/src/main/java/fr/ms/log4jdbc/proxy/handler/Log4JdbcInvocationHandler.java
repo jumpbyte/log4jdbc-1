@@ -50,7 +50,7 @@ public class Log4JdbcInvocationHandler implements InvocationHandler {
 		if (log != null && log.isEnabled()) {
 		    SqlOperation sqlOperation = null;
 		    if (!buildSqlOperation) {
-			sqlOperation = operationContext.newSqlOperation();
+			sqlOperation = operationContext.getSqlOperation();
 			buildSqlOperation = true;
 		    }
 		    try {
@@ -68,7 +68,7 @@ public class Log4JdbcInvocationHandler implements InvocationHandler {
 	    }
 	}
 
-	final Object wrapInvoke = operationContext.getInvoke();
+	final Object wrapInvoke = operationContext.getResultMethod();
 
 	return wrapInvoke;
     }

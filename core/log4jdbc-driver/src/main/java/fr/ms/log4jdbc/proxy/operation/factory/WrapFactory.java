@@ -36,12 +36,12 @@ public class WrapFactory implements Log4JdbcOperationFactory {
 	    this.timeInvocation = timeInvocation;
 	}
 
-	public SqlOperation newSqlOperation() {
-	    return wrap.newSqlOperation();
+	public SqlOperation getSqlOperation() {
+	    return wrap.getSqlOperation();
 	}
 
-	public Object getInvoke() {
-	    timeInvocation.setInvoke(wrap.getInvoke());
+	public Object getResultMethod() {
+	    timeInvocation.setInvoke(wrap.getResultMethod());
 	    return timeInvocation;
 	}
     }
