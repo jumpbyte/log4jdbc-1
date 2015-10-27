@@ -125,7 +125,7 @@ public final class Log4JdbcStackTrace {
 	int position = 0;
 	for (position = 0; position < stackTrace.length; position++) {
 	    final String className = stackTrace[position].getClassName();
-	    if ("fr.ms.log4jdbc".startsWith(className)) {
+	    if (!className.startsWith("fr.ms.log4jdbc")) {
 		break;
 	    }
 	}

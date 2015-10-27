@@ -65,9 +65,4 @@ public class Log4JdbcInvocationHandler implements InvocationHandler {
 
 	return wrapInvoke;
     }
-
-    public Log4JdbcOperationFactory getFactory() {
-	return factory;
-    }
-
 }
