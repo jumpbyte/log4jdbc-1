@@ -6,11 +6,11 @@ import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 
-public class TimeInvocationOperationFactory implements Log4JdbcOperationFactory {
+public class TraceTimeInvocationOperationFactory implements Log4JdbcOperationFactory {
 
     private final Log4JdbcOperationFactory factory;
 
-    public TimeInvocationOperationFactory(final Log4JdbcOperationFactory factory) {
+    public TraceTimeInvocationOperationFactory(final Log4JdbcOperationFactory factory) {
 	this.factory = factory;
     }
 
@@ -18,18 +18,18 @@ public class TimeInvocationOperationFactory implements Log4JdbcOperationFactory 
 	    final Method method, final Object[] args) {
 	final Log4JdbcOperation newLog4JdbcOperation = factory.newLog4JdbcOperation(connectionContext, timeInvocation, proxy, method, args);
 
-	final WrapLog4JdbcOperation wrap = new WrapLog4JdbcOperation(newLog4JdbcOperation, timeInvocation);
+	final Log4JdbcOperation decorator = new TraceTimeInvocationOperation(newLog4JdbcOperation, timeInvocation);
 
-	return wrap;
+	return decorator;
     }
 
-    private final class WrapLog4JdbcOperation implements Log4JdbcOperation {
+    private final class TraceTimeInvocationOperation implements Log4JdbcOperation {
 
 	private final Log4JdbcOperation operation;
 
 	private final TimeInvocation timeInvocation;
 
-	public WrapLog4JdbcOperation(final Log4JdbcOperation operation, final TimeInvocation timeInvocation) {
+	public TraceTimeInvocationOperation(final Log4JdbcOperation operation, final TimeInvocation timeInvocation) {
 	    this.operation = operation;
 	    this.timeInvocation = timeInvocation;
 	}

@@ -19,9 +19,7 @@ public class Log4JdbcInvocationHandler implements InvocationHandler {
 
     private final Log4JdbcOperationFactory factory;
 
-    public Log4JdbcInvocationHandler(final Object implementation,
-	    final ConnectionContext connectionContext,
-	    final SqlOperationLogger[] logs,
+    public Log4JdbcInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
 	    final Log4JdbcOperationFactory factory) {
 	this.invocationHandler = new TimeInvocationHandler(implementation);
 	this.connectionContext = connectionContext;
@@ -29,17 +27,13 @@ public class Log4JdbcInvocationHandler implements InvocationHandler {
 	this.factory = factory;
     }
 
-    public Object invoke(final Object proxy, final Method method,
-	    final Object[] args) throws Throwable {
-	final TimeInvocation timeInvocation = (TimeInvocation) invocationHandler
-		.invoke(proxy, method, args);
+    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+	final TimeInvocation timeInvocation = (TimeInvocation) invocationHandler.invoke(proxy, method, args);
 
 	final Object invoke = timeInvocation.getInvoke();
 	final Throwable targetException = timeInvocation.getTargetException();
 
-	final Log4JdbcOperation operationContext = factory
-		.newLog4JdbcOperation(connectionContext, timeInvocation, proxy,
-			method, args);
+	final Log4JdbcOperation operationContext = factory.newLog4JdbcOperation(connectionContext, timeInvocation, proxy, method, args);
 
 	if (logs != null && logs.length != 0) {
 
@@ -58,8 +52,7 @@ public class Log4JdbcInvocationHandler implements InvocationHandler {
 			if (targetException == null) {
 			    log.buildLog(sqlOperation, method, args, invoke);
 			} else {
-			    log.buildLog(sqlOperation, method, args,
-				    targetException);
+			    log.buildLog(sqlOperation, method, args, targetException);
 			}
 		    } catch (final Throwable t) {
 			t.printStackTrace();
@@ -72,4 +65,9 @@ public class Log4JdbcInvocationHandler implements InvocationHandler {
 
 	return wrapInvoke;
     }
+
+    public Log4JdbcOperationFactory getFactory() {
+	return factory;
+    }
+
 }

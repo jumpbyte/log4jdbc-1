@@ -26,12 +26,20 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import fr.ms.lang.SystemPropertyUtils;
+import fr.ms.lang.reflect.ProxyUtils;
 import fr.ms.lang.reflect.TraceTimeInvocationHandler;
 import fr.ms.log4jdbc.SqlOperationLogger;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
-import fr.ms.log4jdbc.operator.OperationDecorator;
-import fr.ms.log4jdbc.operator.ResultSetOperationInvocationHandler;
+import fr.ms.log4jdbc.proxy.handler.Log4JdbcInvocationHandler;
+import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperationFactory;
+import fr.ms.log4jdbc.proxy.handler.TraceTimeInvocationOperationFactory;
+import fr.ms.log4jdbc.proxy.operation.factory.CallableStatementOperationFactory;
+import fr.ms.log4jdbc.proxy.operation.factory.ConnectionOperationFactory;
+import fr.ms.log4jdbc.proxy.operation.factory.PreparedStatementOperationFactory;
+import fr.ms.log4jdbc.proxy.operation.factory.ResultSetOperationFactory;
+import fr.ms.log4jdbc.proxy.operation.factory.StatementOperationFactory;
 import fr.ms.log4jdbc.sql.Query;
+import fr.ms.log4jdbc.utils.ServicesJDBC;
 
 /**
  *
@@ -60,122 +68,75 @@ public final class Log4JdbcProxy {
     }
 
     public static Connection proxyConnection(final Connection connection, final ConnectionContext connectionContext) {
-	// final OperationDecorator handler = new ConnectionDecorator();
-	//
-	// final SqlOperationLogger[] messageLogger =
-	// ServicesJDBC.getMessageLogger(SqlOperationLogger.CONNECTION);
-	// final InvocationHandler wrapper = create(connection,
-	// connectionContext, messageLogger, handler);
-	//
-	// final Connection instance = (Connection)
-	// ProxyUtils.newProxyInstance(connection, wrapper);
-	//
-	// return instance;
+	final SqlOperationLogger[] logs = ServicesJDBC.getMessageLogger(SqlOperationLogger.CONNECTION);
 
-	return Log4JdbcProxyNew.proxyConnection(connection, connectionContext);
+	final Log4JdbcOperationFactory factory = new ConnectionOperationFactory();
+
+	final InvocationHandler handler = createHandler(connection, connectionContext, logs, factory);
+
+	final Connection instance = (Connection) ProxyUtils.newProxyInstance(connection, handler);
+
+	return instance;
     }
 
     public static Statement proxyStatement(final Statement statement, final ConnectionContext connectionContext) {
-	// final QueryFactory queryFactory = QuerySQLFactory.getInstance();
-	// final OperationDecorator handler = new StatementDecorator(statement,
-	// queryFactory);
-	//
-	// final SqlOperationLogger[] messageLogger =
-	// ServicesJDBC.getMessageLogger(SqlOperationLogger.STATEMENT);
-	// final InvocationHandler wrapper = create(statement,
-	// connectionContext, messageLogger, handler);
-	//
-	// final Statement instance = (Statement)
-	// ProxyUtils.newProxyInstance(statement, wrapper);
-	//
-	// return instance;
+	final SqlOperationLogger[] logs = ServicesJDBC.getMessageLogger(SqlOperationLogger.STATEMENT);
 
-	return Log4JdbcProxyNew.proxyStatement(statement, connectionContext);
+	final Log4JdbcOperationFactory factory = new StatementOperationFactory(statement);
+
+	final InvocationHandler handler = createHandler(statement, connectionContext, logs, factory);
+
+	final Statement instance = (Statement) ProxyUtils.newProxyInstance(statement, handler);
+
+	return instance;
     }
 
-    public static PreparedStatement proxyPreparedStatement(final PreparedStatement preparedStatement, final ConnectionContext connectionContext,
-	    final String sql) {
-	// final QueryFactory queryFactory = QuerySQLFactory.getInstance();
-	// final OperationDecorator handler = new
-	// PreparedStatementDecorator(preparedStatement, connectionContext, sql,
-	// queryFactory);
-	//
-	// final SqlOperationLogger[] messageLogger =
-	// ServicesJDBC.getMessageLogger(SqlOperationLogger.PREPARED_STATEMENT);
-	// final InvocationHandler wrapper = create(preparedStatement,
-	// connectionContext, messageLogger, handler);
-	//
-	// final PreparedStatement instance = (PreparedStatement)
-	// ProxyUtils.newProxyInstance(preparedStatement, wrapper);
-	//
-	// return instance;
+    public static PreparedStatement proxyPreparedStatement(final PreparedStatement statement, final ConnectionContext connectionContext, final String sql) {
+	final SqlOperationLogger[] logs = ServicesJDBC.getMessageLogger(SqlOperationLogger.PREPARED_STATEMENT);
 
-	return Log4JdbcProxyNew.proxyPreparedStatement(preparedStatement, connectionContext, sql);
+	final Log4JdbcOperationFactory factory = new PreparedStatementOperationFactory(statement, connectionContext, sql);
+
+	final InvocationHandler handler = createHandler(statement, connectionContext, logs, factory);
+
+	final PreparedStatement instance = (PreparedStatement) ProxyUtils.newProxyInstance(statement, handler);
+
+	return instance;
     }
 
-    public static CallableStatement proxyCallableStatement(final CallableStatement callableStatement, final ConnectionContext connectionContext,
-	    final String sql) {
-	// final QueryFactory queryFactory = QueryNamedFactory.getInstance();
-	// final OperationDecorator handler = new
-	// PreparedStatementDecorator(callableStatement, connectionContext, sql,
-	// queryFactory);
-	//
-	// final SqlOperationLogger[] messageLogger =
-	// ServicesJDBC.getMessageLogger(SqlOperationLogger.CALLABLE_STATEMENT);
-	// final InvocationHandler wrapper = create(callableStatement,
-	// connectionContext, messageLogger, handler);
-	//
-	// final CallableStatement instance = (CallableStatement)
-	// ProxyUtils.newProxyInstance(callableStatement, wrapper);
-	//
-	// return instance;
+    public static CallableStatement proxyCallableStatement(final CallableStatement statement, final ConnectionContext connectionContext, final String sql) {
+	final SqlOperationLogger[] logs = ServicesJDBC.getMessageLogger(SqlOperationLogger.CALLABLE_STATEMENT);
 
-	return Log4JdbcProxyNew.proxyCallableStatement(callableStatement, connectionContext, sql);
+	final Log4JdbcOperationFactory factory = new CallableStatementOperationFactory(statement, connectionContext, sql);
+
+	final InvocationHandler handler = createHandler(statement, connectionContext, logs, factory);
+
+	final CallableStatement instance = (CallableStatement) ProxyUtils.newProxyInstance(statement, handler);
+
+	return instance;
     }
 
     public static ResultSet proxyResultSet(final ResultSet resultSet, final ConnectionContext connectionContext, final Query query) {
-	// final OperationDecorator handler = new ResultSetDecorator(query,
-	// resultSet);
-	//
-	// final SqlOperationLogger[] messageLogger =
-	// ServicesJDBC.getMessageLogger(SqlOperationLogger.RESULT_SET);
-	// final InvocationHandler wrapper = create(resultSet,
-	// connectionContext, messageLogger, handler);
-	//
-	// final ResultSet instance = (ResultSet)
-	// ProxyUtils.newProxyInstance(resultSet, wrapper);
-	//
-	// return instance;
+	final SqlOperationLogger[] logs = ServicesJDBC.getMessageLogger(SqlOperationLogger.RESULT_SET);
 
-	return Log4JdbcProxyNew.proxyResultSet(resultSet, connectionContext, query);
+	final Log4JdbcOperationFactory factory = new ResultSetOperationFactory(resultSet, query);
+
+	final InvocationHandler handler = createHandler(resultSet, connectionContext, logs, factory);
+
+	final ResultSet instance = (ResultSet) ProxyUtils.newProxyInstance(resultSet, handler);
+
+	return instance;
     }
 
-    private static final InvocationHandler create(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
-	    final OperationDecorator messageFactory) {
+    private static final InvocationHandler createHandler(final Object implementation, final ConnectionContext connectionContext,
+	    final SqlOperationLogger[] logs, Log4JdbcOperationFactory factory) {
 	if (devMode) {
-	    final InvocationHandler wrapper = createDev(implementation, connectionContext, logs, messageFactory);
-
-	    return wrapper;
+	    factory = new TraceTimeInvocationOperationFactory(factory);
+	    final InvocationHandler handler = new Log4JdbcInvocationHandler(implementation, connectionContext, logs, factory);
+	    final InvocationHandler decorator = new TraceTimeInvocationHandler(handler);
+	    return decorator;
 	} else {
-	    final InvocationHandler wrapper = createProd(implementation, connectionContext, logs, messageFactory);
-
-	    return wrapper;
+	    final InvocationHandler handler = new Log4JdbcInvocationHandler(implementation, connectionContext, logs, factory);
+	    return handler;
 	}
-    }
-
-    private static final InvocationHandler createDev(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
-	    final OperationDecorator messageFactory) {
-	final InvocationHandler ih = new ResultSetOperationInvocationHandler(implementation, connectionContext, logs, messageFactory, true);
-
-	final InvocationHandler wrapper = new TraceTimeInvocationHandler(ih);
-
-	return wrapper;
-    }
-
-    private static final InvocationHandler createProd(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
-	    final OperationDecorator messageFactory) {
-	final InvocationHandler wrapper = new ResultSetOperationInvocationHandler(implementation, connectionContext, logs, messageFactory);
-
-	return wrapper;
     }
 }
