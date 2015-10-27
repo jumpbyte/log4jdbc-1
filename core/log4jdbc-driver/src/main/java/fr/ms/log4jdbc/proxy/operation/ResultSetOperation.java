@@ -15,16 +15,20 @@ public class ResultSetOperation extends AbstractOperation {
 
     private final ResultSetOperationFactory context;
 
-    private final Query query;
+    private Query query;
 
-    private final ResultSetCollectorImpl resultSetCollector;
+    private ResultSetCollectorImpl resultSetCollector;
 
-    private final ResultSet rs;
+    private ResultSet rs;
 
     public ResultSetOperation(final ResultSetOperationFactory context, final ConnectionContext connectionContext, final TimeInvocation timeInvocation,
 	    final Object proxy, final Method method, final Object[] args) {
 	super(connectionContext, timeInvocation, proxy, method, args);
 	this.context = context;
+
+    }
+
+    public void init() {
 	this.query = context.query;
 	this.rs = context.rs;
 	this.resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();

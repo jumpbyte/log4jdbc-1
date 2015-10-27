@@ -21,13 +21,6 @@
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>com.github.marcosemiao.log4jdbc</groupId>
-			<artifactId>log4jdbc-driver</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
 		
 		<dependency>
 			<groupId>com.github.marcosemiao.log4jdbc</groupId>

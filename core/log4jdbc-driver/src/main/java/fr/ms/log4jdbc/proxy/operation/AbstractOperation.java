@@ -31,6 +31,9 @@ public abstract class AbstractOperation implements Log4JdbcOperation {
 	this.sqlOperation = new SqlOperationImpl(timeInvocation, connectionContext);
     }
 
+    public void init() {
+    }
+
     public abstract SqlOperation newSqlOperation();
 
     public Object newResultMethod() {
@@ -38,6 +41,7 @@ public abstract class AbstractOperation implements Log4JdbcOperation {
     }
 
     public SqlOperation getSqlOperation() {
+	init();
 	final SqlOperation sqlOperation = newSqlOperation();
 	invoke = newResultMethod();
 	return sqlOperation;

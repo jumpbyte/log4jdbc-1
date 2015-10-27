@@ -15,9 +15,9 @@ import fr.ms.log4jdbc.sql.QueryImpl;
 
 public class StatementOperation extends AbstractOperation {
 
-    protected final StatementOperationFactory context;
+    protected StatementOperationFactory context;
 
-    protected final QueryFactory queryFactory;
+    protected QueryFactory queryFactory;
 
     protected QueryImpl query;
 
@@ -26,7 +26,9 @@ public class StatementOperation extends AbstractOperation {
 	super(connectionContext, timeInvocation, proxy, method, args);
 	this.context = context;
 	this.queryFactory = context.getQueryFactory();
+    }
 
+    public void init() {
 	query = context.getQuery();
     }
 
@@ -103,6 +105,11 @@ public class StatementOperation extends AbstractOperation {
 
 		if (query == null) {
 		    query = queryFactory.newQuery(connectionContext, null);
+		    query.setMethodQuery(Query.STATE_EXECUTE);
+		    query.setTimeInvocation(timeInvocation);
+
+		    connectionContext.addQuery(query, true);
+
 		    query.execute();
 
 		}
