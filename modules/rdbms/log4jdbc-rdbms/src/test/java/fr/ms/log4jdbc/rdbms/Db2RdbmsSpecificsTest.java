@@ -31,13 +31,19 @@ import org.junit.Test;
  * @author Marco Semiao
  *
  */
-public class GenericRdbmsSpecificsTest {
+public class Db2RdbmsSpecificsTest {
 
-    private final static RdbmsSpecifics instance = GenericRdbmsSpecifics.getInstance();
+    private final static RdbmsSpecifics instance = new Db2RdbmsSpecifics();
 
     @Test
     public void isRdbmsTest() {
-	final boolean rdbms = instance.isRdbms(Object.class.getName());
+	boolean rdbms = instance.isRdbms(Object.class.getName());
+	Assert.assertFalse(rdbms);
+
+	rdbms = instance.isRdbms("com.ibm.db2.Driver");
+	Assert.assertTrue(rdbms);
+
+	rdbms = instance.isRdbms("COM.ibm.db2.Driver");
 	Assert.assertTrue(rdbms);
     }
 
@@ -79,8 +85,8 @@ public class GenericRdbmsSpecificsTest {
 
 	final DataRdbms data = instance.getData(timestamp);
 
-	Assert.assertEquals(data.getValue(), "10/28/2015 14:55:43.364000000");
-	Assert.assertEquals(data.getParameter(), "'10/28/2015 14:55:43.364000000'");
+	Assert.assertEquals(data.getValue(), "2015-10-28 14:55:43.364000000");
+	Assert.assertEquals(data.getParameter(), "'2015-10-28 14:55:43.364000000'");
     }
 
     @Test
@@ -89,8 +95,8 @@ public class GenericRdbmsSpecificsTest {
 
 	final DataRdbms data = instance.getData(date);
 
-	Assert.assertEquals(data.getValue(), "10/28/2015 14:55:43.364");
-	Assert.assertEquals(data.getParameter(), "'10/28/2015 14:55:43.364'");
+	Assert.assertEquals(data.getValue(), "2015-10-28 14:55:43.364");
+	Assert.assertEquals(data.getParameter(), "'2015-10-28 14:55:43.364'");
     }
 
     @Test
