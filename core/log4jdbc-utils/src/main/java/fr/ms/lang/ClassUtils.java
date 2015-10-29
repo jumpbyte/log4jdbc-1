@@ -39,7 +39,7 @@ public final class ClassUtils {
 	}
     }
 
-    public final static Class[] getAllInterfaces(final Class cls) {
+    public final static Class[] findInterfaces(final Class cls) {
 	if (cls == null) {
 	    return null;
 	}

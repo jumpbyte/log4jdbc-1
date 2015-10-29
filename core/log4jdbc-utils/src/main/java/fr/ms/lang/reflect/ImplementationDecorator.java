@@ -93,7 +93,7 @@ public class ImplementationDecorator implements InvocationHandler {
     private Object createProxy(final Object impl) {
 	final Class clazz = impl.getClass();
 	final ClassLoader classLoader = clazz.getClassLoader();
-	final Class[] interfaces = ClassUtils.getAllInterfaces(clazz);
+	final Class[] interfaces = ClassUtils.findInterfaces(clazz);
 
 	if (interfaces == null || interfaces.length == 0) {
 	    return impl;

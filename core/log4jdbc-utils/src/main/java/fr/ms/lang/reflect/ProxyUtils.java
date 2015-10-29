@@ -34,7 +34,7 @@ public final class ProxyUtils {
 
     public static final Object newProxyInstance(final Object implementation, final InvocationHandler h) {
 	final ClassLoader classLoader = implementation.getClass().getClassLoader();
-	final Class[] interfaces = ClassUtils.getAllInterfaces(implementation.getClass());
+	final Class[] interfaces = ClassUtils.findInterfaces(implementation.getClass());
 
 	final Object instance = Proxy.newProxyInstance(classLoader, interfaces, h);
 
