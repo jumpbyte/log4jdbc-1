@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.SqlOperation;
+import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.proxy.operation.factory.ResultSetOperationFactory;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
@@ -34,7 +34,7 @@ public class ResultSetOperation extends AbstractOperation {
 	this.resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();
     }
 
-    public SqlOperation newSqlOperation() {
+    public SqlOperationImpl newSqlOperation() {
 
 	final Object invoke = timeInvocation.getInvoke();
 	final Throwable targetException = timeInvocation.getTargetException();

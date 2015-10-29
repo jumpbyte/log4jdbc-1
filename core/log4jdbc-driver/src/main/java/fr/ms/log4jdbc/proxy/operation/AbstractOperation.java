@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationImpl;
+import fr.ms.log4jdbc.SqlOperationLogger;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 
@@ -16,7 +17,7 @@ public abstract class AbstractOperation implements Log4JdbcOperation {
     protected final Method method;
     protected final Object[] args;
 
-    protected final SqlOperationImpl sqlOperation;
+    protected SqlOperationImpl sqlOperation;
 
     private Object invoke;
 
@@ -34,17 +35,16 @@ public abstract class AbstractOperation implements Log4JdbcOperation {
     public void init() {
     }
 
-    public abstract SqlOperation newSqlOperation();
+    public abstract SqlOperationImpl newSqlOperation();
 
     public Object newResultMethod() {
 	return timeInvocation.getInvoke();
     }
 
-    public SqlOperation getSqlOperation() {
+    public void buildOperation() {
 	init();
-	final SqlOperation sqlOperation = newSqlOperation();
+	sqlOperation = newSqlOperation();
 	invoke = newResultMethod();
-	return sqlOperation;
     }
 
     public Object getResultMethod() {
@@ -52,5 +52,9 @@ public abstract class AbstractOperation implements Log4JdbcOperation {
 	    invoke = newResultMethod();
 	}
 	return invoke;
+    }
+
+    public SqlOperation getSqlOperation(final SqlOperationLogger log) {
+	return sqlOperation;
     }
 }

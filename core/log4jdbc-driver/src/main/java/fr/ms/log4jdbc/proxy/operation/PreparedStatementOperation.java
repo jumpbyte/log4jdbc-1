@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.SqlOperation;
+import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.proxy.operation.factory.PreparedStatementOperationFactory;
 import fr.ms.log4jdbc.sql.Query;
@@ -19,7 +19,7 @@ public class PreparedStatementOperation extends StatementOperation {
 	super(context, connectionContext, timeInvocation, proxy, method, args);
     }
 
-    public SqlOperation newSqlOperation() {
+    public SqlOperationImpl newSqlOperation() {
 
 	final String nameMethod = method.getName();
 

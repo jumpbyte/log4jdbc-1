@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.SqlOperation;
+import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.log4jdbc.proxy.operation.factory.StatementOperationFactory;
@@ -32,7 +32,7 @@ public class StatementOperation extends AbstractOperation {
 	query = context.getQuery();
     }
 
-    public SqlOperation newSqlOperation() {
+    public SqlOperationImpl newSqlOperation() {
 	final String nameMethod = method.getName();
 
 	final boolean addBatchMethod = nameMethod.equals("addBatch") && args != null && args.length >= 1;

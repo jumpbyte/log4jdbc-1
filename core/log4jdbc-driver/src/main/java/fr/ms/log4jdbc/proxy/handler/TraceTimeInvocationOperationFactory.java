@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
+import fr.ms.log4jdbc.SqlOperationLogger;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 
 public class TraceTimeInvocationOperationFactory implements Log4JdbcOperationFactory {
@@ -34,8 +35,12 @@ public class TraceTimeInvocationOperationFactory implements Log4JdbcOperationFac
 	    this.timeInvocation = timeInvocation;
 	}
 
-	public SqlOperation getSqlOperation() {
-	    return operation.getSqlOperation();
+	public void buildOperation() {
+	    operation.buildOperation();
+	}
+
+	public SqlOperation getSqlOperation(final SqlOperationLogger log) {
+	    return operation.getSqlOperation(log);
 	}
 
 	public Object getResultMethod() {

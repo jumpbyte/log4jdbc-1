@@ -42,13 +42,12 @@ public class Log4JdbcInvocationHandler implements InvocationHandler {
 		final SqlOperationLogger log = logs[i];
 
 		if (log != null && log.isEnabled()) {
-		    SqlOperation sqlOperation = null;
 		    if (!buildSqlOperation) {
-			sqlOperation = operationContext.getSqlOperation();
+			operationContext.buildOperation();
 			buildSqlOperation = true;
 		    }
 		    try {
-
+			final SqlOperation sqlOperation = operationContext.getSqlOperation(log);
 			if (targetException == null) {
 			    log.buildLog(sqlOperation, method, args, invoke);
 			} else {

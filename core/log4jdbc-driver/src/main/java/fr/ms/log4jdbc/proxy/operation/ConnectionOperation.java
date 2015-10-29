@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.SqlOperation;
+import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 
@@ -17,7 +17,7 @@ public class ConnectionOperation extends AbstractOperation {
 	super(connectionContext, timeInvocation, proxy, method, args);
     }
 
-    public SqlOperation newSqlOperation() {
+    public SqlOperationImpl newSqlOperation() {
 
 	final Object invoke = timeInvocation.getInvoke();
 
