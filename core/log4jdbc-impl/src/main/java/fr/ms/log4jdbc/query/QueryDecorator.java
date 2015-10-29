@@ -24,6 +24,8 @@ import fr.ms.log4jdbc.context.Batch;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.resultset.ResultSetCollector;
+import fr.ms.log4jdbc.sql.FormatQuery;
+import fr.ms.log4jdbc.sql.Query;
 
 /**
  *
