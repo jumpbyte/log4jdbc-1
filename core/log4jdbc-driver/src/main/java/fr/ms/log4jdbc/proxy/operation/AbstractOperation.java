@@ -4,10 +4,13 @@ import java.lang.reflect.Method;
 
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
+import fr.ms.log4jdbc.SqlOperationDecorator;
 import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.SqlOperationLogger;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
+import fr.ms.log4jdbc.sql.FormatQuery;
+import fr.ms.log4jdbc.sql.FormatQueryFactory;
 
 public abstract class AbstractOperation implements Log4JdbcOperation {
 
@@ -55,6 +58,17 @@ public abstract class AbstractOperation implements Log4JdbcOperation {
     }
 
     public SqlOperation getSqlOperation(final SqlOperationLogger log) {
+	if (log instanceof FormatQueryFactory) {
+	    final FormatQueryFactory formatQueryFactory = (FormatQueryFactory) log;
+
+	    final FormatQuery formatQuery = formatQueryFactory.getFormatQuery();
+
+	    if (formatQuery != null) {
+		final SqlOperation wrap = new SqlOperationDecorator(sqlOperation, formatQuery);
+		return wrap;
+	    }
+	}
+
 	return sqlOperation;
     }
 }
