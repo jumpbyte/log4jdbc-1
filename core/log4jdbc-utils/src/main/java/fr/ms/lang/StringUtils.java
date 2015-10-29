@@ -36,15 +36,6 @@ public final class StringUtils {
     private StringUtils() {
     }
 
-    /***
-     * Add space to the provided <code>String</code> to match the provided width
-     *
-     * @param s
-     *            the <code>String</code> we want to adjust
-     * @param n
-     *            the width of the returned <code>String</code>
-     * @return a <code>String</code> matching the provided width
-     */
     public static String padRight(final String s, final int n) {
 	final StringMaker sb = stringMakerFactory.newString();
 

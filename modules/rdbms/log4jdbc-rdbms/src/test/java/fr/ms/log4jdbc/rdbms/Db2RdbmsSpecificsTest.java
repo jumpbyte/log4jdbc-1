@@ -146,27 +146,27 @@ public class Db2RdbmsSpecificsTest {
     @Test
     public void removeCommentTest() {
 	String sql = null;
-	String typeQuery = instance.removeComment(sql);
-	Assert.assertNull(typeQuery);
+	String removeComment = instance.removeComment(sql);
+	Assert.assertNull(removeComment);
 
 	sql = "  ";
-	typeQuery = instance.removeComment(sql);
-	Assert.assertEquals(typeQuery, "  ");
+	removeComment = instance.removeComment(sql);
+	Assert.assertEquals(removeComment, "  ");
 
 	sql = "toto";
-	typeQuery = instance.removeComment(sql);
-	Assert.assertEquals(typeQuery, "toto");
+	removeComment = instance.removeComment(sql);
+	Assert.assertEquals(removeComment, "toto");
 
 	sql = "select Price from products;";
-	typeQuery = instance.removeComment(sql);
-	Assert.assertEquals(typeQuery, "select Price from products;");
+	removeComment = instance.removeComment(sql);
+	Assert.assertEquals(removeComment, "select Price from products;");
 
 	sql = "/* super requete */ select Price from products;";
-	typeQuery = instance.removeComment(sql);
-	Assert.assertEquals(typeQuery, " select Price from products;");
+	removeComment = instance.removeComment(sql);
+	Assert.assertEquals(removeComment, " select Price from products;");
 
 	sql = "/* super requete */ select Price from products; /* genial */";
-	typeQuery = instance.removeComment(sql);
-	Assert.assertEquals(typeQuery, " select Price from products; ");
+	removeComment = instance.removeComment(sql);
+	Assert.assertEquals(removeComment, " select Price from products; ");
     }
 }

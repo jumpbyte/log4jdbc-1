@@ -45,7 +45,7 @@ public class ClassUtilsTest {
 
     @Test
     public void findInterfacesTest() {
-	final ArrayList<Class> checkInterfaces = new ArrayList<Class>();
+	ArrayList<Class> checkInterfaces = new ArrayList<Class>();
 	checkInterfaces.add(java.io.Serializable.class);
 	checkInterfaces.add(java.util.Collection.class);
 	checkInterfaces.add(java.lang.Iterable.class);
@@ -57,6 +57,15 @@ public class ClassUtilsTest {
 
 	for (final Class clazz : interfaces) {
 	    Assert.assertTrue(checkInterfaces.contains(clazz));
+	}
+
+	checkInterfaces = new ArrayList<Class>();
+	checkInterfaces.add(java.lang.Runnable.class);
+
+	interfaces = ClassUtils.findInterfaces(ArrayList.class);
+
+	for (final Class clazz : interfaces) {
+	    Assert.assertFalse(checkInterfaces.contains(clazz));
 	}
 
 	interfaces = ClassUtils.findInterfaces(Object.class);
