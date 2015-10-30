@@ -20,6 +20,7 @@ package fr.ms.lang.delegate;
 import fr.ms.lang.ClassUtils;
 import fr.ms.lang.stringmaker.impl.StringBufferImpl;
 import fr.ms.lang.stringmaker.impl.StringBuilderImpl;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 
 /**
  *

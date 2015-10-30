@@ -19,6 +19,7 @@ package fr.ms.lang.delegate;
 
 import fr.ms.lang.ClassUtils;
 import fr.ms.lang.sync.impl.AtomicLongImpl;
+import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.lang.sync.impl.SyncLongImpl;
 
 /**

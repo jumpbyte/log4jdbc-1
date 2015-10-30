@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.ms.lang.delegate.DefaultSyncLongFactory;
-import fr.ms.lang.delegate.SyncLong;
 import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.ref.ReferenceFactory;
 import fr.ms.lang.ref.ReferenceObject;
+import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
 

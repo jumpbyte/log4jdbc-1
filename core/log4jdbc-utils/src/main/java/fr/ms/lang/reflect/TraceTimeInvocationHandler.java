@@ -22,10 +22,10 @@ import java.lang.reflect.Method;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.DefaultSyncLongFactory;
-import fr.ms.lang.delegate.StringMaker;
 import fr.ms.lang.delegate.StringMakerFactory;
-import fr.ms.lang.delegate.SyncLong;
 import fr.ms.lang.delegate.SyncLongFactory;
+import fr.ms.lang.stringmaker.impl.StringMaker;
+import fr.ms.lang.sync.impl.SyncLong;
 
 /**
  *

@@ -25,8 +25,8 @@ import java.io.InputStreamReader;
 
 import fr.ms.lang.StringUtils;
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.StringMaker;
 import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 
 /**
  *

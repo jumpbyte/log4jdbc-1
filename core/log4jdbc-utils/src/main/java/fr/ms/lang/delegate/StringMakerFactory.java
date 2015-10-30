@@ -17,6 +17,8 @@
  */
 package fr.ms.lang.delegate;
 
+import fr.ms.lang.stringmaker.impl.StringMaker;
+
 /**
  *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>

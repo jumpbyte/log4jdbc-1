@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.lang.delegate;
+package fr.ms.lang.sync.impl;
 
 /**
  *

@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.Set;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.StringMaker;
 import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 
 /**

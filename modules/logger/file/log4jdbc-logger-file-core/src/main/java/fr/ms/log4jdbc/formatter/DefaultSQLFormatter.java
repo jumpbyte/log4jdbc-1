@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.StringMaker;
 import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 
 /*
  * Lots of this could be abstracted out into a word-wrapping class.

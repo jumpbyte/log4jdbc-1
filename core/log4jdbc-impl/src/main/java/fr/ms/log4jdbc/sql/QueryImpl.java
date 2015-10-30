@@ -22,9 +22,9 @@ import java.util.Date;
 import java.util.Map;
 
 import fr.ms.lang.delegate.DefaultSyncLongFactory;
-import fr.ms.lang.delegate.SyncLong;
 import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.reflect.TimeInvocation;
+import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.context.Batch;
 import fr.ms.log4jdbc.context.BatchImpl;
 import fr.ms.log4jdbc.context.Transaction;
