@@ -30,6 +30,12 @@
 
 		<dependency>
 			<groupId>com.github.marcosemiao.log4jdbc</groupId>
+			<artifactId>log4jdbc-logger-file-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.github.marcosemiao.log4jdbc</groupId>
 			<artifactId>log4jdbc-marshaller</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
