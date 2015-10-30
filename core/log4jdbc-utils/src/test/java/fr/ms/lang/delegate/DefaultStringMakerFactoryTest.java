@@ -85,4 +85,111 @@ public class DefaultStringMakerFactoryTest {
 
 	Assert.assertEquals(34, newString.length());
     }
+
+    @Test
+    public void newStringCapacityTest() {
+	final StringMakerFactory stringMaker = DefaultStringMakerFactory.getInstance();
+
+	StringMaker newString = stringMaker.newString(10);
+	Assert.assertEquals(newString.getClass(), StringBuilderImpl.class);
+
+	newString = newString.append(true);
+	Assert.assertEquals("true", newString.toString());
+
+	newString = newString.append(false);
+	Assert.assertEquals("truefalse", newString.toString());
+
+	newString = newString.append('e');
+	Assert.assertEquals("truefalsee", newString.toString());
+
+	final char[] chararray = { 'a', 'r', 'h', 'j' };
+	newString = newString.append(chararray);
+	Assert.assertEquals("truefalseearhj", newString.toString());
+
+	newString = newString.append(25.4);
+	Assert.assertEquals("truefalseearhj25.4", newString.toString());
+
+	newString = newString.append(47f);
+	Assert.assertEquals("truefalseearhj25.447.0", newString.toString());
+
+	newString = newString.append(624551);
+	Assert.assertEquals("truefalseearhj25.447.0624551", newString.toString());
+
+	newString = newString.append(new Byte("10"));
+	Assert.assertEquals("truefalseearhj25.447.062455110", newString.toString());
+
+	newString = newString.append("string");
+	Assert.assertEquals("truefalseearhj25.447.062455110string", newString.toString());
+
+	newString = newString.append(new StringBuffer("buffer"));
+	Assert.assertEquals("truefalseearhj25.447.062455110stringbuffer", newString.toString());
+
+	newString = newString.append(chararray, 2, 2);
+	Assert.assertEquals("truefalseearhj25.447.062455110stringbufferhj", newString.toString());
+
+	newString = newString.replace(6, 14, "re");
+	Assert.assertEquals("truefare25.447.062455110stringbufferhj", newString.toString());
+
+	final String substring = newString.substring(20, 35);
+	Assert.assertEquals("5110stringbuffe", substring);
+
+	newString = newString.delete(16, 20);
+	Assert.assertEquals("truefare25.447.05110stringbufferhj", newString.toString());
+
+	Assert.assertEquals(34, newString.length());
+    }
+
+    @Test
+    public void newStringDefaultTest() {
+	final StringMakerFactory stringMaker = DefaultStringMakerFactory.getInstance();
+
+	StringMaker newString = stringMaker.newString("default");
+	Assert.assertEquals(newString.getClass(), StringBuilderImpl.class);
+	Assert.assertEquals("default", newString.toString());
+
+	newString = newString.append(true);
+	Assert.assertEquals("defaulttrue", newString.toString());
+
+	newString = newString.append(false);
+	Assert.assertEquals("defaulttruefalse", newString.toString());
+
+	newString = newString.append('e');
+	Assert.assertEquals("defaulttruefalsee", newString.toString());
+
+	final char[] chararray = { 'a', 'r', 'h', 'j' };
+	newString = newString.append(chararray);
+	Assert.assertEquals("defaulttruefalseearhj", newString.toString());
+
+	newString = newString.append(25.4);
+	Assert.assertEquals("defaulttruefalseearhj25.4", newString.toString());
+
+	newString = newString.append(47f);
+	Assert.assertEquals("defaulttruefalseearhj25.447.0", newString.toString());
+
+	newString = newString.append(624551);
+	Assert.assertEquals("defaulttruefalseearhj25.447.0624551", newString.toString());
+
+	newString = newString.append(new Byte("10"));
+	Assert.assertEquals("defaulttruefalseearhj25.447.062455110", newString.toString());
+
+	newString = newString.append("string");
+	Assert.assertEquals("defaulttruefalseearhj25.447.062455110string", newString.toString());
+
+	newString = newString.append(new StringBuffer("buffer"));
+	Assert.assertEquals("defaulttruefalseearhj25.447.062455110stringbuffer", newString.toString());
+
+	newString = newString.append(chararray, 2, 2);
+	Assert.assertEquals("defaulttruefalseearhj25.447.062455110stringbufferhj", newString.toString());
+
+	newString = newString.replace(6, 14, "re");
+	Assert.assertEquals("defaulreseearhj25.447.062455110stringbufferhj", newString.toString());
+
+	final String substring = newString.substring(20, 35);
+	Assert.assertEquals("7.062455110stri", substring);
+
+	newString = newString.delete(16, 20);
+	Assert.assertEquals("defaulreseearhj27.062455110stringbufferhj", newString.toString());
+
+	Assert.assertEquals(41, newString.length());
+    }
 }
