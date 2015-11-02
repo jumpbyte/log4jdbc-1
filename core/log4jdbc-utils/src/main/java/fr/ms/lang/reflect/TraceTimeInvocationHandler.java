@@ -97,9 +97,11 @@ public class TraceTimeInvocationHandler implements InvocationHandler {
 	if (args != null) {
 	    for (int i = 0; i < args.length; i++) {
 		final Object arg = args[i];
-		sb.append(arg.getClass());
-		if (i < args.length - 1) {
-		    sb.append(",");
+		if (arg != null) {
+		    sb.append(arg.getClass());
+		    if (i < args.length - 1) {
+			sb.append(",");
+		    }
 		}
 	    }
 	}
