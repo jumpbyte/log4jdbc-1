@@ -41,6 +41,10 @@ public final class QueryString {
     private final static String nl = System.getProperty("line.separator");
 
     public final static String buildMessageQuery(final Query query) {
+	return buildMessageQuery(query, null);
+    }
+
+    public final static String buildMessageQuery(final Query query, final Long resultSetExecTime) {
 	final StringMaker sb = stringFactory.newString();
 
 	sb.append("Query Number : " + query.getQueryNumber() + " - State : " + query.getState());
@@ -50,11 +54,17 @@ public final class QueryString {
 	    sb.append(" - Update Count : " + updateCount);
 	}
 
-	final ResultSetCollector resultSetCollector = query.getResultSetCollector();
-	if (resultSetCollector != null && resultSetCollector.isClosed()) {
-	    final Row[] rows = resultSetCollector.getRows();
-	    if (rows != null) {
-		sb.append(" - Result Count : " + rows.length);
+	if (resultSetExecTime != null) {
+	    final ResultSetCollector resultSetCollector = query.getResultSetCollector();
+	    if (resultSetCollector != null && resultSetCollector.isClosed()) {
+		final Row[] rows = resultSetCollector.getRows();
+		if (rows != null) {
+		    sb.append(" - Result Count : ");
+		    sb.append(rows.length);
+		    sb.append(" - ResultSet Exec Time : ");
+		    sb.append(resultSetExecTime);
+		    sb.append(" ms");
+		}
 	    }
 	}
 
