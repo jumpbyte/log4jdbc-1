@@ -17,9 +17,6 @@
  */
 package fr.ms.log4jdbc.resultset;
 
-import fr.ms.log4jdbc.resultset.Cell;
-import fr.ms.log4jdbc.resultset.Column;
-import fr.ms.log4jdbc.resultset.Row;
 
 /**
  *
@@ -58,6 +55,6 @@ public class CellImpl implements Cell {
     }
 
     public String toString() {
-	return "CellImpl [column=" + getColumn() + ", row=" + getRow() + ", value=" + getValue() + "]";
+	return "CellImpl [column=" + getColumn() + ", value=" + getValue() + "]";
     }
 }

@@ -69,7 +69,8 @@ public class ResultSetMessage extends AbstractMessage {
 		messageWriter.setResultSetCollector(query.getResultSetCollector());
 	    }
 
-	    final String messageQuery = QueryString.buildMessageQuery(query);
+	    final long resultSetExecTime = message.getDate().getTime() - query.getDate().getTime();
+	    final String messageQuery = QueryString.buildMessageQuery(query, Long.valueOf(resultSetExecTime));
 	    messageWriter.traceMessage(messageQuery);
 	} else {
 	    generic.buildLog(messageWriter, message, method, args, invoke);

@@ -71,10 +71,6 @@ public class TimeInvocation {
 
     public void setEndDate(final Date endDate) {
 	this.endDate = endDate;
-	calculTime();
-    }
-
-    private void calculTime() {
 	this.execTime = endDate.getTime() - startDate.getTime();
     }
 
