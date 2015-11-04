@@ -60,6 +60,10 @@ public class Log4JdbcInvocationHandler implements InvocationHandler {
 	    }
 	}
 
+	if (targetException != null) {
+	    throw targetException;
+	}
+
 	final Object wrapInvoke = operationContext.getResultMethod();
 
 	return wrapInvoke;
