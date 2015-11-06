@@ -1,4 +1,4 @@
-package fr.ms.log4jdbc.h2;
+package fr.ms.log4jdbc.h2.statement;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -8,10 +8,13 @@ import java.sql.Statement;
 
 import org.junit.Test;
 
-public class TestH2 {
+import fr.ms.log4jdbc.h2.CreateDatabase;
+
+public class SelectTest {
 
     @Test
-    public void testH2() throws SQLException {
+    public void selectTest() throws SQLException {
+
 	Connection connection = null;
 
 	Statement statement = null;
@@ -51,5 +54,6 @@ public class TestH2 {
 		connection.close();
 	    }
 	}
+
     }
 }
