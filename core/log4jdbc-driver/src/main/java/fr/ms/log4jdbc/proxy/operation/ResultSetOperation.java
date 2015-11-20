@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.proxy.operation.factory.ResultSetOperationFactory;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
@@ -34,7 +33,7 @@ public class ResultSetOperation extends AbstractOperation {
 	this.resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();
     }
 
-    public SqlOperationImpl newSqlOperation() {
+    public void buildSqlOperation() {
 
 	final Object invoke = timeInvocation.getInvoke();
 	final Throwable targetException = timeInvocation.getTargetException();
@@ -60,7 +59,7 @@ public class ResultSetOperation extends AbstractOperation {
 		sqlOperation.setQuery(query);
 	    }
 
-	    return sqlOperation;
+	    return;
 	}
 
 	final boolean previousMethod = nameMethod.equals("previous") && invoke != null && ((Boolean) invoke).booleanValue();
@@ -83,7 +82,7 @@ public class ResultSetOperation extends AbstractOperation {
 		sqlOperation.setQuery(query);
 	    }
 
-	    return sqlOperation;
+	    return;
 	}
 
 	final boolean firstMethod = nameMethod.equals("first") && invoke != null && ((Boolean) invoke).booleanValue();
@@ -94,7 +93,7 @@ public class ResultSetOperation extends AbstractOperation {
 		sqlOperation.setQuery(query);
 	    }
 
-	    return sqlOperation;
+	    return;
 	}
 
 	final boolean lastMethod = nameMethod.equals("last") && invoke != null && ((Boolean) invoke).booleanValue();
@@ -113,7 +112,7 @@ public class ResultSetOperation extends AbstractOperation {
 		sqlOperation.setQuery(query);
 	    }
 
-	    return sqlOperation;
+	    return;
 	}
 
 	final boolean beforeFirstMethod = nameMethod.equals("beforeFirst");
@@ -124,7 +123,7 @@ public class ResultSetOperation extends AbstractOperation {
 		sqlOperation.setQuery(query);
 	    }
 
-	    return sqlOperation;
+	    return;
 	}
 
 	final boolean afterLastMethod = nameMethod.equals("afterLast");
@@ -135,13 +134,13 @@ public class ResultSetOperation extends AbstractOperation {
 		sqlOperation.setQuery(query);
 	    }
 
-	    return sqlOperation;
+	    return;
 	}
 
 	final boolean wasNullMethod = nameMethod.equals("wasNull") && context.lastCell != null && invoke != null && ((Boolean) invoke).booleanValue();
 	if (wasNullMethod) {
 	    context.lastCell.wasNull();
-	    return sqlOperation;
+	    return;
 	}
 
 	final boolean getMetaDataMethod = nameMethod.startsWith("getMetaData") && invoke != null;
@@ -151,14 +150,14 @@ public class ResultSetOperation extends AbstractOperation {
 		final ResultSetMetaData resultSetMetaData = (ResultSetMetaData) invoke;
 		resultSetCollector.setColumnsDetail(resultSetMetaData);
 	    }
-	    return sqlOperation;
+	    return;
 	}
 
 	final boolean closeMethod = nameMethod.startsWith("close") && !resultSetCollector.isClosed();
 	if (closeMethod) {
 	    sqlOperation.setQuery(query);
 	    resultSetCollector.close();
-	    return sqlOperation;
+	    return;
 	}
 
 	final boolean getValueColumn = nameMethod.startsWith("get") && targetException == null && args != null && args.length > 0;
@@ -171,9 +170,8 @@ public class ResultSetOperation extends AbstractOperation {
 		final String arg = (String) args[0];
 		context.lastCell = resultSetCollector.addValueColumn(context.position, invoke, arg);
 	    }
-	    return sqlOperation;
 	}
 
-	return sqlOperation;
+	return;
     }
 }

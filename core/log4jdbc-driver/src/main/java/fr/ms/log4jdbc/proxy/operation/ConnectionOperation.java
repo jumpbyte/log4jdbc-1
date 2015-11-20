@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 
@@ -17,7 +16,7 @@ public class ConnectionOperation extends AbstractOperation {
 	super(connectionContext, timeInvocation, proxy, method, args);
     }
 
-    public SqlOperationImpl newSqlOperation() {
+    public void buildSqlOperation() {
 
 	final Object invoke = timeInvocation.getInvoke();
 
@@ -58,10 +57,9 @@ public class ConnectionOperation extends AbstractOperation {
 	if (closeMethod) {
 	    connectionContext.getOpenConnection().decrementAndGet();
 	}
-	return sqlOperation;
     }
 
-    public Object newResultMethod() {
+    public Object buildResultMethod() {
 	final Object invoke = timeInvocation.getInvoke();
 	if (invoke != null) {
 	    if (invoke instanceof CallableStatement) {

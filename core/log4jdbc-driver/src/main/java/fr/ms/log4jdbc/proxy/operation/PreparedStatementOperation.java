@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.proxy.operation.factory.PreparedStatementOperationFactory;
 import fr.ms.log4jdbc.sql.Query;
@@ -19,7 +18,7 @@ public class PreparedStatementOperation extends StatementOperation {
 	super(context, connectionContext, timeInvocation, proxy, method, args);
     }
 
-    public SqlOperationImpl newSqlOperation() {
+    public void buildSqlOperation() {
 
 	final String nameMethod = method.getName();
 
@@ -37,7 +36,7 @@ public class PreparedStatementOperation extends StatementOperation {
 	    final QueryImpl newQuery = createWrapperQuery(query);
 	    context.setQuery(newQuery);
 
-	    return sqlOperation;
+	    return;
 	}
 
 	final boolean setNullMethod = nameMethod.equals("setNull") && args != null && args.length >= 1;
@@ -45,7 +44,7 @@ public class PreparedStatementOperation extends StatementOperation {
 	    final Object param = args[0];
 	    final Object value = null;
 	    query.putParams(param, value);
-	    return sqlOperation;
+	    return;
 	}
 
 	final boolean setMethod = nameMethod.startsWith("set") && args != null && args.length >= 2;
@@ -53,7 +52,7 @@ public class PreparedStatementOperation extends StatementOperation {
 	    final Object param = args[0];
 	    final Object value = args[1];
 	    query.putParams(param, value);
-	    return sqlOperation;
+	    return;
 	}
 
 	final boolean executeMethod = nameMethod.startsWith("execute") && !nameMethod.equals("executeBatch") && args == null;
@@ -73,10 +72,10 @@ public class PreparedStatementOperation extends StatementOperation {
 	    final QueryImpl newQuery = createWrapperQuery(query);
 	    context.setQuery(newQuery);
 
-	    return sqlOperation;
+	    return;
 	}
 
-	return super.newSqlOperation();
+	buildSqlOperation();
     }
 
     private QueryImpl createWrapperQuery(final QueryImpl query) {

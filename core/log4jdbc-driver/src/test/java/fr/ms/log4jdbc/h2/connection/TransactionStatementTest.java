@@ -50,8 +50,8 @@ public class TransactionStatementTest {
 	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
 	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation.getUrl());
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
-	    Assert.assertNotNull(sqlOperation.getTransaction());
-	    Assert.assertNotNull(sqlOperation.getBatch());
+	    Assert.assertNull(sqlOperation.getTransaction());
+	    Assert.assertNull(sqlOperation.getBatch());
 
 	    Query query = sqlOperation.getQuery();
 	    Assert.assertNull(query);
@@ -74,13 +74,8 @@ public class TransactionStatementTest {
 	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
 	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation.getUrl());
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
-	    Assert.assertNotNull(sqlOperation.getTransaction());
-	    Assert.assertNotNull(sqlOperation.getBatch());
-
-	    sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
-	    Assert.assertNotNull(sqlOperation.getTransaction());
-	    Assert.assertNotNull(sqlOperation.getBatch());
+	    Assert.assertNull(sqlOperation.getTransaction());
+	    Assert.assertNull(sqlOperation.getBatch());
 
 	    query = sqlOperation.getQuery();
 	    Assert.assertNull(query);
@@ -104,12 +99,7 @@ public class TransactionStatementTest {
 	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation.getUrl());
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNotNull(sqlOperation.getTransaction());
-	    Assert.assertNotNull(sqlOperation.getBatch());
-
-	    sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
-	    Assert.assertNotNull(sqlOperation.getTransaction());
-	    Assert.assertNotNull(sqlOperation.getBatch());
+	    Assert.assertNull(sqlOperation.getBatch());
 
 	    query = sqlOperation.getQuery();
 	    Assert.assertNotNull(query);
@@ -123,6 +113,8 @@ public class TransactionStatementTest {
 	    Assert.assertNull(query.getResultSetCollector());
 	    Assert.assertNotNull(query.getTransaction());
 	    Assert.assertEquals(query.getTransaction().getTransactionState(), Query.STATE_EXECUTE);
+	    Assert.assertEquals(query.getTransaction().getQueriesTransaction().length, 1);
+	    Assert.assertEquals(query.getTransaction().getQueriesTransaction()[0], query);
 
 	    // Commit - Fin de la Transaction
 	    connection.commit();
@@ -143,12 +135,8 @@ public class TransactionStatementTest {
 	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation.getUrl());
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNotNull(sqlOperation.getTransaction());
-	    Assert.assertNotNull(sqlOperation.getBatch());
+	    Assert.assertNull(sqlOperation.getBatch());
 
-	    sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
-	    Assert.assertNotNull(sqlOperation.getTransaction());
-	    Assert.assertNotNull(sqlOperation.getBatch());
 	    Assert.assertNotNull(query);
 	} finally {
 

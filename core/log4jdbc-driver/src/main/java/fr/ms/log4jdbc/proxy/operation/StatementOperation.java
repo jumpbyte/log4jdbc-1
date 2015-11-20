@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.log4jdbc.proxy.operation.factory.StatementOperationFactory;
@@ -32,7 +31,7 @@ public class StatementOperation extends AbstractOperation {
 	query = context.getQuery();
     }
 
-    public SqlOperationImpl newSqlOperation() {
+    public void buildSqlOperation() {
 	final String nameMethod = method.getName();
 
 	final boolean addBatchMethod = nameMethod.equals("addBatch") && args != null && args.length >= 1;
@@ -47,7 +46,7 @@ public class StatementOperation extends AbstractOperation {
 
 	    query.execute();
 	    sqlOperation.setQuery(query);
-	    return sqlOperation;
+	    return;
 	}
 
 	final boolean executeBatchMethod = nameMethod.equals("executeBatch") && args == null;
@@ -64,7 +63,7 @@ public class StatementOperation extends AbstractOperation {
 
 	    connectionContext.getBatchContext().executeBatch(updateCounts);
 	    connectionContext.resetBatch();
-	    return sqlOperation;
+	    return;
 	}
 
 	final boolean executeMethod = nameMethod.startsWith("execute") && args != null && args.length >= 1;
@@ -92,10 +91,10 @@ public class StatementOperation extends AbstractOperation {
 		}
 	    }
 	}
-	return sqlOperation;
+	return;
     }
 
-    public Object newResultMethod() {
+    public Object buildResultMethod() {
 	final Object invoke = timeInvocation.getInvoke();
 
 	if (invoke != null) {

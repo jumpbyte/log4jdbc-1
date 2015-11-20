@@ -69,5 +69,4 @@ public class BatchImpl implements Batch {
 	buffer.append("]");
 	return buffer.toString();
     }
-
 }

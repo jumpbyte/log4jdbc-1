@@ -48,4 +48,8 @@ class StrongReferenceObject implements ReferenceObject {
     public boolean isEnqueued() {
 	throw new UnsupportedOperationException();
     }
+
+    public String toString() {
+	return obj.toString();
+    }
 }

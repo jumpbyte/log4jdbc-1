@@ -17,7 +17,6 @@
  */
 package fr.ms.log4jdbc.context;
 
-import fr.ms.log4jdbc.context.Batch;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.Query;
@@ -74,5 +73,23 @@ public class BatchDecorator implements Batch {
 
     public long getOpenBatch() {
 	return batch.getOpenBatch();
+    }
+
+    public String toString() {
+	final StringBuffer buffer = new StringBuffer();
+	buffer.append("BatchDecorator [getBatchState()=");
+	buffer.append(getBatchState());
+	buffer.append(", getBatchNumber()=");
+	buffer.append(getBatchNumber());
+	buffer.append(", getOpenBatch()=");
+	buffer.append(getOpenBatch());
+
+	if (getQueriesBatch() != null) {
+	    buffer.append(", Number Queries=");
+	    buffer.append(getQueriesBatch().length);
+	}
+
+	buffer.append("]");
+	return buffer.toString();
     }
 }

@@ -169,4 +169,21 @@ public class TransactionContext implements Cloneable {
 	}
 	return t;
     }
+
+    public String toString() {
+	final StringBuffer buffer = new StringBuffer();
+	buffer.append("TransactionContext [transactionNumber=");
+	buffer.append(transactionNumber);
+	buffer.append(", state=");
+	buffer.append(state);
+	buffer.append(", transactionInit=");
+	buffer.append(transactionInit);
+	buffer.append(", refQueriesTransaction=");
+	buffer.append(refQueriesTransaction);
+	buffer.append(", savePoint=");
+	buffer.append(savePoint);
+	buffer.append("]");
+	return buffer.toString();
+    }
+
 }

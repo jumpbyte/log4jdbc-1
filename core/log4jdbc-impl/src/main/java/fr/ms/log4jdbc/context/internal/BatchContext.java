@@ -147,4 +147,20 @@ public class BatchContext implements Cloneable {
 	}
 	return b;
     }
+
+    public String toString() {
+	final StringBuffer buffer = new StringBuffer();
+	buffer.append("BatchContext [batchNumber=");
+	buffer.append(batchNumber);
+	buffer.append(", state=");
+	buffer.append(state);
+	buffer.append(", batchInit=");
+	buffer.append(batchInit);
+	buffer.append(", refQueriesBatch=");
+	buffer.append(refQueriesBatch);
+	buffer.append(", transactionContext=");
+	buffer.append(transactionContext);
+	buffer.append("]");
+	return buffer.toString();
+    }
 }

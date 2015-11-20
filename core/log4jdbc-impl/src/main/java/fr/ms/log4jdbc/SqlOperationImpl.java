@@ -46,6 +46,9 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
 
     private final ConnectionContext connectionContext;
 
+    private final BatchContext batchContext;
+    private final TransactionContext transactionContext;
+
     private final long openConnection;
 
     private Query query;
@@ -63,20 +66,18 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
 	this.connectionContext = connectionContext;
 	this.openConnection = connectionContext.getOpenConnection().get();
 
-	this.batch = new BatchImpl(connectionContext.getBatchContext());
-	this.transaction = new TransactionImpl(connectionContext.getTransactionContext());
+	batchContext = connectionContext.getBatchContext();
+	transactionContext = connectionContext.getTransactionContext();
+
+	batch = new BatchImpl(batchContext);
+	transaction = new TransactionImpl(transactionContext);
     }
 
     public Object clone() throws CloneNotSupportedException {
-	final SqlOperationImpl sqlOperation = (SqlOperationImpl) super.clone();
+	this.batch = new BatchImpl((BatchContext) batchContext.clone());
+	this.transaction = new TransactionImpl((TransactionContext) transactionContext.clone());
 
-	final BatchContext batchContext = (BatchContext) sqlOperation.connectionContext.getBatchContext().clone();
-	sqlOperation.batch = new BatchImpl(batchContext);
-
-	final TransactionContext transactionContext = (TransactionContext) sqlOperation.connectionContext.getTransactionContext().clone();
-	sqlOperation.transaction = new TransactionImpl(transactionContext);
-
-	return sqlOperation;
+	return this;
     }
 
     public Date getDate() {
@@ -120,14 +121,14 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
     }
 
     public Transaction getTransaction() {
-	if (isAutoCommit()) {
+	if (isAutoCommit() || transaction == null || transaction.getTransactionState() == null) {
 	    return null;
 	}
 	return transaction;
     }
 
     public Batch getBatch() {
-	if (isAutoCommit()) {
+	if (isAutoCommit() || batch == null || batch.getBatchState() == null) {
 	    return null;
 	}
 	return batch;

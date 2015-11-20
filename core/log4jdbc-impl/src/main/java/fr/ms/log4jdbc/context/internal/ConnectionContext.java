@@ -148,4 +148,24 @@ public class ConnectionContext {
 
 	return rdbmsSpecifics;
     }
+
+    public String toString() {
+	final StringBuffer buffer = new StringBuffer();
+	buffer.append("ConnectionContext [driver=");
+	buffer.append(driver);
+	buffer.append(", url=");
+	buffer.append(url);
+	buffer.append(", connectionNumber=");
+	buffer.append(connectionNumber);
+	buffer.append(", rdbmsSpecifics=");
+	buffer.append(rdbmsSpecifics);
+	buffer.append(", autoCommit=");
+	buffer.append(autoCommit);
+	buffer.append(", batchContext=");
+	buffer.append(batchContext);
+	buffer.append(", transactionContext=");
+	buffer.append(transactionContext);
+	buffer.append("]");
+	return buffer.toString();
+    }
 }

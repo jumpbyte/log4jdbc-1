@@ -69,4 +69,8 @@ public class NotifyReferenceObject implements ReferenceObject {
 
 	return new NotifyReferenceObject(message, soft);
     }
+
+    public String toString() {
+	return reference.get().toString();
+    }
 }

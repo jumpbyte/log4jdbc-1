@@ -38,18 +38,19 @@ public abstract class AbstractOperation implements Log4JdbcOperation {
     public void init() {
     }
 
-    public abstract SqlOperationImpl newSqlOperation();
+    public abstract void buildSqlOperation();
 
-    public Object newResultMethod() {
+    public Object buildResultMethod() {
 	return timeInvocation.getInvoke();
     }
 
     public void buildOperation() {
+	init();
+	buildSqlOperation();
+	invoke = buildResultMethod();
+
 	try {
-	    init();
-	    sqlOperation = newSqlOperation();
-	    invoke = newResultMethod();
-	    sqlOperation = (SqlOperationImpl) sqlOperation.clone();
+	    this.sqlOperation = (SqlOperationImpl) this.sqlOperation.clone();
 	} catch (final CloneNotSupportedException e) {
 	    e.printStackTrace();
 	}
@@ -57,7 +58,7 @@ public abstract class AbstractOperation implements Log4JdbcOperation {
 
     public Object getResultMethod() {
 	if (invoke == null) {
-	    invoke = newResultMethod();
+	    invoke = buildResultMethod();
 	}
 	return invoke;
     }

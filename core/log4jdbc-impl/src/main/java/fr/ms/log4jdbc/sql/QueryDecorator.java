@@ -107,6 +107,6 @@ public class QueryDecorator implements Query {
     }
 
     public String toString() {
-	return "WrapperQuery [query=" + query + ", rdbms=" + rdbms + ", formatQuery=" + formatQuery + "]";
+	return "QueryDecorator [query=" + query + ", rdbms=" + rdbms + ", formatQuery=" + formatQuery + "]";
     }
 }

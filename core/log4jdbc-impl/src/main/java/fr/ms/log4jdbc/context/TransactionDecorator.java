@@ -17,7 +17,6 @@
  */
 package fr.ms.log4jdbc.context;
 
-import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.Query;
@@ -74,5 +73,23 @@ public class TransactionDecorator implements Transaction {
 
     public long getOpenTransaction() {
 	return transaction.getOpenTransaction();
+    }
+
+    public String toString() {
+	final StringBuffer buffer = new StringBuffer();
+	buffer.append("TransactionDecorator [getTransactionState()=");
+	buffer.append(getTransactionState());
+	buffer.append(", getTransactionNumber()=");
+	buffer.append(getTransactionNumber());
+	buffer.append(", getOpenTransaction()=");
+	buffer.append(getOpenTransaction());
+
+	if (getQueriesTransaction() != null) {
+	    buffer.append(", Number Queries=");
+	    buffer.append(getQueriesTransaction().length);
+	}
+
+	buffer.append("]");
+	return buffer.toString();
     }
 }

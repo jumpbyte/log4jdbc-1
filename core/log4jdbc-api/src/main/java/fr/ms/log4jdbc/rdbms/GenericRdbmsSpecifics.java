@@ -101,6 +101,14 @@ public class GenericRdbmsSpecifics implements RdbmsSpecifics {
 	return caseSensitive;
     }
 
+    public String toString() {
+	final StringBuilder builder = new StringBuilder();
+	builder.append("GenericRdbmsSpecifics [caseSensitive=");
+	builder.append(caseSensitive);
+	builder.append("]");
+	return builder.toString();
+    }
+
     private final static class EscapeStringDataRdbms implements DataRdbms {
 	private final String value;
 
