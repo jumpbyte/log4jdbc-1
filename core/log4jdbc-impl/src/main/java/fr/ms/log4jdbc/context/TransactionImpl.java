@@ -17,7 +17,6 @@
  */
 package fr.ms.log4jdbc.context;
 
-import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.context.internal.TransactionContext;
 import fr.ms.log4jdbc.sql.Query;
 
@@ -51,5 +50,23 @@ public class TransactionImpl implements Transaction {
 
     public Query[] getQueriesTransaction() {
 	return transactionContext.getQueriesTransaction();
+    }
+
+    public String toString() {
+	final StringBuffer buffer = new StringBuffer();
+	buffer.append("TransactionImpl [getTransactionState()=");
+	buffer.append(getTransactionState());
+	buffer.append(", getTransactionNumber()=");
+	buffer.append(getTransactionNumber());
+	buffer.append(", getOpenTransaction()=");
+	buffer.append(getOpenTransaction());
+
+	if (getQueriesTransaction() != null) {
+	    buffer.append(", Number Queries=");
+	    buffer.append(getQueriesTransaction().length);
+	}
+
+	buffer.append("]");
+	return buffer.toString();
     }
 }

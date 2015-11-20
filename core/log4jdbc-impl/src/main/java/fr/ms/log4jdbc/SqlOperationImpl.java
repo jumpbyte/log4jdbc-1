@@ -40,7 +40,7 @@ import fr.ms.log4jdbc.sql.Query;
  * @author Marco Semiao
  *
  */
-public class SqlOperationImpl implements SqlOperation {
+public class SqlOperationImpl implements SqlOperation, Cloneable {
 
     private final TimeInvocation timeInvocation;
 
@@ -61,21 +61,22 @@ public class SqlOperationImpl implements SqlOperation {
     public SqlOperationImpl(final TimeInvocation timeInvocation, final ConnectionContext connectionContext) {
 	this.timeInvocation = timeInvocation;
 	this.connectionContext = connectionContext;
-	openConnection = connectionContext.getOpenConnection().get();
+	this.openConnection = connectionContext.getOpenConnection().get();
 
-	try {
-	    final BatchContext batchContext = (BatchContext) connectionContext.getBatchContext().clone();
-	    batch = new BatchImpl(batchContext);
-	} catch (final CloneNotSupportedException e) {
-	    // Rien
-	}
+	this.batch = new BatchImpl(connectionContext.getBatchContext());
+	this.transaction = new TransactionImpl(connectionContext.getTransactionContext());
+    }
 
-	try {
-	    final TransactionContext transactionContext = (TransactionContext) connectionContext.getTransactionContext().clone();
-	    transaction = new TransactionImpl(transactionContext);
-	} catch (final CloneNotSupportedException e) {
-	    // Rien
-	}
+    public Object clone() throws CloneNotSupportedException {
+	final SqlOperationImpl sqlOperation = (SqlOperationImpl) super.clone();
+
+	final BatchContext batchContext = (BatchContext) sqlOperation.connectionContext.getBatchContext().clone();
+	sqlOperation.batch = new BatchImpl(batchContext);
+
+	final TransactionContext transactionContext = (TransactionContext) sqlOperation.connectionContext.getTransactionContext().clone();
+	sqlOperation.transaction = new TransactionImpl(transactionContext);
+
+	return sqlOperation;
     }
 
     public Date getDate() {
