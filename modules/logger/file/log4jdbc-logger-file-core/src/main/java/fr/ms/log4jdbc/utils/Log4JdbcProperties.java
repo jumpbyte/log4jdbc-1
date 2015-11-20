@@ -145,7 +145,7 @@ public class Log4JdbcProperties implements Runnable {
     }
 
     public boolean logRequeteException() {
-	return getProperty("log4jdbc.request.exception", false);
+	return getProperty("log4jdbc.request.exception", true);
     }
 
     public boolean logStackTrace() {
