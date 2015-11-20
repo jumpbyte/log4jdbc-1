@@ -74,8 +74,8 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
     }
 
     public Object clone() throws CloneNotSupportedException {
-	this.batch = new BatchImpl((BatchContext) batchContext.clone());
-	this.transaction = new TransactionImpl((TransactionContext) transactionContext.clone());
+	batch = new BatchImpl((BatchContext) batchContext.clone());
+	transaction = new TransactionImpl((TransactionContext) transactionContext.clone());
 
 	return this;
     }
