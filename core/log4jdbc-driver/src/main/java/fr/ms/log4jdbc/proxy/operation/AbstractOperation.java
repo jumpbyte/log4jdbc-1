@@ -45,9 +45,14 @@ public abstract class AbstractOperation implements Log4JdbcOperation {
     }
 
     public void buildOperation() {
-	init();
-	sqlOperation = newSqlOperation();
-	invoke = newResultMethod();
+	try {
+	    init();
+	    sqlOperation = newSqlOperation();
+	    invoke = newResultMethod();
+	    sqlOperation = (SqlOperationImpl) sqlOperation.clone();
+	} catch (final CloneNotSupportedException e) {
+	    e.printStackTrace();
+	}
     }
 
     public Object getResultMethod() {

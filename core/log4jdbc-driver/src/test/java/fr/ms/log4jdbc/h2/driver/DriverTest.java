@@ -127,6 +127,7 @@ public class DriverTest {
 	Assert.assertArrayEquals(info, infoProxy);
     }
 
+    // H2 not implemented getParentLogger Method
     @Ignore
     @Test
     public void parentLoggerTest() throws SQLException {
