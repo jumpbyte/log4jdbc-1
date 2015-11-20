@@ -1,0 +1,5 @@
+fr.ms.log4jdbc.test.sqloperation.CallableStatementOperationLogger
+fr.ms.log4jdbc.test.sqloperation.ConnectionSqlOperationLogger
+fr.ms.log4jdbc.test.sqloperation.PreparedStatementSqlOperationLogger
+fr.ms.log4jdbc.test.sqloperation.ResultSetOperationLogger
+fr.ms.log4jdbc.test.sqloperation.StatementOperationLogger
