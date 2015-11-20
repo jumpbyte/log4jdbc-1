@@ -113,8 +113,11 @@ public class TransactionStatementTest {
 	    Assert.assertNull(query.getResultSetCollector());
 	    Assert.assertNotNull(query.getTransaction());
 	    Assert.assertEquals(query.getTransaction().getTransactionState(), Query.STATE_EXECUTE);
+	    Assert.assertEquals(query.getTransaction().getOpenTransaction(), 1);
 	    Assert.assertEquals(query.getTransaction().getQueriesTransaction().length, 1);
-	    Assert.assertEquals(query.getTransaction().getQueriesTransaction()[0], query);
+	    Query transactionQuery = query.getTransaction().getQueriesTransaction()[0];
+
+	    Assert.assertEquals(transactionQuery, query);
 
 	    // Commit - Fin de la Transaction
 	    connection.commit();
@@ -135,9 +138,26 @@ public class TransactionStatementTest {
 	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation.getUrl());
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNotNull(sqlOperation.getTransaction());
+	    Assert.assertEquals(query.getTransaction().getTransactionState(), Query.STATE_COMMIT);
+	    Assert.assertEquals(query.getTransaction().getOpenTransaction(), 0);
+	    Assert.assertEquals(query.getTransaction().getQueriesTransaction().length, 1);
+	    transactionQuery = query.getTransaction().getQueriesTransaction()[0];
+
+	    Assert.assertNotNull(transactionQuery.getDate());
+	    Assert.assertNotNull(transactionQuery.getExecTime());
+	    Assert.assertEquals(transactionQuery.getJDBCQuery(),
+		    "INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction', 'SQL', '1970-01-01');");
+	    Assert.assertEquals(transactionQuery.getJDBCParameters().size(), 0);
+	    Assert.assertEquals(transactionQuery.getSQLQuery(),
+		    "INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction', 'SQL', '1970-01-01');");
+	    Assert.assertEquals(transactionQuery.getMethodQuery(), Query.METHOD_EXECUTE);
+	    Assert.assertEquals(transactionQuery.getState(), Query.STATE_COMMIT);
+	    Assert.assertNull(transactionQuery.getResultSetCollector());
+
 	    Assert.assertNull(sqlOperation.getBatch());
 
-	    Assert.assertNotNull(query);
+	    query = sqlOperation.getQuery();
+	    Assert.assertNull(query);
 	} finally {
 
 	    if (statement != null) {

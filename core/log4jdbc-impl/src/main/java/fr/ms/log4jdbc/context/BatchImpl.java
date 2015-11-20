@@ -54,11 +54,11 @@ public class BatchImpl implements Batch {
 
     public String toString() {
 	final StringBuffer buffer = new StringBuffer();
-	buffer.append("BatchImpl [getBatchState()=");
+	buffer.append("BatchImpl [State()=");
 	buffer.append(getBatchState());
-	buffer.append(", getBatchNumber()=");
+	buffer.append(", Number=");
 	buffer.append(getBatchNumber());
-	buffer.append(", getOpenBatch()=");
+	buffer.append(", Open=");
 	buffer.append(getOpenBatch());
 
 	if (getQueriesBatch() != null) {

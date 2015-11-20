@@ -54,11 +54,11 @@ public class TransactionImpl implements Transaction {
 
     public String toString() {
 	final StringBuffer buffer = new StringBuffer();
-	buffer.append("TransactionImpl [getTransactionState()=");
+	buffer.append("TransactionImpl [State=");
 	buffer.append(getTransactionState());
-	buffer.append(", getTransactionNumber()=");
+	buffer.append(", Number=");
 	buffer.append(getTransactionNumber());
-	buffer.append(", getOpenTransaction()=");
+	buffer.append(", Open=");
 	buffer.append(getOpenTransaction());
 
 	if (getQueriesTransaction() != null) {
