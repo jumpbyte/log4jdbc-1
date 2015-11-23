@@ -13,6 +13,7 @@ import org.junit.Test;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationLogger;
 import fr.ms.log4jdbc.h2.CreateDatabase;
+import fr.ms.log4jdbc.rdbms.GenericRdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.test.sqloperation.SqlMessage;
 import fr.ms.log4jdbc.test.sqloperation.SqlOperationMessage;
@@ -42,12 +43,18 @@ public class TransactionStatementTest {
 	    SqlOperationMessage sqlOperationMessage = sqlMessages.get(0);
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
+	    Assert.assertEquals(false, sqlOperationMessage.getArgs()[0]);
+	    Assert.assertNotNull(sqlOperationMessage.getMethod());
+	    Assert.assertNull(sqlOperationMessage.getInvoke());
+	    Assert.assertNull(sqlOperationMessage.getException());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
+	    Assert.assertTrue(sqlOperation.getConnectionNumber() >= sqlOperation.getOpenConnection());
 	    Assert.assertEquals(1, sqlOperation.getOpenConnection());
 	    Assert.assertNotNull(sqlOperation.getDate());
 	    Assert.assertNotNull(sqlOperation.getExecTime());
 	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
+	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation.getUrl());
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
@@ -66,12 +73,19 @@ public class TransactionStatementTest {
 	    sqlOperationMessage = sqlMessages.get(0);
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
+	    Assert.assertNull(sqlOperationMessage.getArgs());
+	    Assert.assertNotNull(sqlOperationMessage.getMethod());
+	    Assert.assertNotNull(sqlOperationMessage.getInvoke());
+	    Assert.assertTrue(sqlOperationMessage.getInvoke() instanceof Statement);
+	    Assert.assertNull(sqlOperationMessage.getException());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
+	    Assert.assertTrue(sqlOperation.getConnectionNumber() >= sqlOperation.getOpenConnection());
 	    Assert.assertEquals(1, sqlOperation.getOpenConnection());
 	    Assert.assertNotNull(sqlOperation.getDate());
 	    Assert.assertNotNull(sqlOperation.getExecTime());
 	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
+	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation.getUrl());
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
@@ -90,12 +104,19 @@ public class TransactionStatementTest {
 	    sqlOperationMessage = sqlMessages.get(0);
 
 	    Assert.assertEquals(SqlOperationLogger.STATEMENT, sqlOperationMessage.getTypeLogger());
+	    Assert.assertEquals("INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction', 'SQL', '1970-01-01');",
+		    sqlOperationMessage.getArgs()[0]);
+	    Assert.assertNotNull(sqlOperationMessage.getMethod());
+	    Assert.assertEquals(false, sqlOperationMessage.getInvoke());
+	    Assert.assertNull(sqlOperationMessage.getException());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
+	    Assert.assertTrue(sqlOperation.getConnectionNumber() >= sqlOperation.getOpenConnection());
 	    Assert.assertEquals(1, sqlOperation.getOpenConnection());
 	    Assert.assertNotNull(sqlOperation.getDate());
 	    Assert.assertNotNull(sqlOperation.getExecTime());
 	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
+	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation.getUrl());
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNotNull(sqlOperation.getTransaction());
@@ -129,12 +150,18 @@ public class TransactionStatementTest {
 	    sqlOperationMessage = sqlMessages.get(0);
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
+	    Assert.assertNull(sqlOperationMessage.getArgs());
+	    Assert.assertNotNull(sqlOperationMessage.getMethod());
+	    Assert.assertNull(sqlOperationMessage.getInvoke());
+	    Assert.assertNull(sqlOperationMessage.getException());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
+	    Assert.assertTrue(sqlOperation.getConnectionNumber() >= sqlOperation.getOpenConnection());
 	    Assert.assertEquals(1, sqlOperation.getOpenConnection());
 	    Assert.assertNotNull(sqlOperation.getDate());
 	    Assert.assertNotNull(sqlOperation.getExecTime());
 	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
+	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation.getUrl());
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNotNull(sqlOperation.getTransaction());
