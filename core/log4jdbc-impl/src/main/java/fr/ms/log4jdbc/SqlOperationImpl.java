@@ -31,6 +31,7 @@ import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.context.internal.TransactionContext;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Query;
+import fr.ms.log4jdbc.sql.QueryImpl;
 
 /**
  *
@@ -51,7 +52,7 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
 
     private final long openConnection;
 
-    private Query query;
+    private QueryImpl query;
 
     private Batch batch;
 
@@ -74,6 +75,10 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
     }
 
     public Object clone() throws CloneNotSupportedException {
+	if (query != null) {
+	    query = (QueryImpl) query.clone();
+	}
+
 	batch = new BatchImpl((BatchContext) batchContext.clone());
 	transaction = new TransactionImpl((TransactionContext) transactionContext.clone());
 
@@ -112,7 +117,7 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
 	return query;
     }
 
-    public void setQuery(final Query query) {
+    public void setQuery(final QueryImpl query) {
 	this.query = query;
     }
 
@@ -135,9 +140,30 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
     }
 
     public String toString() {
-	return "SqlOperationImpl [getDate()=" + getDate() + ", getExecTime()=" + getExecTime() + ", getConnectionNumber()=" + getConnectionNumber()
-		+ ", getOpenConnection()=" + getOpenConnection() + ", getDriver()=" + getDriver() + ", getRdbms()=" + getRdbms() + ", getUrl()=" + getUrl()
-		+ ", getQuery()=" + getQuery() + ", isAutoCommit()=" + isAutoCommit() + ", getTransaction()=" + getTransaction() + ", getBatch()=" + getBatch()
-		+ "]";
+	final StringBuffer buffer = new StringBuffer();
+	buffer.append("SqlOperationImpl [getConnectionNumber()=");
+	buffer.append(getConnectionNumber());
+	buffer.append(", getOpenConnection()=");
+	buffer.append(getOpenConnection());
+	buffer.append(", getUrl()=");
+	buffer.append(getUrl());
+	buffer.append(", getDriver()=");
+	buffer.append(getDriver());
+	buffer.append(", getRdbms()=");
+	buffer.append(getRdbms());
+	buffer.append(", getDate()=");
+	buffer.append(getDate());
+	buffer.append(", getExecTime()=");
+	buffer.append(getExecTime());
+	buffer.append(", getQuery()=");
+	buffer.append(getQuery());
+	buffer.append(", isAutoCommit()=");
+	buffer.append(isAutoCommit());
+	buffer.append(", getTransaction()=");
+	buffer.append(getTransaction());
+	buffer.append(", getBatch()=");
+	buffer.append(getBatch());
+	buffer.append("]");
+	return buffer.toString();
     }
 }

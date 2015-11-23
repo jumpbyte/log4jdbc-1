@@ -43,7 +43,7 @@ import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
  * @author Marco Semiao
  *
  */
-public class QueryImpl implements Query {
+public class QueryImpl implements Query, Cloneable {
 
     private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
 
@@ -199,6 +199,42 @@ public class QueryImpl implements Query {
 
     public Object getSavePoint() {
 	return savePoint;
+    }
+
+    public Object clone() throws CloneNotSupportedException {
+	return super.clone();
+    }
+
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + (int) (queryNumber ^ (queryNumber >>> 32));
+	result = prime * result + ((state == null) ? 0 : state.hashCode());
+	return result;
+    }
+
+    public boolean equals(final Object obj) {
+	if (this == obj) {
+	    return true;
+	}
+	if (obj == null) {
+	    return false;
+	}
+	if (getClass() != obj.getClass()) {
+	    return false;
+	}
+	final QueryImpl other = (QueryImpl) obj;
+	if (queryNumber != other.queryNumber) {
+	    return false;
+	}
+	if (state == null) {
+	    if (other.state != null) {
+		return false;
+	    }
+	} else if (!state.equals(other.state)) {
+	    return false;
+	}
+	return true;
     }
 
     public String toString() {

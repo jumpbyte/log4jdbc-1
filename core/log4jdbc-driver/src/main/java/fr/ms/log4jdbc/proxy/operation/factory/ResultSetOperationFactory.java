@@ -9,11 +9,11 @@ import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperationFactory;
 import fr.ms.log4jdbc.proxy.operation.ResultSetOperation;
 import fr.ms.log4jdbc.resultset.CellImpl;
-import fr.ms.log4jdbc.sql.Query;
+import fr.ms.log4jdbc.sql.QueryImpl;
 
 public class ResultSetOperationFactory implements Log4JdbcOperationFactory {
 
-    public final Query query;
+    public final QueryImpl query;
 
     public final ResultSet rs;
 
@@ -21,18 +21,15 @@ public class ResultSetOperationFactory implements Log4JdbcOperationFactory {
 
     public CellImpl lastCell;
 
-    public ResultSetOperationFactory(final ResultSet rs, final Query query) {
+    public ResultSetOperationFactory(final ResultSet rs, final QueryImpl query) {
 	this.rs = rs;
 	this.query = query;
     }
 
-    public Log4JdbcOperation newLog4JdbcOperation(
-	    final ConnectionContext connectionContext,
-	    final TimeInvocation timeInvocation, final Object proxy,
+    public Log4JdbcOperation newLog4JdbcOperation(final ConnectionContext connectionContext, final TimeInvocation timeInvocation, final Object proxy,
 	    final Method method, final Object[] args) {
 
-	final Log4JdbcOperation operation = new ResultSetOperation(this,
-		connectionContext, timeInvocation, proxy, method, args);
+	final Log4JdbcOperation operation = new ResultSetOperation(this, connectionContext, timeInvocation, proxy, method, args);
 
 	return operation;
     }

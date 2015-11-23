@@ -38,7 +38,7 @@ import fr.ms.log4jdbc.proxy.operation.factory.ConnectionOperationFactory;
 import fr.ms.log4jdbc.proxy.operation.factory.PreparedStatementOperationFactory;
 import fr.ms.log4jdbc.proxy.operation.factory.ResultSetOperationFactory;
 import fr.ms.log4jdbc.proxy.operation.factory.StatementOperationFactory;
-import fr.ms.log4jdbc.sql.Query;
+import fr.ms.log4jdbc.sql.QueryImpl;
 import fr.ms.log4jdbc.utils.ServicesJDBC;
 
 /**
@@ -115,7 +115,7 @@ public final class Log4JdbcProxy {
 	return instance;
     }
 
-    public static ResultSet proxyResultSet(final ResultSet resultSet, final ConnectionContext connectionContext, final Query query) {
+    public static ResultSet proxyResultSet(final ResultSet resultSet, final ConnectionContext connectionContext, final QueryImpl query) {
 	final SqlOperationLogger[] logs = ServicesJDBC.getMessageLogger(SqlOperationLogger.RESULT_SET);
 
 	final Log4JdbcOperationFactory factory = new ResultSetOperationFactory(resultSet, query);

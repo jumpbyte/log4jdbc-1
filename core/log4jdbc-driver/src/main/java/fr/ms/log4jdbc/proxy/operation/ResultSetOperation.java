@@ -8,13 +8,13 @@ import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.proxy.operation.factory.ResultSetOperationFactory;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
-import fr.ms.log4jdbc.sql.Query;
+import fr.ms.log4jdbc.sql.QueryImpl;
 
 public class ResultSetOperation extends AbstractOperation {
 
     private final ResultSetOperationFactory context;
 
-    private Query query;
+    private QueryImpl query;
 
     private ResultSetCollectorImpl resultSetCollector;
 
