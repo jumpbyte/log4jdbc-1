@@ -75,7 +75,7 @@ public class PreparedStatementOperation extends StatementOperation {
 	    return;
 	}
 
-	buildSqlOperation();
+	super.buildSqlOperation();
     }
 
     private QueryImpl createWrapperQuery(final QueryImpl query) {
