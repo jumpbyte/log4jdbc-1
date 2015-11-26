@@ -55,7 +55,7 @@ public class ConnectionOperation extends AbstractOperation {
 
 	final boolean closeMethod = nameMethod.equals("close");
 	if (closeMethod) {
-	    connectionContext.getOpenConnection().decrementAndGet();
+	    connectionContext.resetContext();
 	}
     }
 

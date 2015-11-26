@@ -128,6 +128,11 @@ public class ConnectionContext {
 	return transactionContext;
     }
 
+    public void resetContext() {
+	openConnection.decrementAndGet();
+	resetTransaction();
+    }
+
     public void resetTransaction() {
 	transactionContext.decrement();
 	transactionContext = new TransactionContext();

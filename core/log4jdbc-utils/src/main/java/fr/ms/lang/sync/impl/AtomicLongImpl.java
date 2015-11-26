@@ -63,6 +63,38 @@ public class AtomicLongImpl implements SyncLong {
 	return factory;
     }
 
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((atomicLong == null) ? 0 : atomicLong.hashCode());
+	return result;
+    }
+
+    public boolean equals(final Object obj) {
+	if (this == obj) {
+	    return true;
+	}
+	if (obj == null) {
+	    return false;
+	}
+	if (getClass() != obj.getClass()) {
+	    return false;
+	}
+	final AtomicLongImpl other = (AtomicLongImpl) obj;
+	if (atomicLong == null) {
+	    if (other.atomicLong != null) {
+		return false;
+	    }
+	} else if (!atomicLong.equals(other.atomicLong)) {
+	    return false;
+	}
+	return true;
+    }
+
+    public String toString() {
+	return atomicLong.toString();
+    }
+
     private final static class Factory implements SyncLongFactory {
 
 	public SyncLong newLong() {

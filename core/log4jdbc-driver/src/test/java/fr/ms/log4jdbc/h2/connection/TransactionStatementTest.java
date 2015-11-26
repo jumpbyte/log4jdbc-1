@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationLogger;
+import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.h2.CreateDatabase;
 import fr.ms.log4jdbc.rdbms.GenericRdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Query;
@@ -288,7 +289,8 @@ public class TransactionStatementTest {
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation.getUrl());
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
-	    Assert.assertNotNull(sqlOperation.getTransaction());
+	    final Transaction transaction1 = sqlOperation.getTransaction();
+	    Assert.assertNotNull(transaction1);
 	    Assert.assertNull(sqlOperation.getBatch());
 
 	    final Query query1 = sqlOperation.getQuery();
@@ -308,6 +310,7 @@ public class TransactionStatementTest {
 	    Query transactionQuery1 = query1.getTransaction().getQueriesTransaction()[0];
 
 	    Assert.assertEquals(transactionQuery1, query1);
+	    Assert.assertEquals(query1.getTransaction(), transaction1);
 
 	    // Execute Query - INSERT 2
 	    statement.execute("INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction2', 'SQL2', '1970-01-01');");
@@ -334,7 +337,8 @@ public class TransactionStatementTest {
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation.getUrl());
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
-	    Assert.assertNotNull(sqlOperation.getTransaction());
+	    final Transaction transaction2 = sqlOperation.getTransaction();
+	    Assert.assertNotNull(transaction2);
 	    Assert.assertNull(sqlOperation.getBatch());
 
 	    final Query query2 = sqlOperation.getQuery();
@@ -354,6 +358,7 @@ public class TransactionStatementTest {
 	    final Query transactionQuery2 = query2.getTransaction().getQueriesTransaction()[1];
 
 	    Assert.assertEquals(transactionQuery2, query2);
+	    Assert.assertEquals(query2.getTransaction(), transaction2);
 
 	    // Commit - Fin de la Transaction
 	    connection.commit();

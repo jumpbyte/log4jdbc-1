@@ -102,7 +102,7 @@ public class GenericRdbmsSpecifics implements RdbmsSpecifics {
     }
 
     public String toString() {
-	final StringBuilder builder = new StringBuilder();
+	final StringBuffer builder = new StringBuffer();
 	builder.append("GenericRdbmsSpecifics [caseSensitive=");
 	builder.append(caseSensitive);
 	builder.append("]");

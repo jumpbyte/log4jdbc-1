@@ -52,6 +52,34 @@ public class TransactionImpl implements Transaction {
 	return transactionContext.getQueriesTransaction();
     }
 
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((transactionContext == null) ? 0 : transactionContext.hashCode());
+	return result;
+    }
+
+    public boolean equals(final Object obj) {
+	if (this == obj) {
+	    return true;
+	}
+	if (obj == null) {
+	    return false;
+	}
+	if (getClass() != obj.getClass()) {
+	    return false;
+	}
+	final TransactionImpl other = (TransactionImpl) obj;
+	if (transactionContext == null) {
+	    if (other.transactionContext != null) {
+		return false;
+	    }
+	} else if (!transactionContext.equals(other.transactionContext)) {
+	    return false;
+	}
+	return true;
+    }
+
     public String toString() {
 	final StringBuffer buffer = new StringBuffer();
 	buffer.append("TransactionImpl [State=");

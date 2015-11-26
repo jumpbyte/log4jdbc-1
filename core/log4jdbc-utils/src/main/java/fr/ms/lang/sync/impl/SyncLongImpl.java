@@ -88,6 +88,10 @@ public class SyncLongImpl implements SyncLong {
 	return true;
     }
 
+    public String toString() {
+	return String.valueOf(value);
+    }
+
     private final static class Factory implements SyncLongFactory {
 
 	public SyncLong newLong() {

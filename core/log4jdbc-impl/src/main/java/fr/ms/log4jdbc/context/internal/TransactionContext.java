@@ -159,6 +159,45 @@ public class TransactionContext implements Cloneable {
 	return state;
     }
 
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((getState() == null) ? 0 : getState().hashCode());
+	result = prime * result + (int) (getTransactionNumber() ^ (getTransactionNumber() >>> 32));
+	return result;
+    }
+
+    public boolean equals(final Object obj) {
+	if (this == obj) {
+	    return true;
+	}
+	if (obj == null) {
+	    return false;
+	}
+	if (getClass() != obj.getClass()) {
+	    return false;
+	}
+	final TransactionContext other = (TransactionContext) obj;
+	if (getQueriesTransaction() == null) {
+	    if (other.getQueriesTransaction() != null) {
+		return false;
+	    }
+	} else if (getQueriesTransaction().length != other.getQueriesTransaction().length) {
+	    return false;
+	}
+	if (getState() == null) {
+	    if (other.getState() != null) {
+		return false;
+	    }
+	} else if (!getState().equals(other.getState())) {
+	    return false;
+	}
+	if (getTransactionNumber() != other.getTransactionNumber()) {
+	    return false;
+	}
+	return true;
+    }
+
     public Object clone() throws CloneNotSupportedException {
 	final TransactionContext t = (TransactionContext) super.clone();
 	final List queriesTransaction = (List) refQueriesTransaction.get();
@@ -185,5 +224,4 @@ public class TransactionContext implements Cloneable {
 	buffer.append("]");
 	return buffer.toString();
     }
-
 }
