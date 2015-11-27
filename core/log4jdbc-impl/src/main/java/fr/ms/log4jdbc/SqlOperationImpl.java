@@ -23,7 +23,6 @@ import java.util.Date;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.Batch;
 import fr.ms.log4jdbc.context.BatchImpl;
-import fr.ms.log4jdbc.context.SqlOperationContext;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.context.TransactionImpl;
 import fr.ms.log4jdbc.context.internal.BatchContext;
@@ -57,10 +56,6 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
     private Batch batch;
 
     private Transaction transaction;
-
-    public SqlOperationImpl(final SqlOperationContext mic) {
-	this(mic.getInvokeTime(), mic.getConnectionContext());
-    }
 
     public SqlOperationImpl(final TimeInvocation timeInvocation, final ConnectionContext connectionContext) {
 	this.timeInvocation = timeInvocation;
