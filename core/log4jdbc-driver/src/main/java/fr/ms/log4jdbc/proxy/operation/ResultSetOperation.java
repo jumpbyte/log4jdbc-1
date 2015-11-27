@@ -24,7 +24,6 @@ public class ResultSetOperation extends AbstractOperation {
 	    final Object proxy, final Method method, final Object[] args) {
 	super(connectionContext, timeInvocation, proxy, method, args);
 	this.context = context;
-
     }
 
     public void init() {
@@ -55,6 +54,8 @@ public class ResultSetOperation extends AbstractOperation {
 		context.position++;
 	    }
 
+	    resultSetCollector.getRow(context.position);
+
 	    if (!resultSetCollector.isClosed()) {
 		sqlOperation.setQuery(query);
 	    }
@@ -78,6 +79,8 @@ public class ResultSetOperation extends AbstractOperation {
 		context.position--;
 	    }
 
+	    resultSetCollector.getRow(context.position);
+
 	    if (!resultSetCollector.isClosed()) {
 		sqlOperation.setQuery(query);
 	    }
@@ -88,6 +91,8 @@ public class ResultSetOperation extends AbstractOperation {
 	final boolean firstMethod = nameMethod.equals("first") && invoke != null && ((Boolean) invoke).booleanValue();
 	if (firstMethod) {
 	    context.position = 1;
+
+	    resultSetCollector.getRow(context.position);
 
 	    if (!resultSetCollector.isClosed()) {
 		sqlOperation.setQuery(query);
@@ -107,6 +112,8 @@ public class ResultSetOperation extends AbstractOperation {
 	    } catch (final Throwable e) {
 		context.position = Integer.MAX_VALUE;
 	    }
+
+	    resultSetCollector.getRow(context.position);
 
 	    if (!resultSetCollector.isClosed()) {
 		sqlOperation.setQuery(query);

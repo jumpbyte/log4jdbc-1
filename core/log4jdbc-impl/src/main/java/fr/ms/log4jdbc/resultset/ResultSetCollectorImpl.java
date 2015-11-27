@@ -30,9 +30,6 @@ import java.util.Map;
 import fr.ms.lang.ref.ReferenceFactory;
 import fr.ms.lang.ref.ReferenceObject;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
-import fr.ms.log4jdbc.resultset.Column;
-import fr.ms.log4jdbc.resultset.ResultSetCollector;
-import fr.ms.log4jdbc.resultset.Row;
 
 /**
  *
@@ -132,7 +129,7 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
 	}
     }
 
-    private RowImpl getRow(final int cursorPosition) {
+    public RowImpl getRow(final int cursorPosition) {
 	if (rs != null && !metaData) {
 	    try {
 		setColumnsDetail(rs.getMetaData());
