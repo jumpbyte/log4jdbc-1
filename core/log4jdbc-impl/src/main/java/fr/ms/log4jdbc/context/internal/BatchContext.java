@@ -68,8 +68,6 @@ public class BatchContext implements Cloneable {
 	    queriesBatch.add(query);
 	}
 
-	query.setBatchContext(this);
-
 	if (!batchInit) {
 	    batchInit = true;
 	    batchNumber = totalBatchNumber.incrementAndGet();
@@ -77,6 +75,12 @@ public class BatchContext implements Cloneable {
 	}
 
 	state = Query.STATE_NOT_EXECUTE;
+
+	try {
+	    query.setBatchContext((BatchContext) this.clone());
+	} catch (final CloneNotSupportedException e) {
+	    e.printStackTrace();
+	}
     }
 
     public void executeBatch(final int[] updateCounts) {

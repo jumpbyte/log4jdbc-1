@@ -59,6 +59,7 @@ public class TransactionContext implements Cloneable {
     }
 
     public void addQuery(final QueryImpl query, final boolean batch) {
+
 	query.setState(Query.STATE_EXECUTE);
 	if (savePoint != null) {
 	    query.setSavePoint(savePoint);
@@ -68,8 +69,6 @@ public class TransactionContext implements Cloneable {
 	if (queriesTransaction != null) {
 	    queriesTransaction.add(query);
 	}
-
-	query.setTransactionContext(this);
 
 	if (!transactionInit) {
 	    transactionInit = true;
@@ -81,6 +80,12 @@ public class TransactionContext implements Cloneable {
 	    state = Query.STATE_NOT_EXECUTE;
 	} else {
 	    state = Query.STATE_EXECUTE;
+	}
+
+	try {
+	    query.setTransactionContext((TransactionContext) this.clone());
+	} catch (final CloneNotSupportedException e) {
+	    e.printStackTrace();
 	}
     }
 

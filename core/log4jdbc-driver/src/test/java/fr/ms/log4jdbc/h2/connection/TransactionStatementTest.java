@@ -35,157 +35,169 @@ public class TransactionStatementTest {
 	try {
 	    connection = CreateDatabase.createConnection(true);
 
-	    // Set Auto Commit False - Debut Transaction
+	    // ///////////////////// Set Auto Commit False - Debut Transaction
 	    connection.setAutoCommit(false);
-	    List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
+	    final List<SqlOperationMessage> sqlMessages1 = messages.getSqlMessages();
 
-	    Assert.assertEquals(1, sqlMessages.size());
+	    Assert.assertEquals(1, sqlMessages1.size());
 
-	    SqlOperationMessage sqlOperationMessage = sqlMessages.get(0);
+	    // SqlOperationMessage
+	    final SqlOperationMessage sqlOperationMessage1 = sqlMessages1.get(0);
 
-	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
-	    Assert.assertEquals(false, sqlOperationMessage.getArgs()[0]);
-	    Assert.assertNotNull(sqlOperationMessage.getMethod());
-	    Assert.assertNull(sqlOperationMessage.getInvoke());
-	    Assert.assertNull(sqlOperationMessage.getException());
+	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage1.getTypeLogger());
+	    Assert.assertEquals(false, sqlOperationMessage1.getArgs()[0]);
+	    Assert.assertNotNull(sqlOperationMessage1.getMethod());
+	    Assert.assertNull(sqlOperationMessage1.getInvoke());
+	    Assert.assertNull(sqlOperationMessage1.getException());
 
-	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertTrue(sqlOperation.getConnectionNumber() >= sqlOperation.getOpenConnection());
-	    Assert.assertEquals(1, sqlOperation.getOpenConnection());
-	    Assert.assertNotNull(sqlOperation.getDate());
-	    Assert.assertNotNull(sqlOperation.getExecTime());
-	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
-	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation.getUrl());
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
-	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+	    // SqlOperation
+	    final SqlOperation sqlOperation1 = sqlOperationMessage1.getSqlOperation();
+	    Assert.assertTrue(sqlOperation1.getConnectionNumber() >= sqlOperation1.getOpenConnection());
+	    Assert.assertEquals(1, sqlOperation1.getOpenConnection());
+	    Assert.assertNotNull(sqlOperation1.getDate());
+	    Assert.assertNotNull(sqlOperation1.getExecTime());
+	    Assert.assertEquals(Driver.class, sqlOperation1.getDriver().getClass());
+	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation1.getRdbms().getClass());
+	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation1.getUrl());
+	    Assert.assertFalse(sqlOperation1.isAutoCommit());
+	    Assert.assertNull(sqlOperation1.getTransaction());
+	    Assert.assertNull(sqlOperation1.getBatch());
 
-	    Query query = sqlOperation.getQuery();
-	    Assert.assertNull(query);
+	    // Query
+	    final Query query1 = sqlOperation1.getQuery();
+	    Assert.assertNull(query1);
 
-	    // create statement
+	    // ///////////////////// create statement
 	    statement = connection.createStatement();
 
-	    sqlMessages = messages.getSqlMessages();
+	    final List<SqlOperationMessage> sqlMessages2 = messages.getSqlMessages();
 
-	    Assert.assertEquals(1, sqlMessages.size());
+	    Assert.assertEquals(1, sqlMessages2.size());
 
-	    sqlOperationMessage = sqlMessages.get(0);
+	    // SqlOperationMessage
+	    final SqlOperationMessage sqlOperationMessage2 = sqlMessages2.get(0);
 
-	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
-	    Assert.assertNull(sqlOperationMessage.getArgs());
-	    Assert.assertNotNull(sqlOperationMessage.getMethod());
-	    Assert.assertNotNull(sqlOperationMessage.getInvoke());
-	    Assert.assertTrue(sqlOperationMessage.getInvoke() instanceof Statement);
-	    Assert.assertNull(sqlOperationMessage.getException());
+	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage2.getTypeLogger());
+	    Assert.assertNull(sqlOperationMessage2.getArgs());
+	    Assert.assertNotNull(sqlOperationMessage2.getMethod());
+	    Assert.assertNotNull(sqlOperationMessage2.getInvoke());
+	    Assert.assertTrue(sqlOperationMessage2.getInvoke() instanceof Statement);
+	    Assert.assertNull(sqlOperationMessage2.getException());
 
-	    sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertTrue(sqlOperation.getConnectionNumber() >= sqlOperation.getOpenConnection());
-	    Assert.assertEquals(1, sqlOperation.getOpenConnection());
-	    Assert.assertNotNull(sqlOperation.getDate());
-	    Assert.assertNotNull(sqlOperation.getExecTime());
-	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
-	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation.getUrl());
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
-	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+	    // SqlOperation
+	    final SqlOperation sqlOperation2 = sqlOperationMessage2.getSqlOperation();
+	    Assert.assertTrue(sqlOperation2.getConnectionNumber() >= sqlOperation2.getOpenConnection());
+	    Assert.assertEquals(1, sqlOperation2.getOpenConnection());
+	    Assert.assertNotNull(sqlOperation2.getDate());
+	    Assert.assertNotNull(sqlOperation2.getExecTime());
+	    Assert.assertEquals(Driver.class, sqlOperation2.getDriver().getClass());
+	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation2.getRdbms().getClass());
+	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation2.getUrl());
+	    Assert.assertFalse(sqlOperation2.isAutoCommit());
+	    Assert.assertNull(sqlOperation2.getTransaction());
+	    Assert.assertNull(sqlOperation2.getBatch());
 
-	    query = sqlOperation.getQuery();
-	    Assert.assertNull(query);
+	    // Query
+	    final Query query2 = sqlOperation2.getQuery();
+	    Assert.assertNull(query2);
 
 	    // Execute Query - INSERT
 	    statement.execute("INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction', 'SQL', '1970-01-01');");
 
-	    sqlMessages = messages.getSqlMessages();
+	    final List<SqlOperationMessage> sqlMessages3 = messages.getSqlMessages();
 
-	    Assert.assertEquals(1, sqlMessages.size());
+	    Assert.assertEquals(1, sqlMessages3.size());
 
-	    sqlOperationMessage = sqlMessages.get(0);
+	    // SqlOperationMessage
+	    final SqlOperationMessage sqlOperationMessage3 = sqlMessages3.get(0);
 
-	    Assert.assertEquals(SqlOperationLogger.STATEMENT, sqlOperationMessage.getTypeLogger());
+	    Assert.assertEquals(SqlOperationLogger.STATEMENT, sqlOperationMessage3.getTypeLogger());
 	    Assert.assertEquals("INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction', 'SQL', '1970-01-01');",
-		    sqlOperationMessage.getArgs()[0]);
-	    Assert.assertNotNull(sqlOperationMessage.getMethod());
-	    Assert.assertEquals(false, sqlOperationMessage.getInvoke());
-	    Assert.assertNull(sqlOperationMessage.getException());
+		    sqlOperationMessage3.getArgs()[0]);
+	    Assert.assertNotNull(sqlOperationMessage3.getMethod());
+	    Assert.assertEquals(false, sqlOperationMessage3.getInvoke());
+	    Assert.assertNull(sqlOperationMessage3.getException());
 
-	    sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertTrue(sqlOperation.getConnectionNumber() >= sqlOperation.getOpenConnection());
-	    Assert.assertEquals(1, sqlOperation.getOpenConnection());
-	    Assert.assertNotNull(sqlOperation.getDate());
-	    Assert.assertNotNull(sqlOperation.getExecTime());
-	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
-	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation.getUrl());
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
-	    Assert.assertNotNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+	    // SqlOperation
+	    final SqlOperation sqlOperation3 = sqlOperationMessage3.getSqlOperation();
+	    Assert.assertTrue(sqlOperation3.getConnectionNumber() >= sqlOperation3.getOpenConnection());
+	    Assert.assertEquals(1, sqlOperation3.getOpenConnection());
+	    Assert.assertNotNull(sqlOperation3.getDate());
+	    Assert.assertNotNull(sqlOperation3.getExecTime());
+	    Assert.assertEquals(Driver.class, sqlOperation3.getDriver().getClass());
+	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation3.getRdbms().getClass());
+	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation3.getUrl());
+	    Assert.assertFalse(sqlOperation3.isAutoCommit());
+	    Assert.assertNotNull(sqlOperation3.getTransaction());
+	    Assert.assertNull(sqlOperation3.getBatch());
 
-	    query = sqlOperation.getQuery();
-	    Assert.assertNotNull(query);
-	    Assert.assertNotNull(query.getDate());
-	    Assert.assertNotNull(query.getExecTime());
-	    Assert.assertEquals(query.getJDBCQuery(), "INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction', 'SQL', '1970-01-01');");
-	    Assert.assertEquals(query.getJDBCParameters().size(), 0);
-	    Assert.assertEquals(query.getSQLQuery(), "INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction', 'SQL', '1970-01-01');");
-	    Assert.assertEquals(query.getMethodQuery(), Query.METHOD_EXECUTE);
-	    Assert.assertEquals(query.getState(), Query.STATE_EXECUTE);
-	    Assert.assertNull(query.getResultSetCollector());
-	    Assert.assertNotNull(query.getTransaction());
-	    Assert.assertEquals(query.getTransaction().getTransactionState(), Query.STATE_EXECUTE);
-	    Assert.assertEquals(query.getTransaction().getOpenTransaction(), 1);
-	    Assert.assertEquals(query.getTransaction().getQueriesTransaction().length, 1);
-	    Query transactionQuery = query.getTransaction().getQueriesTransaction()[0];
+	    // Query
+	    final Query query3 = sqlOperation3.getQuery();
 
-	    Assert.assertEquals(transactionQuery, query);
+	    Assert.assertNotNull(query3);
+	    Assert.assertNotNull(query3.getDate());
+	    Assert.assertNotNull(query3.getExecTime());
+	    Assert.assertEquals(query3.getJDBCQuery(), "INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction', 'SQL', '1970-01-01');");
+	    Assert.assertEquals(query3.getJDBCParameters().size(), 0);
+	    Assert.assertEquals(query3.getSQLQuery(), "INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction', 'SQL', '1970-01-01');");
+	    Assert.assertEquals(query3.getMethodQuery(), Query.METHOD_EXECUTE);
+	    Assert.assertEquals(query3.getState(), Query.STATE_EXECUTE);
+	    Assert.assertNull(query3.getResultSetCollector());
+	    Assert.assertNotNull(query3.getTransaction());
+	    Assert.assertEquals(query3.getTransaction().getTransactionState(), Query.STATE_EXECUTE);
+	    Assert.assertEquals(query3.getTransaction().getOpenTransaction(), 1);
+	    Assert.assertEquals(query3.getTransaction().getQueriesTransaction().length, 1);
+	    final Query transactionQuery3 = query3.getTransaction().getQueriesTransaction()[0];
+
+	    Assert.assertEquals(transactionQuery3, query3);
 
 	    // Commit - Fin de la Transaction
 	    connection.commit();
 
-	    sqlMessages = messages.getSqlMessages();
+	    final List<SqlOperationMessage> sqlMessages4 = messages.getSqlMessages();
 
-	    Assert.assertEquals(1, sqlMessages.size());
+	    Assert.assertEquals(1, sqlMessages4.size());
 
-	    sqlOperationMessage = sqlMessages.get(0);
+	    // SqlOperationMessage
+	    final SqlOperationMessage sqlOperationMessage4 = sqlMessages4.get(0);
 
-	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
-	    Assert.assertNull(sqlOperationMessage.getArgs());
-	    Assert.assertNotNull(sqlOperationMessage.getMethod());
-	    Assert.assertNull(sqlOperationMessage.getInvoke());
-	    Assert.assertNull(sqlOperationMessage.getException());
+	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage4.getTypeLogger());
+	    Assert.assertNull(sqlOperationMessage4.getArgs());
+	    Assert.assertNotNull(sqlOperationMessage4.getMethod());
+	    Assert.assertNull(sqlOperationMessage4.getInvoke());
+	    Assert.assertNull(sqlOperationMessage4.getException());
 
-	    sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertTrue(sqlOperation.getConnectionNumber() >= sqlOperation.getOpenConnection());
-	    Assert.assertEquals(1, sqlOperation.getOpenConnection());
-	    Assert.assertNotNull(sqlOperation.getDate());
-	    Assert.assertNotNull(sqlOperation.getExecTime());
-	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
-	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation.getUrl());
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
-	    Assert.assertNotNull(sqlOperation.getTransaction());
-	    Assert.assertEquals(query.getTransaction().getTransactionState(), Query.STATE_COMMIT);
-	    Assert.assertEquals(query.getTransaction().getOpenTransaction(), 0);
-	    Assert.assertEquals(query.getTransaction().getQueriesTransaction().length, 1);
-	    transactionQuery = query.getTransaction().getQueriesTransaction()[0];
+	    // SqlOperation
+	    final SqlOperation sqlOperation4 = sqlOperationMessage4.getSqlOperation();
+	    Assert.assertTrue(sqlOperation4.getConnectionNumber() >= sqlOperation4.getOpenConnection());
+	    Assert.assertEquals(1, sqlOperation4.getOpenConnection());
+	    Assert.assertNotNull(sqlOperation4.getDate());
+	    Assert.assertNotNull(sqlOperation4.getExecTime());
+	    Assert.assertEquals(Driver.class, sqlOperation4.getDriver().getClass());
+	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation4.getRdbms().getClass());
+	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation4.getUrl());
+	    Assert.assertFalse(sqlOperation4.isAutoCommit());
+	    Assert.assertNotNull(sqlOperation4.getTransaction());
+	    Assert.assertEquals(query3.getTransaction().getTransactionState(), Query.STATE_EXECUTE);
+	    Assert.assertEquals(query3.getTransaction().getOpenTransaction(), 0);
+	    Assert.assertEquals(query3.getTransaction().getQueriesTransaction().length, 1);
+	    final Query transactionQuery3Bis = query3.getTransaction().getQueriesTransaction()[0];
 
-	    Assert.assertNotNull(transactionQuery.getDate());
-	    Assert.assertNotNull(transactionQuery.getExecTime());
-	    Assert.assertEquals(transactionQuery.getJDBCQuery(),
+	    Assert.assertNotNull(transactionQuery3Bis.getDate());
+	    Assert.assertNotNull(transactionQuery3Bis.getExecTime());
+	    Assert.assertEquals(transactionQuery3Bis.getJDBCQuery(),
 		    "INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction', 'SQL', '1970-01-01');");
-	    Assert.assertEquals(transactionQuery.getJDBCParameters().size(), 0);
-	    Assert.assertEquals(transactionQuery.getSQLQuery(),
+	    Assert.assertEquals(transactionQuery3Bis.getJDBCParameters().size(), 0);
+	    Assert.assertEquals(transactionQuery3Bis.getSQLQuery(),
 		    "INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction', 'SQL', '1970-01-01');");
-	    Assert.assertEquals(transactionQuery.getMethodQuery(), Query.METHOD_EXECUTE);
-	    Assert.assertEquals(transactionQuery.getState(), Query.STATE_COMMIT);
-	    Assert.assertNull(transactionQuery.getResultSetCollector());
+	    Assert.assertEquals(transactionQuery3Bis.getMethodQuery(), Query.METHOD_EXECUTE);
+	    Assert.assertEquals(transactionQuery3Bis.getState(), Query.STATE_COMMIT);
+	    Assert.assertNull(transactionQuery3Bis.getResultSetCollector());
 
-	    Assert.assertNull(sqlOperation.getBatch());
+	    Assert.assertNull(sqlOperation4.getBatch());
 
-	    query = sqlOperation.getQuery();
-	    Assert.assertNull(query);
+	    final Query query4 = sqlOperation4.getQuery();
+	    Assert.assertNull(query4);
 	} finally {
 
 	    if (statement != null) {
@@ -385,9 +397,9 @@ public class TransactionStatementTest {
 	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperation.getUrl());
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNotNull(sqlOperation.getTransaction());
-	    Assert.assertEquals(query1.getTransaction().getTransactionState(), Query.STATE_COMMIT);
+	    Assert.assertEquals(query1.getTransaction().getTransactionState(), Query.STATE_EXECUTE);
 	    Assert.assertEquals(query1.getTransaction().getOpenTransaction(), 0);
-	    Assert.assertEquals(query1.getTransaction().getQueriesTransaction().length, 2);
+	    Assert.assertEquals(query1.getTransaction().getQueriesTransaction().length, 1);
 	    transactionQuery1 = query1.getTransaction().getQueriesTransaction()[0];
 
 	    Assert.assertNotNull(transactionQuery1.getDate());
