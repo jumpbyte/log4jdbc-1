@@ -26,9 +26,7 @@ import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.context.Batch;
-import fr.ms.log4jdbc.context.BatchImpl;
 import fr.ms.log4jdbc.context.Transaction;
-import fr.ms.log4jdbc.context.TransactionImpl;
 import fr.ms.log4jdbc.context.internal.BatchContext;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.context.internal.TransactionContext;
@@ -186,11 +184,11 @@ public class QueryImpl implements Query, Cloneable {
     }
 
     public void setBatchContext(final BatchContext batchContext) {
-	this.batch = new BatchImpl(batchContext);
+	this.batch = batchContext;
     }
 
     public void setTransactionContext(final TransactionContext transactionContext) {
-	this.transaction = new TransactionImpl(transactionContext);
+	this.transaction = transactionContext;
     }
 
     public void setSavePoint(final Object savePoint) {

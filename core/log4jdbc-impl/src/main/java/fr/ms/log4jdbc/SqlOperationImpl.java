@@ -22,9 +22,7 @@ import java.util.Date;
 
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.Batch;
-import fr.ms.log4jdbc.context.BatchImpl;
 import fr.ms.log4jdbc.context.Transaction;
-import fr.ms.log4jdbc.context.TransactionImpl;
 import fr.ms.log4jdbc.context.internal.BatchContext;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.context.internal.TransactionContext;
@@ -46,27 +44,21 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
 
     private final ConnectionContext connectionContext;
 
-    private final BatchContext batchContext;
-    private final TransactionContext transactionContext;
-
     private final long openConnection;
 
     private QueryImpl query;
 
-    private Batch batch;
+    private BatchContext batch;
 
-    private Transaction transaction;
+    private TransactionContext transaction;
 
     public SqlOperationImpl(final TimeInvocation timeInvocation, final ConnectionContext connectionContext) {
 	this.timeInvocation = timeInvocation;
 	this.connectionContext = connectionContext;
 	this.openConnection = connectionContext.getOpenConnection().get();
 
-	batchContext = connectionContext.getBatchContext();
-	transactionContext = connectionContext.getTransactionContext();
-
-	batch = new BatchImpl(batchContext);
-	transaction = new TransactionImpl(transactionContext);
+	batch = connectionContext.getBatchContext();
+	transaction = connectionContext.getTransactionContext();
     }
 
     public Object clone() throws CloneNotSupportedException {
@@ -74,8 +66,8 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
 	    query = (QueryImpl) query.clone();
 	}
 
-	batch = new BatchImpl((BatchContext) batchContext.clone());
-	transaction = new TransactionImpl((TransactionContext) transactionContext.clone());
+	batch = (BatchContext) batch.clone();
+	transaction = (TransactionContext) transaction.clone();
 
 	return this;
     }
