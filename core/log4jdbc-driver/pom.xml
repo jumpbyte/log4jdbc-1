@@ -30,6 +30,12 @@
 
 		<dependency>
 			<groupId>com.github.marcosemiao.log4jdbc</groupId>
+			<artifactId>log4jdbc-impl-format-query</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.github.marcosemiao.log4jdbc</groupId>
 			<artifactId>log4jdbc-utils</artifactId>
 			<version>${project.version}</version>
 		</dependency>

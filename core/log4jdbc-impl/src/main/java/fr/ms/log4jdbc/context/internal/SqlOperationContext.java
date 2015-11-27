@@ -44,7 +44,7 @@ public class SqlOperationContext {
 	return invokeTime;
     }
 
-    public ConnectionContext getconnectionContext() {
+    public ConnectionContext getConnectionContext() {
 	return connectionContext;
     }
 
