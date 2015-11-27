@@ -76,7 +76,6 @@ public class ConnectionContext {
     }
 
     public QueryImpl addQuery(final QueryImpl query, final boolean batch) {
-
 	if (!autoCommit) {
 	    if (batch) {
 		batchContext.addQuery(query);
