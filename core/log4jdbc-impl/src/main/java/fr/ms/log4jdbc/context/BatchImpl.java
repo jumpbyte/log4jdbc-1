@@ -37,7 +37,7 @@ public class BatchImpl implements Batch {
     }
 
     public String getBatchState() {
-	return batchContext.getState();
+	return batchContext.getBatchState();
     }
 
     public long getBatchNumber() {

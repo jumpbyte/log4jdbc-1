@@ -25,6 +25,7 @@ import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.ref.ReferenceFactory;
 import fr.ms.lang.ref.ReferenceObject;
 import fr.ms.lang.sync.impl.SyncLong;
+import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
@@ -36,7 +37,7 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  * @author Marco Semiao
  *
  */
-public class TransactionContext implements Cloneable {
+public class TransactionContext implements Transaction, Cloneable {
 
     private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
 
@@ -160,14 +161,14 @@ public class TransactionContext implements Cloneable {
 	return (Query[]) queriesTransaction.toArray(new Query[queriesTransaction.size()]);
     }
 
-    public String getState() {
+    public String getTransactionState() {
 	return state;
     }
 
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + ((getState() == null) ? 0 : getState().hashCode());
+	result = prime * result + ((getTransactionState() == null) ? 0 : getTransactionState().hashCode());
 	result = prime * result + (int) (getTransactionNumber() ^ (getTransactionNumber() >>> 32));
 	return result;
     }
@@ -190,11 +191,11 @@ public class TransactionContext implements Cloneable {
 	} else if (getQueriesTransaction().length != other.getQueriesTransaction().length) {
 	    return false;
 	}
-	if (getState() == null) {
-	    if (other.getState() != null) {
+	if (getTransactionState() == null) {
+	    if (other.getTransactionState() != null) {
 		return false;
 	    }
-	} else if (!getState().equals(other.getState())) {
+	} else if (!getTransactionState().equals(other.getTransactionState())) {
 	    return false;
 	}
 	if (getTransactionNumber() != other.getTransactionNumber()) {
@@ -209,7 +210,8 @@ public class TransactionContext implements Cloneable {
 	if (queriesTransaction == null) {
 	    t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
 	} else {
-	    t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList(queriesTransaction));
+	    t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL,
+		    new ArrayList(queriesTransaction));
 	}
 	return t;
     }

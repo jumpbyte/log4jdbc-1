@@ -37,7 +37,7 @@ public class TransactionImpl implements Transaction {
     }
 
     public String getTransactionState() {
-	return transactionContext.getState();
+	return transactionContext.getTransactionState();
     }
 
     public long getTransactionNumber() {

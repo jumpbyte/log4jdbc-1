@@ -25,6 +25,7 @@ import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.ref.ReferenceFactory;
 import fr.ms.lang.ref.ReferenceObject;
 import fr.ms.lang.sync.impl.SyncLong;
+import fr.ms.log4jdbc.context.Batch;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
@@ -36,7 +37,7 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  * @author Marco Semiao
  *
  */
-public class BatchContext implements Cloneable {
+public class BatchContext implements Batch, Cloneable {
 
     private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
 
@@ -137,7 +138,7 @@ public class BatchContext implements Cloneable {
 	return batchNumber;
     }
 
-    public String getState() {
+    public String getBatchState() {
 	return state;
     }
 
