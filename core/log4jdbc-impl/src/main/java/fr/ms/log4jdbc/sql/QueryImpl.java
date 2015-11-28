@@ -26,12 +26,13 @@ import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.context.Batch;
+import fr.ms.log4jdbc.context.BatchContext;
 import fr.ms.log4jdbc.context.Transaction;
-import fr.ms.log4jdbc.context.internal.BatchContext;
+import fr.ms.log4jdbc.context.TransactionContext;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
-import fr.ms.log4jdbc.context.internal.TransactionContext;
 import fr.ms.log4jdbc.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
+import fr.ms.log4jdbc.sql.internal.QuerySQL;
 
 /**
  *
@@ -66,7 +67,7 @@ public class QueryImpl implements Query, Cloneable {
 
     private Object savePoint;
 
-    QueryImpl(final QuerySQL query) {
+    public QueryImpl(final QuerySQL query) {
 	this.query = query;
     }
 

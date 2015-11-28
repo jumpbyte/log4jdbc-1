@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.sql;
+package fr.ms.log4jdbc.sql.internal;
 
 import java.util.HashMap;
 import java.util.Iterator;

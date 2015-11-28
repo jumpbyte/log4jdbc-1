@@ -15,10 +15,11 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.sql;
+package fr.ms.log4jdbc.sql.internal;
 
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
+import fr.ms.log4jdbc.sql.QueryImpl;
 
 /**
  *

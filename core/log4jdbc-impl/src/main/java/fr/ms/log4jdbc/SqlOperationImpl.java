@@ -22,10 +22,10 @@ import java.util.Date;
 
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.Batch;
+import fr.ms.log4jdbc.context.BatchContext;
 import fr.ms.log4jdbc.context.Transaction;
-import fr.ms.log4jdbc.context.internal.BatchContext;
+import fr.ms.log4jdbc.context.TransactionContext;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
-import fr.ms.log4jdbc.context.internal.TransactionContext;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;

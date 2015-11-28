@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.context.internal;
+package fr.ms.log4jdbc.context;
 
 import java.util.ArrayList;
 import java.util.List;

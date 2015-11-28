@@ -8,9 +8,9 @@ import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperationFactory;
 import fr.ms.log4jdbc.proxy.operation.StatementOperation;
-import fr.ms.log4jdbc.sql.QueryFactory;
 import fr.ms.log4jdbc.sql.QueryImpl;
-import fr.ms.log4jdbc.sql.QuerySQLFactory;
+import fr.ms.log4jdbc.sql.internal.QueryFactory;
+import fr.ms.log4jdbc.sql.internal.QuerySQLFactory;
 
 public class StatementOperationFactory implements Log4JdbcOperationFactory {
 

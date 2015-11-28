@@ -9,8 +9,8 @@ import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.log4jdbc.proxy.operation.factory.StatementOperationFactory;
 import fr.ms.log4jdbc.sql.Query;
-import fr.ms.log4jdbc.sql.QueryFactory;
 import fr.ms.log4jdbc.sql.QueryImpl;
+import fr.ms.log4jdbc.sql.internal.QueryFactory;
 
 public class StatementOperation extends AbstractOperation {
 
