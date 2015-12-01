@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class CreateDatabase {
 
-    private final static String URL_H2 = "jdbc:h2:~/test";
+    private final static String URL_H2 = "jdbc:h2:mem:test";
 
     private final static String URL_H2_PROXY = "jdbc:log4" + URL_H2;
 
@@ -48,7 +48,7 @@ public class CreateDatabase {
 
 	    statement = connection.createStatement();
 
-	    statement.execute("DROP ALL OBJECTS");
+	    statement.execute("DROP ALL OBJECTS DELETE FILES");
 	    statement.execute("RUNSCRIPT FROM 'classpath:schema.sql'");
 	    statement.execute("RUNSCRIPT FROM 'classpath:data.sql'");
 	} finally {

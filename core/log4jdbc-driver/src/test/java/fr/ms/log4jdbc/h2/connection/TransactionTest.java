@@ -19,7 +19,7 @@ import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.test.sqloperation.SqlMessage;
 import fr.ms.log4jdbc.test.sqloperation.SqlOperationMessage;
 
-public class TransactionStatementTest {
+public class TransactionTest {
 
     private final SqlMessage messages = SqlMessage.getInstance();
 
@@ -34,6 +34,7 @@ public class TransactionStatementTest {
 	Statement statement = null;
 	try {
 	    connection = CreateDatabase.createConnection(true);
+	    CreateDatabase.createDatabase(connection);
 
 	    // ///////////////////// Set Auto Commit False - Debut Transaction
 	    connection.setAutoCommit(false);
@@ -215,6 +216,7 @@ public class TransactionStatementTest {
 	Statement statement = null;
 	try {
 	    connection = CreateDatabase.createConnection(true);
+	    CreateDatabase.createDatabase(connection);
 
 	    // Set Auto Commit False - Debut Transaction
 	    connection.setAutoCommit(false);

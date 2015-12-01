@@ -85,7 +85,7 @@ public class StatementOperation extends AbstractOperation {
 	    final Class returnType = method.getReturnType();
 	    if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
 		final Boolean invokeBoolean = (Boolean) timeInvocation.getInvoke();
-		if (invokeBoolean.booleanValue()) {
+		if (invokeBoolean != null && invokeBoolean.booleanValue()) {
 		    query.initResultSetCollector(connectionContext);
 		    context.setQuery(query);
 		}

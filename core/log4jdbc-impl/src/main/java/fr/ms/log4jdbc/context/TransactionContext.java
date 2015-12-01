@@ -25,7 +25,6 @@ import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.ref.ReferenceFactory;
 import fr.ms.lang.ref.ReferenceObject;
 import fr.ms.lang.sync.impl.SyncLong;
-import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
@@ -104,11 +103,15 @@ public class TransactionContext implements Transaction, Cloneable {
 
 		final Object savePointQuery = q.getSavePoint();
 
-		if (savePoint != null && rollback == -1 && savePoint.equals(savePointQuery)) {
-		    rollback = i;
-		}
-		if (rollback != -1) {
+		if (savePoint == null) {
 		    q.setState(Query.STATE_ROLLBACK);
+		} else {
+		    if (rollback == -1 && savePoint.equals(savePointQuery)) {
+			rollback = i;
+		    }
+		    if (rollback != -1) {
+			q.setState(Query.STATE_ROLLBACK);
+		    }
 		}
 	    }
 	}
@@ -210,8 +213,7 @@ public class TransactionContext implements Transaction, Cloneable {
 	if (queriesTransaction == null) {
 	    t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
 	} else {
-	    t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL,
-		    new ArrayList(queriesTransaction));
+	    t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList(queriesTransaction));
 	}
 	return t;
     }

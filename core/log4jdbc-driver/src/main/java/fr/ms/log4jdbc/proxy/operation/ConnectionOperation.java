@@ -42,8 +42,12 @@ public class ConnectionOperation extends AbstractOperation {
 
 	final boolean rollbackMethod = nameMethod.equals("rollback");
 	if (rollbackMethod) {
-	    connectionContext.getTransactionContext().rollback(invoke);
-	    if (invoke == null) {
+	    Object savePoint = null;
+	    if (args != null && args[0] != null) {
+		savePoint = args[0];
+	    }
+	    connectionContext.getTransactionContext().rollback(savePoint);
+	    if (savePoint == null) {
 		connectionContext.resetTransaction();
 	    }
 	}
