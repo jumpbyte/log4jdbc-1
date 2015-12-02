@@ -26,7 +26,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import fr.ms.log4jdbc.h2.CreateDatabase;
+import fr.ms.log4jdbc.h2.DatabaseUtil;
 
 /**
  *
@@ -41,12 +41,12 @@ public class DriverTest {
     @Test
     public void minorVersionTest() throws SQLException {
 	// Real Driver
-	final Driver driver = CreateDatabase.getDriver(false);
+	final Driver driver = DatabaseUtil.getDriver(false);
 
 	final int minorVersion = driver.getMinorVersion();
 
 	// Proxy Driver
-	final Driver driverProxy = CreateDatabase.getDriver(true);
+	final Driver driverProxy = DatabaseUtil.getDriver(true);
 
 	final int minorVersionProxy = driverProxy.getMinorVersion();
 
@@ -56,12 +56,12 @@ public class DriverTest {
     @Test
     public void majorVersionTest() throws SQLException {
 	// Real Driver
-	final Driver driver = CreateDatabase.getDriver(false);
+	final Driver driver = DatabaseUtil.getDriver(false);
 
 	final int majorVersion = driver.getMajorVersion();
 
 	// Proxy Driver
-	final Driver driverProxy = CreateDatabase.getDriver(true);
+	final Driver driverProxy = DatabaseUtil.getDriver(true);
 
 	final int majorVersionProxy = driverProxy.getMajorVersion();
 
@@ -70,11 +70,11 @@ public class DriverTest {
 
     @Test
     public void acceptsURLTest() throws SQLException {
-	final String url = CreateDatabase.getURL(false);
-	final String urlProxy = CreateDatabase.getURL(true);
+	final String url = DatabaseUtil.getURL(false);
+	final String urlProxy = DatabaseUtil.getURL(true);
 
 	// Real Driver
-	final Driver driver = CreateDatabase.getDriver(false);
+	final Driver driver = DatabaseUtil.getDriver(false);
 
 	boolean acceptsURL = driver.acceptsURL(url);
 
@@ -85,7 +85,7 @@ public class DriverTest {
 	Assert.assertFalse(acceptsURL);
 
 	// Proxy Driver
-	final Driver driverProxy = CreateDatabase.getDriver(true);
+	final Driver driverProxy = DatabaseUtil.getDriver(true);
 
 	boolean acceptsURLProxy = driverProxy.acceptsURL(urlProxy);
 
@@ -99,12 +99,12 @@ public class DriverTest {
     @Test
     public void jdbcCompliantTest() throws SQLException {
 	// Real Driver
-	final Driver driver = CreateDatabase.getDriver(false);
+	final Driver driver = DatabaseUtil.getDriver(false);
 
 	final boolean jdbcCompliant = driver.jdbcCompliant();
 
 	// Proxy Driver
-	final Driver driverProxy = CreateDatabase.getDriver(true);
+	final Driver driverProxy = DatabaseUtil.getDriver(true);
 
 	final boolean jdbcCompliantProxy = driverProxy.jdbcCompliant();
 
@@ -113,14 +113,14 @@ public class DriverTest {
 
     @Test
     public void propertyInfoTest() throws SQLException {
-	final String url = CreateDatabase.getURL(false);
+	final String url = DatabaseUtil.getURL(false);
 	// Real Driver
-	final Driver driver = CreateDatabase.getDriver(false);
+	final Driver driver = DatabaseUtil.getDriver(false);
 
 	final DriverPropertyInfo[] info = driver.getPropertyInfo(url, null);
 
 	// Proxy Driver
-	final Driver driverProxy = CreateDatabase.getDriver(true);
+	final Driver driverProxy = DatabaseUtil.getDriver(true);
 
 	final DriverPropertyInfo[] infoProxy = driverProxy.getPropertyInfo(url, null);
 
@@ -132,12 +132,12 @@ public class DriverTest {
     @Test
     public void parentLoggerTest() throws SQLException {
 	// Real Driver
-	final Driver driver = CreateDatabase.getDriver(false);
+	final Driver driver = DatabaseUtil.getDriver(false);
 
 	final Logger parentLogger = driver.getParentLogger();
 
 	// Proxy Driver
-	final Driver driverProxy = CreateDatabase.getDriver(true);
+	final Driver driverProxy = DatabaseUtil.getDriver(true);
 
 	final Logger parentLoggerProxy = driverProxy.getParentLogger();
 

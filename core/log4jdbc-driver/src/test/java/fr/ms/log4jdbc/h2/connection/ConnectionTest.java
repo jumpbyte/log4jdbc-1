@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationLogger;
-import fr.ms.log4jdbc.h2.CreateDatabase;
+import fr.ms.log4jdbc.h2.DatabaseUtil;
 import fr.ms.log4jdbc.test.sqloperation.SqlMessage;
 import fr.ms.log4jdbc.test.sqloperation.SqlOperationMessage;
 
@@ -30,7 +30,7 @@ public class ConnectionTest {
 	Connection connection = null;
 
 	try {
-	    connection = CreateDatabase.createConnection(true);
+	    connection = DatabaseUtil.createConnection(true);
 	} finally {
 
 	    if (connection != null) {
@@ -47,7 +47,7 @@ public class ConnectionTest {
 		// Assert.assertEquals(1,
 		// sqlOperationMessage.getSqlOperation().getOpenConnection());
 		Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-		Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+		Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 		final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 		Assert.assertTrue(sqlOperation.isAutoCommit());
@@ -63,7 +63,7 @@ public class ConnectionTest {
 	Connection connection = null;
 
 	try {
-	    connection = CreateDatabase.createConnection(true);
+	    connection = DatabaseUtil.createConnection(true);
 
 	    connection.commit();
 	    final List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
@@ -75,7 +75,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertTrue(sqlOperation.isAutoCommit());
@@ -95,7 +95,7 @@ public class ConnectionTest {
 	Connection connection = null;
 
 	try {
-	    connection = CreateDatabase.createConnection(true);
+	    connection = DatabaseUtil.createConnection(true);
 
 	    connection.setAutoCommit(false);
 	    final List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
@@ -107,7 +107,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
@@ -127,7 +127,7 @@ public class ConnectionTest {
 	Connection connection = null;
 
 	try {
-	    connection = CreateDatabase.createConnection(true);
+	    connection = DatabaseUtil.createConnection(true);
 
 	    connection.setAutoCommit(false);
 	    List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
@@ -139,7 +139,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
@@ -157,7 +157,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertTrue(sqlOperation.isAutoCommit());
@@ -178,7 +178,7 @@ public class ConnectionTest {
 	Connection connection = null;
 
 	try {
-	    connection = CreateDatabase.createConnection(true);
+	    connection = DatabaseUtil.createConnection(true);
 
 	    connection.rollback();
 	    final List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
@@ -190,7 +190,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertTrue(sqlOperation.isAutoCommit());
@@ -210,7 +210,7 @@ public class ConnectionTest {
 	Connection connection = null;
 
 	try {
-	    connection = CreateDatabase.createConnection(true);
+	    connection = DatabaseUtil.createConnection(true);
 
 	    connection.setAutoCommit(false);
 	    List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
@@ -222,7 +222,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
@@ -240,7 +240,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
@@ -260,7 +260,7 @@ public class ConnectionTest {
 	Connection connection = null;
 
 	try {
-	    connection = CreateDatabase.createConnection(true);
+	    connection = DatabaseUtil.createConnection(true);
 
 	    final Savepoint savepoint = connection.setSavepoint();
 	    Assert.assertNotNull(savepoint);
@@ -274,7 +274,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertTrue(sqlOperation.isAutoCommit());
@@ -294,7 +294,7 @@ public class ConnectionTest {
 	Connection connection = null;
 
 	try {
-	    connection = CreateDatabase.createConnection(true);
+	    connection = DatabaseUtil.createConnection(true);
 
 	    final Savepoint savepoint = connection.setSavepoint("1point");
 	    Assert.assertNotNull(savepoint);
@@ -308,7 +308,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertTrue(sqlOperation.isAutoCommit());
@@ -328,7 +328,7 @@ public class ConnectionTest {
 	Connection connection = null;
 
 	try {
-	    connection = CreateDatabase.createConnection(true);
+	    connection = DatabaseUtil.createConnection(true);
 
 	    connection.setAutoCommit(false);
 	    List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
@@ -340,7 +340,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
@@ -358,7 +358,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
@@ -378,7 +378,7 @@ public class ConnectionTest {
 	Connection connection = null;
 
 	try {
-	    connection = CreateDatabase.createConnection(true);
+	    connection = DatabaseUtil.createConnection(true);
 
 	    connection.setAutoCommit(false);
 	    List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
@@ -390,7 +390,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
@@ -408,7 +408,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
@@ -428,7 +428,7 @@ public class ConnectionTest {
 	Connection connection = null;
 
 	try {
-	    connection = CreateDatabase.createConnection(true);
+	    connection = DatabaseUtil.createConnection(true);
 
 	    connection.setAutoCommit(false);
 	    List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
@@ -440,7 +440,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
@@ -458,7 +458,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
@@ -477,7 +477,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
@@ -497,7 +497,7 @@ public class ConnectionTest {
 	Connection connection = null;
 
 	try {
-	    connection = CreateDatabase.createConnection(true);
+	    connection = DatabaseUtil.createConnection(true);
 
 	    connection.setAutoCommit(false);
 	    List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
@@ -509,7 +509,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
@@ -527,7 +527,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
@@ -546,7 +546,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
 	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
-	    Assert.assertEquals(CreateDatabase.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
+	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());

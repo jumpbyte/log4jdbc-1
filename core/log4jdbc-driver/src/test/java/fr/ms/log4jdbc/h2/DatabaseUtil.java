@@ -3,10 +3,12 @@ package fr.ms.log4jdbc.h2;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class CreateDatabase {
+public class DatabaseUtil {
 
     private final static String URL_H2 = "jdbc:h2:mem:test";
 
@@ -55,6 +57,21 @@ public class CreateDatabase {
 	    if (statement != null) {
 		statement.close();
 	    }
+	}
+    }
+
+    public static final void printResultSet(final ResultSet rs) throws SQLException {
+	final ResultSetMetaData rsmd = rs.getMetaData();
+	final int columnsNumber = rsmd.getColumnCount();
+	while (rs.next()) {
+	    for (int i = 1; i <= columnsNumber; i++) {
+		if (i > 1) {
+		    System.out.print(",  ");
+		}
+		final String columnValue = rs.getString(i);
+		System.out.print(columnValue + " " + rsmd.getColumnName(i));
+	    }
+	    System.out.println("");
 	}
     }
 }
