@@ -64,7 +64,8 @@ public class ConnectionMessage extends AbstractMessage {
 	    final Transaction transaction = message.getTransaction();
 
 	    if (transaction != null
-		    && (Query.STATE_COMMIT.equals(transaction.getTransactionState()) || Query.STATE_ROLLBACK.equals(transaction.getTransactionState()))) {
+		    && (Transaction.STATE_COMMIT.equals(transaction.getTransactionState()) || Transaction.STATE_ROLLBACK.equals(transaction
+			    .getTransactionState()))) {
 		final Query[] queriesTransaction = transaction.getQueriesTransaction();
 		int commit = 0;
 		int rollback = 0;

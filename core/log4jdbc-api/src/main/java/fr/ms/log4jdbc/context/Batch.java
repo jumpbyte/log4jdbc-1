@@ -29,6 +29,9 @@ import fr.ms.log4jdbc.sql.Query;
  */
 public interface Batch {
 
+    public final static String STATE_NOT_EXECUTE = "BATCH_STATE_NOT_EXECUTE";
+    public final static String STATE_EXECUTE = "BATCH_STATE_EXECUTE";
+
     String getBatchState();
 
     long getBatchNumber();

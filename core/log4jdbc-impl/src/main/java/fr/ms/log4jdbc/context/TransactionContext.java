@@ -77,9 +77,9 @@ public class TransactionContext implements Transaction, Cloneable {
 	}
 
 	if (batch) {
-	    state = Query.STATE_NOT_EXECUTE;
+	    state = Transaction.STATE_NOT_EXECUTE;
 	} else {
-	    state = Query.STATE_EXECUTE;
+	    state = Transaction.STATE_EXECUTE;
 	}
 
 	try {
@@ -116,7 +116,7 @@ public class TransactionContext implements Transaction, Cloneable {
 	    }
 	}
 
-	state = Query.STATE_ROLLBACK;
+	state = Transaction.STATE_ROLLBACK;
     }
 
     public void commit() {
@@ -135,7 +135,7 @@ public class TransactionContext implements Transaction, Cloneable {
 	    }
 	}
 
-	state = Query.STATE_COMMIT;
+	state = Transaction.STATE_COMMIT;
     }
 
     public void setSavePoint(final Object savePoint) {

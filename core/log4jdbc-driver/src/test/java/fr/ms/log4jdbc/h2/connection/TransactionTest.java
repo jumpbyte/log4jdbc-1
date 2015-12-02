@@ -36,6 +36,8 @@ public class TransactionTest {
 	    connection = DatabaseUtil.createConnection(true);
 	    DatabaseUtil.createDatabase(connection);
 
+	    messages.clear();
+
 	    // ///////////////////// Set Auto Commit False - Debut Transaction
 	    connection.setAutoCommit(false);
 	    final List<SqlOperationMessage> sqlMessages1 = messages.getSqlMessages();
@@ -145,7 +147,7 @@ public class TransactionTest {
 	    Assert.assertEquals(query3.getState(), Query.STATE_EXECUTE);
 	    Assert.assertNull(query3.getResultSetCollector());
 	    Assert.assertNotNull(query3.getTransaction());
-	    Assert.assertEquals(query3.getTransaction().getTransactionState(), Query.STATE_EXECUTE);
+	    Assert.assertEquals(query3.getTransaction().getTransactionState(), Transaction.STATE_EXECUTE);
 	    Assert.assertEquals(query3.getTransaction().getOpenTransaction(), 1);
 	    Assert.assertEquals(query3.getTransaction().getQueriesTransaction().length, 1);
 	    final Query transactionQuery3 = query3.getTransaction().getQueriesTransaction()[0];
@@ -179,7 +181,7 @@ public class TransactionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation4.getUrl());
 	    Assert.assertFalse(sqlOperation4.isAutoCommit());
 	    Assert.assertNotNull(sqlOperation4.getTransaction());
-	    Assert.assertEquals(query3.getTransaction().getTransactionState(), Query.STATE_EXECUTE);
+	    Assert.assertEquals(query3.getTransaction().getTransactionState(), Transaction.STATE_EXECUTE);
 	    Assert.assertEquals(query3.getTransaction().getOpenTransaction(), 0);
 	    Assert.assertEquals(query3.getTransaction().getQueriesTransaction().length, 1);
 	    final Query transactionQuery3Bis = query3.getTransaction().getQueriesTransaction()[0];
@@ -218,6 +220,7 @@ public class TransactionTest {
 	    connection = DatabaseUtil.createConnection(true);
 	    DatabaseUtil.createDatabase(connection);
 
+	    messages.clear();
 	    // Set Auto Commit False - Debut Transaction
 	    connection.setAutoCommit(false);
 	    List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
@@ -318,7 +321,7 @@ public class TransactionTest {
 	    Assert.assertEquals(query1.getState(), Query.STATE_EXECUTE);
 	    Assert.assertNull(query1.getResultSetCollector());
 	    Assert.assertNotNull(query1.getTransaction());
-	    Assert.assertEquals(query1.getTransaction().getTransactionState(), Query.STATE_EXECUTE);
+	    Assert.assertEquals(query1.getTransaction().getTransactionState(), Transaction.STATE_EXECUTE);
 	    Assert.assertEquals(query1.getTransaction().getOpenTransaction(), 1);
 	    Assert.assertEquals(query1.getTransaction().getQueriesTransaction().length, 1);
 	    Query transactionQuery1 = query1.getTransaction().getQueriesTransaction()[0];
@@ -366,7 +369,7 @@ public class TransactionTest {
 	    Assert.assertEquals(query2.getState(), Query.STATE_EXECUTE);
 	    Assert.assertNull(query2.getResultSetCollector());
 	    Assert.assertNotNull(query2.getTransaction());
-	    Assert.assertEquals(query2.getTransaction().getTransactionState(), Query.STATE_EXECUTE);
+	    Assert.assertEquals(query2.getTransaction().getTransactionState(), Transaction.STATE_EXECUTE);
 	    Assert.assertEquals(query2.getTransaction().getOpenTransaction(), 1);
 	    Assert.assertEquals(query2.getTransaction().getQueriesTransaction().length, 2);
 	    final Query transactionQuery2 = query2.getTransaction().getQueriesTransaction()[1];
@@ -399,7 +402,7 @@ public class TransactionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation.getUrl());
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNotNull(sqlOperation.getTransaction());
-	    Assert.assertEquals(query1.getTransaction().getTransactionState(), Query.STATE_EXECUTE);
+	    Assert.assertEquals(query1.getTransaction().getTransactionState(), Transaction.STATE_EXECUTE);
 	    Assert.assertEquals(query1.getTransaction().getOpenTransaction(), 0);
 	    Assert.assertEquals(query1.getTransaction().getQueriesTransaction().length, 1);
 	    transactionQuery1 = query1.getTransaction().getQueriesTransaction()[0];

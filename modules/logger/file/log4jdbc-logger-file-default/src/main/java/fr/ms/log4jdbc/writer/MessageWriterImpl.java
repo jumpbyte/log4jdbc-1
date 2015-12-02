@@ -19,6 +19,7 @@ package fr.ms.log4jdbc.writer;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
@@ -87,7 +88,16 @@ public class MessageWriterImpl implements MessageWriter {
 
     public String traceHeader() {
 	final DateFormat df = new SimpleDateFormat(DATE_PATTERN);
-	final String dateQuery = df.format(message.getQuery().getDate());
+
+	Date dateMessage = null;
+
+	if (message.getQuery() == null) {
+	    dateMessage = message.getDate();
+	} else {
+	    dateMessage = message.getQuery().getDate();
+	}
+
+	final String dateQuery = df.format(dateMessage);
 
 	final StringMaker sb = stringFactory.newString();
 

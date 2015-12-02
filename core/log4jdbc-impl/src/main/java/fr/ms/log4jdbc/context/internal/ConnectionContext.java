@@ -129,6 +129,18 @@ public class ConnectionContext {
 	return transactionContext;
     }
 
+    public void commit() {
+	transactionContext.commit();
+    }
+
+    public void rollback(final Object savePoint) {
+	transactionContext.rollback(savePoint);
+    }
+
+    public void setSavePoint(final Object savePoint) {
+	transactionContext.setSavePoint(savePoint);
+    }
+
     public void resetContext() {
 	openConnection.decrementAndGet();
 	resetTransaction();

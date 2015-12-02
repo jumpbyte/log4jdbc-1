@@ -25,7 +25,6 @@ import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.ref.ReferenceFactory;
 import fr.ms.lang.ref.ReferenceObject;
 import fr.ms.lang.sync.impl.SyncLong;
-import fr.ms.log4jdbc.context.Batch;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
@@ -75,7 +74,7 @@ public class BatchContext implements Batch, Cloneable {
 	    openBatch.incrementAndGet();
 	}
 
-	state = Query.STATE_NOT_EXECUTE;
+	state = Batch.STATE_NOT_EXECUTE;
 
 	try {
 	    query.setBatchContext((BatchContext) this.clone());
@@ -113,7 +112,7 @@ public class BatchContext implements Batch, Cloneable {
 	    }
 	}
 
-	state = Query.STATE_EXECUTE;
+	state = Batch.STATE_EXECUTE;
     }
 
     public Query[] getQueriesBatch() {

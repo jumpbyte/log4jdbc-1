@@ -50,11 +50,20 @@ public class RollBackTest {
 
 	    statement.execute("DELETE PERSONNE where PRENOM = 'RollBack2';");
 
+	    messages.clear();
+
 	    connection.rollback();
 
 	    final List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
+	    final Transaction transaction = sqlMessages.get(0).getSqlOperation().getTransaction();
+	    Assert.assertEquals(transaction.getTransactionState(), Transaction.STATE_ROLLBACK);
 
-	    System.out.println(sqlMessages);
+	    Assert.assertEquals(transaction.getQueriesTransaction()[0].getState(), Query.STATE_ROLLBACK);
+	    Assert.assertEquals(transaction.getQueriesTransaction()[1].getState(), Query.STATE_ROLLBACK);
+	    Assert.assertEquals(transaction.getQueriesTransaction()[2].getState(), Query.STATE_ROLLBACK);
+	    Assert.assertEquals(transaction.getQueriesTransaction()[3].getState(), Query.STATE_ROLLBACK);
+	    Assert.assertEquals(transaction.getQueriesTransaction()[4].getState(), Query.STATE_ROLLBACK);
+	    Assert.assertEquals(transaction.getQueriesTransaction()[5].getState(), Query.STATE_ROLLBACK);
 	} finally {
 
 	    if (statement != null) {
@@ -107,7 +116,7 @@ public class RollBackTest {
 
 	    List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
 	    Transaction transaction = sqlMessages.get(0).getSqlOperation().getTransaction();
-	    Assert.assertEquals(transaction.getTransactionState(), Query.STATE_EXECUTE);
+	    Assert.assertEquals(transaction.getTransactionState(), Transaction.STATE_EXECUTE);
 
 	    Assert.assertEquals(transaction.getQueriesTransaction()[0].getState(), Query.STATE_EXECUTE);
 	    Assert.assertEquals(transaction.getQueriesTransaction()[1].getState(), Query.STATE_EXECUTE);
@@ -121,7 +130,7 @@ public class RollBackTest {
 
 	    sqlMessages = messages.getSqlMessages();
 	    transaction = sqlMessages.get(0).getSqlOperation().getTransaction();
-	    Assert.assertEquals(transaction.getTransactionState(), Query.STATE_ROLLBACK);
+	    Assert.assertEquals(transaction.getTransactionState(), Transaction.STATE_ROLLBACK);
 
 	    Assert.assertEquals(transaction.getQueriesTransaction()[0].getState(), Query.STATE_EXECUTE);
 	    Assert.assertEquals(transaction.getQueriesTransaction()[1].getState(), Query.STATE_EXECUTE);
@@ -138,7 +147,7 @@ public class RollBackTest {
 
 	    sqlMessages = messages.getSqlMessages();
 	    transaction = sqlMessages.get(0).getSqlOperation().getTransaction();
-	    Assert.assertEquals(transaction.getTransactionState(), Query.STATE_EXECUTE);
+	    Assert.assertEquals(transaction.getTransactionState(), Transaction.STATE_EXECUTE);
 
 	    Assert.assertEquals(transaction.getQueriesTransaction()[0].getState(), Query.STATE_EXECUTE);
 	    Assert.assertEquals(transaction.getQueriesTransaction()[1].getState(), Query.STATE_EXECUTE);
@@ -154,7 +163,7 @@ public class RollBackTest {
 
 	    sqlMessages = messages.getSqlMessages();
 	    transaction = sqlMessages.get(0).getSqlOperation().getTransaction();
-	    Assert.assertEquals(transaction.getTransactionState(), Query.STATE_COMMIT);
+	    Assert.assertEquals(transaction.getTransactionState(), Transaction.STATE_COMMIT);
 
 	    Assert.assertEquals(transaction.getQueriesTransaction()[0].getState(), Query.STATE_COMMIT);
 	    Assert.assertEquals(transaction.getQueriesTransaction()[1].getState(), Query.STATE_COMMIT);
@@ -224,7 +233,7 @@ public class RollBackTest {
 
 	    List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
 	    Transaction transaction = sqlMessages.get(0).getSqlOperation().getTransaction();
-	    Assert.assertEquals(transaction.getTransactionState(), Query.STATE_EXECUTE);
+	    Assert.assertEquals(transaction.getTransactionState(), Transaction.STATE_EXECUTE);
 
 	    Assert.assertEquals(transaction.getQueriesTransaction()[0].getState(), Query.STATE_EXECUTE);
 	    Assert.assertEquals(transaction.getQueriesTransaction()[1].getState(), Query.STATE_EXECUTE);
@@ -238,7 +247,7 @@ public class RollBackTest {
 
 	    sqlMessages = messages.getSqlMessages();
 	    transaction = sqlMessages.get(0).getSqlOperation().getTransaction();
-	    Assert.assertEquals(transaction.getTransactionState(), Query.STATE_ROLLBACK);
+	    Assert.assertEquals(transaction.getTransactionState(), Transaction.STATE_ROLLBACK);
 
 	    Assert.assertEquals(transaction.getQueriesTransaction()[0].getState(), Query.STATE_EXECUTE);
 	    Assert.assertEquals(transaction.getQueriesTransaction()[1].getState(), Query.STATE_EXECUTE);
@@ -255,7 +264,7 @@ public class RollBackTest {
 
 	    sqlMessages = messages.getSqlMessages();
 	    transaction = sqlMessages.get(0).getSqlOperation().getTransaction();
-	    Assert.assertEquals(transaction.getTransactionState(), Query.STATE_EXECUTE);
+	    Assert.assertEquals(transaction.getTransactionState(), Transaction.STATE_EXECUTE);
 
 	    Assert.assertEquals(transaction.getQueriesTransaction()[0].getState(), Query.STATE_EXECUTE);
 	    Assert.assertEquals(transaction.getQueriesTransaction()[1].getState(), Query.STATE_EXECUTE);
@@ -271,7 +280,7 @@ public class RollBackTest {
 
 	    sqlMessages = messages.getSqlMessages();
 	    transaction = sqlMessages.get(0).getSqlOperation().getTransaction();
-	    Assert.assertEquals(transaction.getTransactionState(), Query.STATE_COMMIT);
+	    Assert.assertEquals(transaction.getTransactionState(), Transaction.STATE_COMMIT);
 
 	    Assert.assertEquals(transaction.getQueriesTransaction()[0].getState(), Query.STATE_COMMIT);
 	    Assert.assertEquals(transaction.getQueriesTransaction()[1].getState(), Query.STATE_COMMIT);
@@ -332,7 +341,7 @@ public class RollBackTest {
 
 	    List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
 	    Transaction transaction = sqlMessages.get(0).getSqlOperation().getTransaction();
-	    Assert.assertEquals(transaction.getTransactionState(), Query.STATE_EXECUTE);
+	    Assert.assertEquals(transaction.getTransactionState(), Transaction.STATE_EXECUTE);
 
 	    Assert.assertEquals(transaction.getQueriesTransaction()[0].getState(), Query.STATE_EXECUTE);
 	    Assert.assertEquals(transaction.getQueriesTransaction()[1].getState(), Query.STATE_EXECUTE);
@@ -344,7 +353,7 @@ public class RollBackTest {
 
 	    sqlMessages = messages.getSqlMessages();
 	    transaction = sqlMessages.get(0).getSqlOperation().getTransaction();
-	    Assert.assertEquals(transaction.getTransactionState(), Query.STATE_ROLLBACK);
+	    Assert.assertEquals(transaction.getTransactionState(), Transaction.STATE_ROLLBACK);
 
 	    Assert.assertEquals(transaction.getQueriesTransaction()[0].getState(), Query.STATE_EXECUTE);
 	    Assert.assertEquals(transaction.getQueriesTransaction()[1].getState(), Query.STATE_EXECUTE);

@@ -36,7 +36,7 @@ public class ConnectionOperation extends AbstractOperation {
 	}
 
 	if (commitMethod) {
-	    connectionContext.getTransactionContext().commit();
+	    connectionContext.commit();
 	    connectionContext.resetTransaction();
 	}
 
@@ -46,7 +46,7 @@ public class ConnectionOperation extends AbstractOperation {
 	    if (args != null && args[0] != null) {
 		savePoint = args[0];
 	    }
-	    connectionContext.getTransactionContext().rollback(savePoint);
+	    connectionContext.rollback(savePoint);
 	    if (savePoint == null) {
 		connectionContext.resetTransaction();
 	    }
@@ -54,7 +54,7 @@ public class ConnectionOperation extends AbstractOperation {
 
 	final boolean setSavepointMethod = nameMethod.equals("setSavepoint");
 	if (setSavepointMethod) {
-	    connectionContext.getTransactionContext().setSavePoint(invoke);
+	    connectionContext.setSavePoint(invoke);
 	}
 
 	final boolean closeMethod = nameMethod.equals("close");
