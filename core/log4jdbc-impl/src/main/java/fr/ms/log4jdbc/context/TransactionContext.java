@@ -70,8 +70,6 @@ public class TransactionContext implements Transaction, Cloneable {
     }
 
     public void addQuery(final QueryImpl query, final boolean batch) {
-
-	query.setState(Query.STATE_EXECUTE);
 	if (savePoint != null) {
 	    query.setSavePoint(savePoint);
 	}
@@ -84,9 +82,13 @@ public class TransactionContext implements Transaction, Cloneable {
 	initTransaction();
 
 	if (batch) {
-	    state = Transaction.STATE_NOT_EXECUTE;
+	    if (!Transaction.STATE_EXECUTE.equals(state)) {
+		state = Transaction.STATE_NOT_EXECUTE;
+	    }
+	    query.setState(Query.STATE_NOT_EXECUTE);
 	} else {
 	    state = Transaction.STATE_EXECUTE;
+	    query.setState(Query.STATE_EXECUTE);
 	}
 
 	try {
@@ -126,6 +128,39 @@ public class TransactionContext implements Transaction, Cloneable {
 	if (state != null) {
 	    state = Transaction.STATE_ROLLBACK;
 	}
+    }
+
+    public void executeBatch(final int[] updateCounts) {
+	final List queriesTransaction = (List) refQueriesTransaction.get();
+	if (queriesTransaction == null) {
+	    return;
+	}
+
+	int compteur = -1;
+	int updateCountsSize = 0;
+
+	if (updateCounts != null) {
+	    updateCountsSize = updateCounts.length;
+	    compteur = 0;
+	}
+
+	if (queriesTransaction.size() > 0) {
+	    for (int i = 0; i < queriesTransaction.size(); i++) {
+		final QueryImpl q = (QueryImpl) queriesTransaction.get(i);
+
+		if (Query.STATE_NOT_EXECUTE.equals(q.getState())) {
+		    q.setState(Query.STATE_COMMIT);
+
+		    if (compteur >= updateCountsSize) {
+
+			q.setUpdateCount(Integer.valueOf(updateCounts[compteur]));
+			compteur++;
+		    }
+		}
+	    }
+	}
+
+	state = Transaction.STATE_EXECUTE;
     }
 
     public void commit() {
