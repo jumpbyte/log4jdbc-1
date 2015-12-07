@@ -20,10 +20,13 @@ package fr.ms.log4jdbc.context;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.DefaultSyncLongFactory;
+import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.ref.ReferenceFactory;
 import fr.ms.lang.ref.ReferenceObject;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
@@ -59,6 +62,14 @@ public class BatchContext implements Batch, Cloneable {
 	this.transactionContext = transactionContext;
     }
 
+    private void initBatch() {
+	if (!batchInit) {
+	    batchInit = true;
+	    batchNumber = totalBatchNumber.incrementAndGet();
+	    openBatch.incrementAndGet();
+	}
+    }
+
     public void addQuery(final QueryImpl query) {
 	transactionContext.addQuery(query, true);
 	query.setState(Query.STATE_NOT_EXECUTE);
@@ -68,11 +79,7 @@ public class BatchContext implements Batch, Cloneable {
 	    queriesBatch.add(query);
 	}
 
-	if (!batchInit) {
-	    batchInit = true;
-	    batchNumber = totalBatchNumber.incrementAndGet();
-	    openBatch.incrementAndGet();
-	}
+	initBatch();
 
 	state = Batch.STATE_NOT_EXECUTE;
 
@@ -112,7 +119,9 @@ public class BatchContext implements Batch, Cloneable {
 	    }
 	}
 
-	state = Batch.STATE_EXECUTE;
+	if (state != null) {
+	    state = Batch.STATE_EXECUTE;
+	}
     }
 
     public Query[] getQueriesBatch() {
@@ -153,7 +162,9 @@ public class BatchContext implements Batch, Cloneable {
     }
 
     public String toString() {
-	final StringBuffer buffer = new StringBuffer();
+	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	final StringMaker buffer = stringFactory.newString();
+
 	buffer.append("BatchContext [batchNumber=");
 	buffer.append(batchNumber);
 	buffer.append(", state=");
@@ -165,6 +176,7 @@ public class BatchContext implements Batch, Cloneable {
 	buffer.append(", transactionContext=");
 	buffer.append(transactionContext);
 	buffer.append("]");
+
 	return buffer.toString();
     }
 }

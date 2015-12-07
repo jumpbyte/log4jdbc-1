@@ -92,8 +92,12 @@ public class Log4JdbcProperties implements Runnable {
 	return getProperty("log4jdbc.generic.message", false);
     }
 
-    public boolean logConnection() {
-	return getProperty("log4jdbc.connection", true);
+    public boolean logTransaction() {
+	return getProperty("log4jdbc.transaction", false);
+    }
+
+    public boolean logBatch() {
+	return getProperty("log4jdbc.batch", false);
     }
 
     public boolean logRequeteAllSQL() {

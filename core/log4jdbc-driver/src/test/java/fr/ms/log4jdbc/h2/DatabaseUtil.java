@@ -10,7 +10,7 @@ import java.sql.Statement;
 
 public class DatabaseUtil {
 
-    private final static String URL_H2 = "jdbc:h2:mem:test";
+    private final static String URL_H2 = "jdbc:h2:mem:test;TRACE_LEVEL_SYSTEM_OUT=3";
 
     private final static String URL_H2_PROXY = "jdbc:log4" + URL_H2;
 
@@ -27,7 +27,6 @@ public class DatabaseUtil {
     }
 
     public static final Driver getDriver(final String url) throws SQLException {
-
 	return DriverManager.getDriver(url);
     }
 

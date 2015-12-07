@@ -20,10 +20,13 @@ package fr.ms.log4jdbc.context;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.DefaultSyncLongFactory;
+import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.ref.ReferenceFactory;
 import fr.ms.lang.ref.ReferenceObject;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
@@ -54,6 +57,14 @@ public class TransactionContext implements Transaction, Cloneable {
     private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean Queries Transaction";
     private ReferenceObject refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
 
+    private void initTransaction() {
+	if (!transactionInit) {
+	    transactionInit = true;
+	    transactionNumber = totalTransactionNumber.incrementAndGet();
+	    openTransaction.incrementAndGet();
+	}
+    }
+
     public void addQuery(final QueryImpl query) {
 	addQuery(query, false);
     }
@@ -70,11 +81,7 @@ public class TransactionContext implements Transaction, Cloneable {
 	    queriesTransaction.add(query);
 	}
 
-	if (!transactionInit) {
-	    transactionInit = true;
-	    transactionNumber = totalTransactionNumber.incrementAndGet();
-	    openTransaction.incrementAndGet();
-	}
+	initTransaction();
 
 	if (batch) {
 	    state = Transaction.STATE_NOT_EXECUTE;
@@ -116,7 +123,9 @@ public class TransactionContext implements Transaction, Cloneable {
 	    }
 	}
 
-	state = Transaction.STATE_ROLLBACK;
+	if (state != null) {
+	    state = Transaction.STATE_ROLLBACK;
+	}
     }
 
     public void commit() {
@@ -135,7 +144,9 @@ public class TransactionContext implements Transaction, Cloneable {
 	    }
 	}
 
-	state = Transaction.STATE_COMMIT;
+	if (state != null) {
+	    state = Transaction.STATE_COMMIT;
+	}
     }
 
     public void setSavePoint(final Object savePoint) {
@@ -219,18 +230,28 @@ public class TransactionContext implements Transaction, Cloneable {
     }
 
     public String toString() {
-	final StringBuffer buffer = new StringBuffer();
-	buffer.append("TransactionContext [transactionNumber=");
-	buffer.append(transactionNumber);
-	buffer.append(", state=");
-	buffer.append(state);
-	buffer.append(", transactionInit=");
-	buffer.append(transactionInit);
-	buffer.append(", refQueriesTransaction=");
-	buffer.append(refQueriesTransaction);
-	buffer.append(", savePoint=");
-	buffer.append(savePoint);
-	buffer.append("]");
-	return buffer.toString();
+	final String nl = System.getProperty("line.separator");
+
+	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	final StringMaker sb = stringFactory.newString();
+
+	sb.append(getTransactionNumber() + ". " + getOpenTransaction());
+	sb.append(nl);
+	sb.append("	State  : " + getTransactionState());
+	sb.append(nl);
+
+	if (getQueriesTransaction() != null && getQueriesTransaction().length > 0) {
+	    sb.append("*********************");
+	    sb.append(nl);
+	    sb.append(getQueriesTransaction().length + " queries");
+
+	    for (int i = 0; i < getQueriesTransaction().length; i++) {
+		sb.append(nl);
+		sb.append(getQueriesTransaction()[i]);
+	    }
+	}
+
+	return sb.toString();
+
     }
 }

@@ -44,7 +44,7 @@ public class ConnectionLogger extends AbstractLogger implements SqlOperationLogg
     }
 
     public boolean isEnabled() {
-	return props.logEnabled() && (props.logConnection() || props.logGenericMessage());
+	return props.logEnabled() && (props.logTransaction() || props.logBatch() || props.logGenericMessage());
     }
 
     public void buildLog(final SqlOperation message, final Method method, final Object[] args, final Object invoke) {

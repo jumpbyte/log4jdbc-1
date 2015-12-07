@@ -70,7 +70,7 @@ public final class Log4JdbcProxy {
     public static Connection proxyConnection(final Connection connection, final ConnectionContext connectionContext) {
 	final SqlOperationLogger[] logs = ServicesJDBC.getMessageLogger(SqlOperationLogger.CONNECTION);
 
-	final Log4JdbcOperationFactory factory = new ConnectionOperationFactory();
+	final Log4JdbcOperationFactory factory = new ConnectionOperationFactory(connection, connectionContext);
 
 	final InvocationHandler handler = createHandler(connection, connectionContext, logs, factory);
 
