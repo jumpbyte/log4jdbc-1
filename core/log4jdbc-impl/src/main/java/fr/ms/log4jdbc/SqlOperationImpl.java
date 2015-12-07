@@ -20,7 +20,10 @@ package fr.ms.log4jdbc;
 import java.sql.Driver;
 import java.util.Date;
 
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.reflect.TimeInvocation;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.context.Batch;
 import fr.ms.log4jdbc.context.BatchContext;
 import fr.ms.log4jdbc.context.Transaction;
@@ -127,30 +130,33 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
     }
 
     public String toString() {
-	final StringBuffer buffer = new StringBuffer();
-	buffer.append("SqlOperationImpl [getConnectionNumber()=");
-	buffer.append(getConnectionNumber());
-	buffer.append(", getOpenConnection()=");
-	buffer.append(getOpenConnection());
-	buffer.append(", getUrl()=");
-	buffer.append(getUrl());
-	buffer.append(", getDriver()=");
-	buffer.append(getDriver());
-	buffer.append(", getRdbms()=");
-	buffer.append(getRdbms());
-	buffer.append(", getDate()=");
-	buffer.append(getDate());
-	buffer.append(", getExecTime()=");
-	buffer.append(getExecTime());
-	buffer.append(", getQuery()=");
-	buffer.append(getQuery());
-	buffer.append(", isAutoCommit()=");
-	buffer.append(isAutoCommit());
-	buffer.append(", getTransaction()=");
-	buffer.append(getTransaction());
-	buffer.append(", getBatch()=");
-	buffer.append(getBatch());
-	buffer.append("]");
-	return buffer.toString();
+	final String nl = System.getProperty("line.separator");
+
+	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	final StringMaker sb = stringFactory.newString();
+
+	sb.append(getDate());
+	sb.append(nl);
+	sb.append(getConnectionNumber() + ". " + getOpenConnection() + " - executed : " + getExecTime() + " ms");
+	sb.append(nl);
+	sb.append("Driver : " + getDriver() + " - url : " + getUrl());
+	sb.append(nl);
+	if (getQuery() != null) {
+	    sb.append("*******************************************");
+	    sb.append(nl);
+	    sb.append("Query : ");
+	    sb.append(getQuery());
+	    sb.append(nl);
+	}
+	if (getTransaction() != null) {
+	    sb.append("*******************************************");
+	    sb.append(nl);
+	    sb.append("Transaction : ");
+	    sb.append(nl);
+	    sb.append(getTransaction());
+	    sb.append(nl);
+	}
+
+	return sb.toString();
     }
 }

@@ -17,6 +17,9 @@
  */
 package fr.ms.log4jdbc.context;
 
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.Query;
@@ -76,7 +79,9 @@ public class BatchDecorator implements Batch {
     }
 
     public String toString() {
-	final StringBuffer buffer = new StringBuffer();
+	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	final StringMaker buffer = stringFactory.newString();
+
 	buffer.append("BatchDecorator [getBatchState()=");
 	buffer.append(getBatchState());
 	buffer.append(", getBatchNumber()=");
@@ -90,6 +95,7 @@ public class BatchDecorator implements Batch {
 	}
 
 	buffer.append("]");
+
 	return buffer.toString();
     }
 }

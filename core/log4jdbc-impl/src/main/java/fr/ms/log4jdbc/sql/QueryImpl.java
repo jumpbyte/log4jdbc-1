@@ -21,9 +21,12 @@ import java.sql.ResultSet;
 import java.util.Date;
 import java.util.Map;
 
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.DefaultSyncLongFactory;
+import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.reflect.TimeInvocation;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.context.Batch;
 import fr.ms.log4jdbc.context.BatchContext;
@@ -236,7 +239,21 @@ public class QueryImpl implements Query, Cloneable {
 	return true;
     }
 
+    @Override
     public String toString() {
-	return "QueryImpl [queryNumber=" + queryNumber + ", state=" + state + ", query=" + query + "]";
+	final String nl = System.getProperty("line.separator");
+
+	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	final StringMaker sb = stringFactory.newString();
+
+	sb.append(getQueryNumber() + ".");
+	sb.append(nl);
+	sb.append("	Method : " + getMethodQuery());
+	sb.append(nl);
+	sb.append("	State  : " + getState());
+	sb.append(nl);
+	sb.append("	Query  : " + getSQLQuery());
+
+	return sb.toString();
     }
 }

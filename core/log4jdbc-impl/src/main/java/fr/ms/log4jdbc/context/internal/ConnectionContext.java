@@ -19,8 +19,11 @@ package fr.ms.log4jdbc.context.internal;
 
 import java.sql.Driver;
 
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.DefaultSyncLongFactory;
+import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.delegate.SyncLongFactory;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.context.BatchContext;
 import fr.ms.log4jdbc.context.TransactionContext;
@@ -168,7 +171,9 @@ public class ConnectionContext {
     }
 
     public String toString() {
-	final StringBuffer buffer = new StringBuffer();
+	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	final StringMaker buffer = stringFactory.newString();
+
 	buffer.append("ConnectionContext [driver=");
 	buffer.append(driver);
 	buffer.append(", url=");

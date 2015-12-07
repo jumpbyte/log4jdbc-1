@@ -26,6 +26,9 @@ import java.util.Date;
 
 import fr.ms.lang.StringUtils;
 import fr.ms.lang.SystemPropertyUtils;
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 
 /**
  *
@@ -102,11 +105,14 @@ public class GenericRdbmsSpecifics implements RdbmsSpecifics {
     }
 
     public String toString() {
-	final StringBuffer builder = new StringBuffer();
-	builder.append("GenericRdbmsSpecifics [caseSensitive=");
-	builder.append(caseSensitive);
-	builder.append("]");
-	return builder.toString();
+	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	final StringMaker sb = stringFactory.newString();
+
+	sb.append("GenericRdbmsSpecifics [caseSensitive=");
+	sb.append(caseSensitive);
+	sb.append("]");
+
+	return sb.toString();
     }
 
     private final static class EscapeStringDataRdbms implements DataRdbms {
