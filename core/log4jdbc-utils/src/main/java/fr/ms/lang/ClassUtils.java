@@ -30,6 +30,9 @@ import java.util.Set;
  */
 public final class ClassUtils {
 
+    private ClassUtils() {
+    }
+
     public final static boolean classPresent(final String className) {
 	try {
 	    Class.forName(className);
