@@ -28,8 +28,6 @@ import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
-import fr.ms.log4jdbc.context.Batch;
-import fr.ms.log4jdbc.context.BatchContext;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.context.TransactionContext;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
@@ -63,8 +61,6 @@ public class QueryImpl implements Query, Cloneable {
     private ResultSetCollectorImpl resultSetCollector;
 
     private String state = Query.STATE_COMMIT;
-
-    private Batch batch;
 
     private Transaction transaction;
 
@@ -147,10 +143,6 @@ public class QueryImpl implements Query, Cloneable {
 	return transaction;
     }
 
-    public Batch getBatch() {
-	return batch;
-    }
-
     public Object putParams(final Object key, final Object value) {
 	if (query == null) {
 	    return null;
@@ -185,10 +177,6 @@ public class QueryImpl implements Query, Cloneable {
 
     public void setState(final String state) {
 	this.state = state;
-    }
-
-    public void setBatchContext(final BatchContext batchContext) {
-	this.batch = batchContext;
     }
 
     public void setTransactionContext(final TransactionContext transactionContext) {
@@ -239,7 +227,6 @@ public class QueryImpl implements Query, Cloneable {
 	return true;
     }
 
-    @Override
     public String toString() {
 	final String nl = System.getProperty("line.separator");
 

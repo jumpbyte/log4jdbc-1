@@ -20,7 +20,6 @@ package fr.ms.log4jdbc.utils;
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.stringmaker.impl.StringMaker;
-import fr.ms.log4jdbc.context.Batch;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.resultset.Row;
@@ -73,12 +72,6 @@ public final class QueryString {
 	final Transaction transaction = query.getTransaction();
 	if (transaction != null) {
 	    sb.append("Transaction Number : " + transaction.getTransactionNumber() + " - State : " + transaction.getTransactionState());
-	    sb.append(nl);
-	}
-
-	final Batch batch = query.getBatch();
-	if (batch != null) {
-	    sb.append("Batch Number : " + batch.getBatchNumber() + " - State : " + batch.getBatchState());
 	    sb.append(nl);
 	}
 

@@ -10,13 +10,13 @@ import java.sql.Statement;
 
 public class DatabaseUtil {
 
-    private final static String URL_H2 = "jdbc:h2:mem:test;TRACE_LEVEL_SYSTEM_OUT=3";
+    public final static String URL_H2 = "jdbc:h2:mem:test;TRACE_LEVEL_SYSTEM_OUT=3";
 
-    private final static String URL_H2_PROXY = "jdbc:log4" + URL_H2;
+    public final static String URL_H2_PROXY = "jdbc:log4" + URL_H2;
 
-    private final static String USER = "SA";
+    public final static String USER = "SA";
 
-    private final static String PASSWORD = "SA";
+    public final static String PASSWORD = "SA";
 
     public static final String getURL(final boolean proxy) {
 	if (proxy) {

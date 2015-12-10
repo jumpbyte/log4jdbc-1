@@ -65,10 +65,6 @@ public class TransactionContext implements Transaction, Cloneable {
 	}
     }
 
-    public void addQuery(final QueryImpl query) {
-	addQuery(query, false);
-    }
-
     public void addQuery(final QueryImpl query, final boolean batch) {
 	if (savePoint != null) {
 	    query.setSavePoint(savePoint);
@@ -149,9 +145,9 @@ public class TransactionContext implements Transaction, Cloneable {
 		final QueryImpl q = (QueryImpl) queriesTransaction.get(i);
 
 		if (Query.STATE_NOT_EXECUTE.equals(q.getState())) {
-		    q.setState(Query.STATE_COMMIT);
+		    q.setState(Query.STATE_EXECUTE);
 
-		    if (compteur >= updateCountsSize) {
+		    if (compteur <= updateCountsSize) {
 
 			q.setUpdateCount(Integer.valueOf(updateCounts[compteur]));
 			compteur++;
@@ -214,6 +210,10 @@ public class TransactionContext implements Transaction, Cloneable {
 	return state;
     }
 
+    public String getTransactionType() {
+	return "JDBC";
+    }
+
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
@@ -259,7 +259,13 @@ public class TransactionContext implements Transaction, Cloneable {
 	if (queriesTransaction == null) {
 	    t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
 	} else {
-	    t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList(queriesTransaction));
+	    final List copies = new ArrayList(queriesTransaction.size());
+	    for (int i = 0; i < queriesTransaction.size(); i++) {
+		final QueryImpl query = (QueryImpl) queriesTransaction.get(i);
+		copies.add(query.clone());
+	    }
+
+	    t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, copies);
 	}
 	return t;
     }
@@ -271,6 +277,8 @@ public class TransactionContext implements Transaction, Cloneable {
 	final StringMaker sb = stringFactory.newString();
 
 	sb.append(getTransactionNumber() + ". " + getOpenTransaction());
+	sb.append(nl);
+	sb.append("	Type  : " + getTransactionType());
 	sb.append(nl);
 	sb.append("	State  : " + getTransactionState());
 	sb.append(nl);
@@ -287,6 +295,5 @@ public class TransactionContext implements Transaction, Cloneable {
 	}
 
 	return sb.toString();
-
     }
 }

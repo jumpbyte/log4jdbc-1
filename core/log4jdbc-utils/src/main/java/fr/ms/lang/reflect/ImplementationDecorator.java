@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.ms.lang.ClassUtils;
+import fr.ms.util.logging.Logger;
+import fr.ms.util.logging.LoggerManager;
 
 /**
  *
@@ -35,6 +37,8 @@ import fr.ms.lang.ClassUtils;
  *
  */
 public class ImplementationDecorator implements InvocationHandler {
+
+    private final static Logger LOG = LoggerManager.getLogger(ImplementationDecorator.class);
 
     private final Object impl;
 
@@ -52,6 +56,13 @@ public class ImplementationDecorator implements InvocationHandler {
     }
 
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+	if (LOG.isDebugEnabled()) {
+	    final String declaringClass = method.getDeclaringClass().getName();
+	    final String name = method.getName();
+
+	    LOG.debug(declaringClass + "." + name);
+	}
+
 	final Object invoke = method.invoke(impl, args);
 
 	final Object createProxy = ip.createProxy(this, invoke);

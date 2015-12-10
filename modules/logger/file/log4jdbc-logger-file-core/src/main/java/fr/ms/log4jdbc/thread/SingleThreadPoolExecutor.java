@@ -22,6 +22,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
+import fr.ms.util.logging.Logger;
+import fr.ms.util.logging.LoggerManager;
 
 /**
  *
@@ -32,6 +34,8 @@ import fr.ms.log4jdbc.utils.Log4JdbcProperties;
  *
  */
 public class SingleThreadPoolExecutor {
+
+    private final static Logger LOG = LoggerManager.getLogger(SingleThreadPoolExecutor.class);
 
     private final static SingleThreadPoolExecutor INSTANCE = new SingleThreadPoolExecutor();
     private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
@@ -78,8 +82,8 @@ public class SingleThreadPoolExecutor {
     }
 
     private void logLimit() {
-	if (props.logProcessThreadDebug()) {
-	    System.out.println("Log4JDBC : pool size limit : " + w.pool.size() + " - thread priority  : " + thread.getPriority());
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("Log4JDBC : pool size limit : " + w.pool.size() + " - thread priority  : " + thread.getPriority());
 	}
     }
 

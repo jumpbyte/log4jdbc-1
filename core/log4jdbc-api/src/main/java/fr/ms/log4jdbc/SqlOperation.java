@@ -20,7 +20,6 @@ package fr.ms.log4jdbc;
 import java.sql.Driver;
 import java.util.Date;
 
-import fr.ms.log4jdbc.context.Batch;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Query;
@@ -54,6 +53,4 @@ public interface SqlOperation {
     boolean isAutoCommit();
 
     Transaction getTransaction();
-
-    Batch getBatch();
 }

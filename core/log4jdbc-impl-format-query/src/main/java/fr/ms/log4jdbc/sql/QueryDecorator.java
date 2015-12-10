@@ -20,7 +20,9 @@ package fr.ms.log4jdbc.sql;
 import java.util.Date;
 import java.util.Map;
 
-import fr.ms.log4jdbc.context.Batch;
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.resultset.ResultSetCollector;
@@ -102,11 +104,31 @@ public class QueryDecorator implements Query {
 	return query.getTransaction();
     }
 
-    public Batch getBatch() {
-	return query.getBatch();
+    public int hashCode() {
+	return query.hashCode();
+    }
+
+    public boolean equals(final Object obj) {
+	if (obj instanceof QueryDecorator) {
+	    return query.equals(((QueryDecorator) obj).query);
+	}
+	return query.equals(obj);
     }
 
     public String toString() {
-	return "QueryDecorator [query=" + query + ", rdbms=" + rdbms + ", formatQuery=" + formatQuery + "]";
+	final String nl = System.getProperty("line.separator");
+
+	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	final StringMaker sb = stringFactory.newString();
+
+	sb.append(getQueryNumber() + ".");
+	sb.append(nl);
+	sb.append("	Method : " + getMethodQuery());
+	sb.append(nl);
+	sb.append("	State  : " + getState());
+	sb.append(nl);
+	sb.append("	Query  : " + getSQLQuery());
+
+	return sb.toString();
     }
 }

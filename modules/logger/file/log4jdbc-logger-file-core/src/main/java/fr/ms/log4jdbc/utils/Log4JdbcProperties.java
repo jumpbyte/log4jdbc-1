@@ -84,10 +84,6 @@ public class Log4JdbcProperties implements Runnable {
 	return getProperty("log4jdbc.process.thread.size", 500);
     }
 
-    public boolean logProcessThreadDebug() {
-	return getProperty("log4jdbc.process.thread.debug", false);
-    }
-
     public boolean logGenericMessage() {
 	return getProperty("log4jdbc.generic.message", false);
     }

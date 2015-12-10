@@ -24,8 +24,6 @@ import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.lang.stringmaker.impl.StringMaker;
-import fr.ms.log4jdbc.context.Batch;
-import fr.ms.log4jdbc.context.BatchContext;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.context.TransactionContext;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
@@ -51,16 +49,12 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
 
     private QueryImpl query;
 
-    private BatchContext batch;
-
     private TransactionContext transaction;
 
     public SqlOperationImpl(final TimeInvocation timeInvocation, final ConnectionContext connectionContext) {
 	this.timeInvocation = timeInvocation;
 	this.connectionContext = connectionContext;
 	this.openConnection = connectionContext.getOpenConnection().get();
-
-	batch = connectionContext.getBatchContext();
 	transaction = connectionContext.getTransactionContext();
     }
 
@@ -69,7 +63,6 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
 	    query = (QueryImpl) query.clone();
 	}
 
-	batch = (BatchContext) batch.clone();
 	transaction = (TransactionContext) transaction.clone();
 
 	return this;
@@ -120,13 +113,6 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
 	    return null;
 	}
 	return transaction;
-    }
-
-    public Batch getBatch() {
-	if (isAutoCommit() || batch == null || batch.getBatchState() == null) {
-	    return null;
-	}
-	return batch;
     }
 
     public String toString() {

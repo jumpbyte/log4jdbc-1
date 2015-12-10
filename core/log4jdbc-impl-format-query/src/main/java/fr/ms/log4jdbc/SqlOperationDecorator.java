@@ -20,8 +20,9 @@ package fr.ms.log4jdbc;
 import java.sql.Driver;
 import java.util.Date;
 
-import fr.ms.log4jdbc.context.Batch;
-import fr.ms.log4jdbc.context.BatchDecorator;
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.context.TransactionDecorator;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
@@ -67,14 +68,6 @@ public class SqlOperationDecorator implements SqlOperation {
 	return new TransactionDecorator(transaction, sqlOperation.getRdbms(), formatQuery);
     }
 
-    public Batch getBatch() {
-	final Batch batch = sqlOperation.getBatch();
-	if (batch == null) {
-	    return null;
-	}
-	return new BatchDecorator(batch, sqlOperation.getRdbms(), formatQuery);
-    }
-
     public Date getDate() {
 	return sqlOperation.getDate();
     }
@@ -107,7 +100,45 @@ public class SqlOperationDecorator implements SqlOperation {
 	return sqlOperation.isAutoCommit();
     }
 
+    public int hashCode() {
+	return sqlOperation.hashCode();
+    }
+
+    public boolean equals(final Object obj) {
+	if (obj instanceof SqlOperationDecorator) {
+	    return sqlOperation.equals(((SqlOperationDecorator) obj).sqlOperation);
+	}
+	return sqlOperation.equals(obj);
+    }
+
     public String toString() {
-	return "SqlOperationDecorator [sqlOperation=" + sqlOperation + ", formatQuery=" + formatQuery + "]";
+	final String nl = System.getProperty("line.separator");
+
+	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	final StringMaker sb = stringFactory.newString();
+
+	sb.append(getDate());
+	sb.append(nl);
+	sb.append(getConnectionNumber() + ". " + getOpenConnection() + " - executed : " + getExecTime() + " ms");
+	sb.append(nl);
+	sb.append("Driver : " + getDriver() + " - url : " + getUrl());
+	sb.append(nl);
+	if (getQuery() != null) {
+	    sb.append("*******************************************");
+	    sb.append(nl);
+	    sb.append("Query : ");
+	    sb.append(getQuery());
+	    sb.append(nl);
+	}
+	if (getTransaction() != null) {
+	    sb.append("*******************************************");
+	    sb.append(nl);
+	    sb.append("Transaction : ");
+	    sb.append(nl);
+	    sb.append(getTransaction());
+	    sb.append(nl);
+	}
+
+	return sb.toString();
     }
 }

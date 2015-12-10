@@ -28,7 +28,6 @@ package fr.ms.log4jdbc.sql;
 import java.util.Date;
 import java.util.Map;
 
-import fr.ms.log4jdbc.context.Batch;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.resultset.ResultSetCollector;
 
@@ -65,6 +64,4 @@ public interface Query {
     String getState();
 
     Transaction getTransaction();
-
-    Batch getBatch();
 }

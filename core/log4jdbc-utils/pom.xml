@@ -16,6 +16,11 @@
 	<name>Log4Jdbc Core Utils</name>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.github.marcosemiao.util</groupId>
+			<artifactId>service-provider</artifactId>
+		</dependency>
+
 		<!-- Tests -->
 		<dependency>
 			<groupId>junit</groupId>

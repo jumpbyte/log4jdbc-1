@@ -61,9 +61,14 @@ public class BatchTest {
 
 	    statement.addBatch("INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('RollBack13', 'SQL', '1970-01-01');");
 
-	    final ResultSet resultSet = statement.executeQuery("SELECT * FROM PERSONNE;");
+	    final int[] count = statement.executeBatch();
 
-	    DatabaseUtil.printResultSet(resultSet);
+	    System.out.println(count.length);
+	    for (final int i : count) {
+		System.out.println(i);
+	    }
+
+	    connection.commit();
 
 	    final List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
 
@@ -87,16 +92,12 @@ public class BatchTest {
 	    final SqlOperation sqlOperation17 = sqlMessages.get(17).getSqlOperation();
 	    final SqlOperation sqlOperation18 = sqlMessages.get(18).getSqlOperation();
 	    final SqlOperation sqlOperation19 = sqlMessages.get(19).getSqlOperation();
+	    final SqlOperation sqlOperation20 = sqlMessages.get(20).getSqlOperation();
+	    final SqlOperation sqlOperation21 = sqlMessages.get(21).getSqlOperation();
 
-	    final int[] count = statement.executeBatch();
+	    final ResultSet resultSet = statement.executeQuery("SELECT * FROM PERSONNE;");
 
-	    for (final int i : count) {
-		System.out.println(i);
-	    }
-
-	    messages.clear();
-
-	    connection.commit();
+	    DatabaseUtil.printResultSet(resultSet);
 
 	} finally {
 

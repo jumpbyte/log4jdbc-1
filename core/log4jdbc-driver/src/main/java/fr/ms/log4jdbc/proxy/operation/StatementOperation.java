@@ -61,8 +61,7 @@ public class StatementOperation extends AbstractOperation {
 		}
 	    }
 
-	    connectionContext.getBatchContext().executeBatch(updateCounts);
-	    connectionContext.resetBatch();
+	    connectionContext.getTransactionContext().executeBatch(updateCounts);
 	    return;
 	}
 

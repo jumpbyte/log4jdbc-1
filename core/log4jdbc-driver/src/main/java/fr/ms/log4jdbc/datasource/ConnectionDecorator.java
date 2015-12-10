@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 
+import fr.ms.lang.ClassUtils;
 import fr.ms.lang.reflect.ImplementationDecorator;
 import fr.ms.lang.reflect.ImplementationDecorator.ImplementationProxy;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
@@ -41,7 +42,7 @@ public class ConnectionDecorator implements ImplementationProxy {
 
 	final Class clazz = impl.getClass();
 	final ClassLoader classLoader = clazz.getClassLoader();
-	final Class[] interfaces = clazz.getInterfaces();
+	final Class[] interfaces = ClassUtils.findInterfaces(clazz);
 	final Object wrap = Proxy.newProxyInstance(classLoader, interfaces, ih);
 
 	return wrap;

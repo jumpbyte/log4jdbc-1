@@ -20,7 +20,8 @@ package fr.ms.lang.ref;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 
-import fr.ms.lang.SystemPropertyUtils;
+import fr.ms.util.logging.Logger;
+import fr.ms.util.logging.LoggerManager;
 
 /**
  *
@@ -32,7 +33,7 @@ import fr.ms.lang.SystemPropertyUtils;
  */
 public class NotifyReferenceObject implements ReferenceObject {
 
-    private final static boolean printCleanReference = SystemPropertyUtils.getProperty("notifyReferenceObject.print", false);
+    private final static Logger LOG = LoggerManager.getLogger(NotifyReferenceObject.class);
 
     private final String message;
 
@@ -54,8 +55,8 @@ public class NotifyReferenceObject implements ReferenceObject {
     public Object get() {
 	final Object obj = reference.get();
 
-	if (obj == null && printCleanReference) {
-	    System.out.println(message);
+	if (obj == null && LOG.isInfoEnabled()) {
+	    LOG.info(message);
 	}
 	return obj;
     }

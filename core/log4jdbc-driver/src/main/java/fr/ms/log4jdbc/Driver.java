@@ -26,11 +26,11 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import fr.ms.lang.SystemPropertyUtils;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.sql.JdbcDriverManager;
 import fr.ms.sql.JdbcDriverManagerFactory;
 import fr.ms.util.Service;
+import fr.ms.util.logging.LoggerManager;
 
 /**
  *
@@ -42,16 +42,16 @@ import fr.ms.util.Service;
  */
 public class Driver implements java.sql.Driver {
 
-    private static final String LOG4JDBC_PREFIX = "jdbc:log4";
+    private final static fr.ms.util.logging.Logger LOG = LoggerManager.getLogger(Driver.class);
 
-    private final static boolean logDriverManager = SystemPropertyUtils.getProperty("log4jdbc.driverManager.log", false);
+    private final static String LOG4JDBC_PREFIX = "jdbc:log4";
 
     private final static JdbcDriverManager driverManager = JdbcDriverManagerFactory.getInstance();
 
     private java.sql.Driver driver;
 
     static {
-	if (logDriverManager) {
+	if (LOG.isInfoEnabled()) {
 	    driverManager.setLogWriter(new PrintWriter(System.out));
 	}
 	loadAdditionalDrivers();
@@ -148,8 +148,8 @@ public class Driver implements java.sql.Driver {
     private static void loadAdditionalDrivers() {
 	String drivers = System.getProperty("log4jdbc.drivers");
 
-	if (logDriverManager) {
-	    System.out.println("Log4Jdbc DriverManager.Initialize: log4jdbc.drivers = " + drivers);
+	if (LOG.isInfoEnabled()) {
+	    LOG.info("Log4Jdbc DriverManager.Initialize: log4jdbc.drivers = " + drivers);
 	}
 
 	if (drivers != null) {
@@ -168,8 +168,8 @@ public class Driver implements java.sql.Driver {
 		}
 		try {
 		    driver = driver.trim();
-		    if (logDriverManager) {
-			System.out.println("Log4jdbc DriverManager.Initialize: loading " + driver);
+		    if (LOG.isInfoEnabled()) {
+			LOG.info("Log4jdbc DriverManager.Initialize: loading " + driver);
 		    }
 		    final Class clazz = Class.forName(driver);
 		    final java.sql.Driver d = (java.sql.Driver) clazz.newInstance();

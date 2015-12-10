@@ -52,7 +52,6 @@ public class ConnectionTest {
 		final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 		Assert.assertTrue(sqlOperation.isAutoCommit());
 		Assert.assertNull(sqlOperation.getTransaction());
-		Assert.assertNull(sqlOperation.getBatch());
 		Assert.assertNull(sqlOperation.getQuery());
 	    }
 	}
@@ -80,7 +79,6 @@ public class ConnectionTest {
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertTrue(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
 	    Assert.assertNull(sqlOperation.getQuery());
 	} finally {
 
@@ -112,7 +110,6 @@ public class ConnectionTest {
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
 	    Assert.assertNull(sqlOperation.getQuery());
 	} finally {
 
@@ -144,7 +141,6 @@ public class ConnectionTest {
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
 	    Assert.assertNull(sqlOperation.getQuery());
 
 	    connection.setAutoCommit(true);
@@ -162,7 +158,7 @@ public class ConnectionTest {
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertTrue(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+
 	    Assert.assertNull(sqlOperation.getQuery());
 
 	} finally {
@@ -195,7 +191,7 @@ public class ConnectionTest {
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertTrue(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+
 	    Assert.assertNull(sqlOperation.getQuery());
 	} finally {
 
@@ -227,7 +223,7 @@ public class ConnectionTest {
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+
 	    Assert.assertNull(sqlOperation.getQuery());
 
 	    connection.rollback();
@@ -245,7 +241,7 @@ public class ConnectionTest {
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNotNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+
 	    Assert.assertNull(sqlOperation.getQuery());
 	} finally {
 
@@ -279,7 +275,7 @@ public class ConnectionTest {
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertTrue(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+
 	    Assert.assertNull(sqlOperation.getQuery());
 	} finally {
 
@@ -313,7 +309,7 @@ public class ConnectionTest {
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertTrue(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+
 	    Assert.assertNull(sqlOperation.getQuery());
 	} finally {
 
@@ -345,7 +341,7 @@ public class ConnectionTest {
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+
 	    Assert.assertNull(sqlOperation.getQuery());
 
 	    connection.setSavepoint();
@@ -363,7 +359,7 @@ public class ConnectionTest {
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+
 	    Assert.assertNull(sqlOperation.getQuery());
 	} finally {
 
@@ -395,7 +391,7 @@ public class ConnectionTest {
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+
 	    Assert.assertNull(sqlOperation.getQuery());
 
 	    connection.setSavepoint("1point");
@@ -413,7 +409,7 @@ public class ConnectionTest {
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+
 	    Assert.assertNull(sqlOperation.getQuery());
 	} finally {
 
@@ -445,7 +441,7 @@ public class ConnectionTest {
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+
 	    Assert.assertNull(sqlOperation.getQuery());
 
 	    final Savepoint savepoint = connection.setSavepoint();
@@ -463,7 +459,7 @@ public class ConnectionTest {
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+
 	    Assert.assertNull(sqlOperation.getQuery());
 
 	    connection.rollback(savepoint);
@@ -482,7 +478,7 @@ public class ConnectionTest {
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNotNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+
 	    Assert.assertNull(sqlOperation.getQuery());
 	} finally {
 
@@ -514,7 +510,7 @@ public class ConnectionTest {
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+
 	    Assert.assertNull(sqlOperation.getQuery());
 
 	    final Savepoint savepoint = connection.setSavepoint("1point");
@@ -532,7 +528,7 @@ public class ConnectionTest {
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+
 	    Assert.assertNull(sqlOperation.getQuery());
 
 	    connection.rollback(savepoint);
@@ -551,7 +547,7 @@ public class ConnectionTest {
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
 	    Assert.assertFalse(sqlOperation.isAutoCommit());
 	    Assert.assertNotNull(sqlOperation.getTransaction());
-	    Assert.assertNull(sqlOperation.getBatch());
+
 	    Assert.assertNull(sqlOperation.getQuery());
 	} finally {
 

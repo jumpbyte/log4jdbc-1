@@ -23,6 +23,7 @@ import java.util.List;
 
 import fr.ms.log4jdbc.SqlOperationLogger;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
+import fr.ms.util.CollectionsUtil;
 import fr.ms.util.Service;
 
 /**
@@ -69,15 +70,7 @@ public final class ServicesJDBC {
 
 	    final Iterator providers = Service.providers(SqlOperationLogger.class);
 
-	    final List list = new ArrayList();
-	    while (providers.hasNext()) {
-		try {
-		    final SqlOperationLogger m = (SqlOperationLogger) providers.next();
-		    list.add(m);
-		} catch (final Throwable t) {
-		    t.printStackTrace();
-		}
-	    }
+	    final List list = CollectionsUtil.convert(providers);
 
 	    messageLogger = (SqlOperationLogger[]) list.toArray(new SqlOperationLogger[list.size()]);
 
@@ -93,15 +86,7 @@ public final class ServicesJDBC {
 
 	    final Iterator providers = Service.providers(RdbmsSpecifics.class);
 
-	    final List list = new ArrayList();
-	    while (providers.hasNext()) {
-		try {
-		    final RdbmsSpecifics r = (RdbmsSpecifics) providers.next();
-		    list.add(r);
-		} catch (final Throwable t) {
-		    t.printStackTrace();
-		}
-	    }
+	    final List list = CollectionsUtil.convert(providers);
 
 	    rdbmsSpecifics = (RdbmsSpecifics[]) list.toArray(new RdbmsSpecifics[list.size()]);
 

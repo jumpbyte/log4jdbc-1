@@ -25,7 +25,6 @@ import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
-import fr.ms.log4jdbc.context.BatchContext;
 import fr.ms.log4jdbc.context.TransactionContext;
 import fr.ms.log4jdbc.rdbms.GenericRdbmsSpecifics;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
@@ -58,8 +57,6 @@ public class ConnectionContext {
 
     private boolean autoCommit = true;
 
-    private BatchContext batchContext;
-
     private TransactionContext transactionContext;
 
     {
@@ -67,7 +64,6 @@ public class ConnectionContext {
 	openConnection.incrementAndGet();
 
 	transactionContext = new TransactionContext();
-	batchContext = new BatchContext(transactionContext);
     }
 
     public ConnectionContext(final Class clazz) {
@@ -82,11 +78,7 @@ public class ConnectionContext {
 
     public QueryImpl addQuery(final QueryImpl query, final boolean batch) {
 	if (!autoCommit) {
-	    if (batch) {
-		batchContext.addQuery(query);
-	    } else {
-		transactionContext.addQuery(query);
-	    }
+	    transactionContext.addQuery(query, batch);
 	}
 
 	return query;
@@ -124,10 +116,6 @@ public class ConnectionContext {
 	this.autoCommit = autoCommit;
     }
 
-    public BatchContext getBatchContext() {
-	return batchContext;
-    }
-
     public TransactionContext getTransactionContext() {
 	return transactionContext;
     }
@@ -152,12 +140,6 @@ public class ConnectionContext {
     public void resetTransaction() {
 	transactionContext.decrement();
 	transactionContext = new TransactionContext();
-	resetBatch();
-    }
-
-    public void resetBatch() {
-	batchContext.decrement();
-	batchContext = new BatchContext(transactionContext);
     }
 
     private final static RdbmsSpecifics getRdbms(final Class driverClass) {
@@ -184,8 +166,6 @@ public class ConnectionContext {
 	buffer.append(rdbmsSpecifics);
 	buffer.append(", autoCommit=");
 	buffer.append(autoCommit);
-	buffer.append(", batchContext=");
-	buffer.append(batchContext);
 	buffer.append(", transactionContext=");
 	buffer.append(transactionContext);
 	buffer.append("]");
