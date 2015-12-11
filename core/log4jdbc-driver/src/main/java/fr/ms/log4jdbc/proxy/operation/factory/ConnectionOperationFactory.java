@@ -15,7 +15,7 @@ public class ConnectionOperationFactory implements Log4JdbcOperationFactory {
     public ConnectionOperationFactory(final Connection connection, final ConnectionContext connectionContext) {
 	try {
 	    final boolean autoCommit = connection.getAutoCommit();
-	    connectionContext.setAutoCommit(autoCommit);
+	    connectionContext.getTransactionContext().setEnabled(!autoCommit);
 	} catch (final SQLException e) {
 
 	}

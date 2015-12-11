@@ -62,7 +62,7 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation1.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation1.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation1.getUrl());
-	    Assert.assertFalse(sqlOperation1.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation1.getTransaction());
 
 	    // Query
@@ -95,7 +95,7 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation2.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation2.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation2.getUrl());
-	    Assert.assertFalse(sqlOperation2.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation2.getTransaction());
 
 	    // Query
@@ -128,7 +128,7 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation3.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation3.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation3.getUrl());
-	    Assert.assertFalse(sqlOperation3.isAutoCommit());
+
 	    Assert.assertNotNull(sqlOperation3.getTransaction());
 
 	    // Query
@@ -176,7 +176,6 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation4.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation4.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation4.getUrl());
-	    Assert.assertFalse(sqlOperation4.isAutoCommit());
 	    Assert.assertNotNull(sqlOperation4.getTransaction());
 	    Assert.assertEquals(query3.getTransaction().getTransactionState(), Transaction.STATE_EXECUTE);
 	    Assert.assertEquals(query3.getTransaction().getOpenTransaction(), 0);
@@ -238,7 +237,7 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation.getUrl());
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Query query = sqlOperation.getQuery();
@@ -268,7 +267,7 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation.getUrl());
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    query = sqlOperation.getQuery();
@@ -298,7 +297,7 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation.getUrl());
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    final Transaction transaction1 = sqlOperation.getTransaction();
 	    Assert.assertNotNull(transaction1);
 
@@ -345,7 +344,7 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation.getUrl());
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    final Transaction transaction2 = sqlOperation.getTransaction();
 	    Assert.assertNotNull(transaction2);
 
@@ -391,7 +390,7 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation.getUrl());
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNotNull(sqlOperation.getTransaction());
 	    Assert.assertEquals(query1.getTransaction().getTransactionState(), Transaction.STATE_EXECUTE);
 	    Assert.assertEquals(query1.getTransaction().getOpenTransaction(), 0);

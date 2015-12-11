@@ -55,8 +55,6 @@ public class ConnectionContext {
 
     private final RdbmsSpecifics rdbmsSpecifics;
 
-    private boolean autoCommit = true;
-
     private TransactionContext transactionContext;
 
     {
@@ -77,7 +75,7 @@ public class ConnectionContext {
     }
 
     public QueryImpl addQuery(final QueryImpl query, final boolean batch) {
-	if (!autoCommit) {
+	if (transactionContext.isEnabled()) {
 	    transactionContext.addQuery(query, batch);
 	}
 
@@ -106,14 +104,6 @@ public class ConnectionContext {
 
     public RdbmsSpecifics getRdbmsSpecifics() {
 	return rdbmsSpecifics;
-    }
-
-    public boolean isAutoCommit() {
-	return autoCommit;
-    }
-
-    public void setAutoCommit(final boolean autoCommit) {
-	this.autoCommit = autoCommit;
     }
 
     public TransactionContext getTransactionContext() {
@@ -164,11 +154,10 @@ public class ConnectionContext {
 	buffer.append(connectionNumber);
 	buffer.append(", rdbmsSpecifics=");
 	buffer.append(rdbmsSpecifics);
-	buffer.append(", autoCommit=");
-	buffer.append(autoCommit);
 	buffer.append(", transactionContext=");
 	buffer.append(transactionContext);
 	buffer.append("]");
+
 	return buffer.toString();
     }
 }

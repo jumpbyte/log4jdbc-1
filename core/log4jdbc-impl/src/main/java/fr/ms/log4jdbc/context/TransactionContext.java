@@ -47,6 +47,8 @@ public class TransactionContext implements Transaction, Cloneable {
 
     private final static SyncLong openTransaction = syncLongFactory.newLong();
 
+    private boolean enabled;
+
     private String state;
 
     private boolean transactionInit = false;
@@ -56,6 +58,14 @@ public class TransactionContext implements Transaction, Cloneable {
 
     private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean Queries Transaction";
     private ReferenceObject refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
+
+    public boolean isEnabled() {
+	return enabled;
+    }
+
+    public void setEnabled(final boolean enabled) {
+	this.enabled = enabled;
+    }
 
     private void initTransaction() {
 	if (!transactionInit) {

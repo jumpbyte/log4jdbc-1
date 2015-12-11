@@ -26,11 +26,14 @@ public class ConnectionOperation extends AbstractOperation {
 
 	final boolean setAutoCommitMethod = nameMethod.equals("setAutoCommit");
 	if (setAutoCommitMethod) {
-	    final Boolean autoCommit = (Boolean) args[0];
-	    final boolean etatActuel = connectionContext.isAutoCommit();
-	    connectionContext.setAutoCommit(autoCommit.booleanValue());
+	    final boolean autoCommit = ((Boolean) args[0]).booleanValue();
 
-	    if (etatActuel == false && connectionContext.isAutoCommit()) {
+	    final boolean transactionEnabled = connectionContext.getTransactionContext().isEnabled();
+	    final boolean autoCommitEnCours = !transactionEnabled;
+
+	    connectionContext.getTransactionContext().setEnabled(!autoCommit);
+
+	    if (autoCommitEnCours == false && autoCommit) {
 		commitMethod = true;
 	    }
 	}
