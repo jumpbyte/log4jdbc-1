@@ -36,9 +36,15 @@ import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
  */
 public class ConnectionDecorator implements ImplementationProxy {
 
+    private final Object sourceImpl;
+
+    private ConnectionDecorator(final Object sourceImpl) {
+	this.sourceImpl = sourceImpl;
+    }
+
     public static Object proxyConnection(final Object impl, final Object sourceImpl) {
-	final ImplementationProxy ip = new ConnectionDecorator();
-	final InvocationHandler ih = new ImplementationDecorator(impl, sourceImpl, ip);
+	final ImplementationProxy ip = new ConnectionDecorator(sourceImpl);
+	final InvocationHandler ih = new ImplementationDecorator(impl, ip);
 
 	final Class clazz = impl.getClass();
 	final ClassLoader classLoader = clazz.getClassLoader();
@@ -53,7 +59,7 @@ public class ConnectionDecorator implements ImplementationProxy {
 
 	    final Connection c = (Connection) invoke;
 
-	    final Connection wrapObject = Log4JdbcProxy.proxyConnection(c, origine.getSourceImpl().getClass());
+	    final Connection wrapObject = Log4JdbcProxy.proxyConnection(c, sourceImpl.getClass());
 	    return wrapObject;
 	}
 	return null;

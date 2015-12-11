@@ -42,16 +42,13 @@ public class ImplementationDecorator implements InvocationHandler {
 
     private final Object impl;
 
-    private final Object sourceImpl;
-
     private final ImplementationProxy ip;
 
-    public ImplementationDecorator(final Object impl, final Object sourceImpl, final ImplementationProxy ip) {
+    public ImplementationDecorator(final Object impl, final ImplementationProxy ip) {
 	if (ip == null) {
 	    throw new NullPointerException();
 	}
 	this.impl = impl;
-	this.sourceImpl = sourceImpl;
 	this.ip = ip;
     }
 
@@ -109,15 +106,11 @@ public class ImplementationDecorator implements InvocationHandler {
 	if (interfaces == null || interfaces.length == 0) {
 	    return impl;
 	}
-	final InvocationHandler ih = new ImplementationDecorator(impl, sourceImpl, ip);
+	final InvocationHandler ih = new ImplementationDecorator(impl, ip);
 
 	final Object proxy = Proxy.newProxyInstance(classLoader, interfaces, ih);
 
 	return proxy;
-    }
-
-    public Object getSourceImpl() {
-	return sourceImpl;
     }
 
     public static interface ImplementationProxy {
