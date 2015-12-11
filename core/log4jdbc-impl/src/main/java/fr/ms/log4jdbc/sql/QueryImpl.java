@@ -29,7 +29,7 @@ import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.context.Transaction;
-import fr.ms.log4jdbc.context.TransactionContext;
+import fr.ms.log4jdbc.context.TransactionJDBCContextOld;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
@@ -179,7 +179,7 @@ public class QueryImpl implements Query, Cloneable {
 	this.state = state;
     }
 
-    public void setTransactionContext(final TransactionContext transactionContext) {
+    public void setTransactionContext(final TransactionJDBCContextOld transactionContext) {
 	this.transaction = transactionContext;
     }
 

@@ -26,6 +26,8 @@ import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.context.TransactionContext;
+import fr.ms.log4jdbc.context.TransactionFactory;
+import fr.ms.log4jdbc.context.TransactionJDBCFactory;
 import fr.ms.log4jdbc.rdbms.GenericRdbmsSpecifics;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.QueryImpl;
@@ -55,13 +57,15 @@ public class ConnectionContext {
 
     private final RdbmsSpecifics rdbmsSpecifics;
 
+    private final TransactionFactory transactionFactory = new TransactionJDBCFactory();
+
     private TransactionContext transactionContext;
 
     {
 	this.connectionNumber = totalConnectionNumber.incrementAndGet();
 	openConnection.incrementAndGet();
 
-	transactionContext = new TransactionContext();
+	transactionContext = transactionFactory.newTransactionContext();
     }
 
     public ConnectionContext(final Class clazz) {
@@ -128,8 +132,8 @@ public class ConnectionContext {
     }
 
     public void resetTransaction() {
-	transactionContext.decrement();
-	transactionContext = new TransactionContext();
+	transactionContext.reset();
+	transactionContext = transactionFactory.newTransactionContext();
     }
 
     private final static RdbmsSpecifics getRdbms(final Class driverClass) {
