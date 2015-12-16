@@ -6,12 +6,10 @@ import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.sql.internal.QueryFactory;
 import fr.ms.log4jdbc.sql.internal.QueryNamedFactory;
 
-public class CallableStatementOperationFactory extends
-	PreparedStatementOperationFactory {
+public class CallableStatementOperationFactory extends PreparedStatementOperationFactory {
 
-    public CallableStatementOperationFactory(final CallableStatement statement,
-	    final ConnectionContext connectionContext, final String sql) {
-	super(statement, connectionContext, sql);
+    public CallableStatementOperationFactory(final ConnectionContext connectionContext, final CallableStatement statement, final String sql) {
+	super(connectionContext, statement, sql);
     }
 
     public QueryFactory getQueryFactory() {

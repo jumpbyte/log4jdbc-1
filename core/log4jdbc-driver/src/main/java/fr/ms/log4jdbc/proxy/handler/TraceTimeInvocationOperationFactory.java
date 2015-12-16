@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationLogger;
-import fr.ms.log4jdbc.context.internal.ConnectionContext;
 
 public class TraceTimeInvocationOperationFactory implements Log4JdbcOperationFactory {
 
@@ -15,9 +14,8 @@ public class TraceTimeInvocationOperationFactory implements Log4JdbcOperationFac
 	this.factory = factory;
     }
 
-    public Log4JdbcOperation newLog4JdbcOperation(final ConnectionContext connectionContext, final TimeInvocation timeInvocation, final Object proxy,
-	    final Method method, final Object[] args) {
-	final Log4JdbcOperation newLog4JdbcOperation = factory.newLog4JdbcOperation(connectionContext, timeInvocation, proxy, method, args);
+    public Log4JdbcOperation newLog4JdbcOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
+	final Log4JdbcOperation newLog4JdbcOperation = factory.newLog4JdbcOperation(timeInvocation, proxy, method, args);
 
 	final Log4JdbcOperation decorator = new TraceTimeInvocationOperation(newLog4JdbcOperation, timeInvocation);
 

@@ -7,22 +7,17 @@ import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.lang.reflect.TimeInvocationHandler;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationLogger;
-import fr.ms.log4jdbc.context.internal.ConnectionContext;
 
 public class Log4JdbcInvocationHandler implements InvocationHandler {
 
     private final TimeInvocationHandler invocationHandler;
 
-    private final ConnectionContext connectionContext;
-
     private final SqlOperationLogger[] logs;
 
     private final Log4JdbcOperationFactory factory;
 
-    public Log4JdbcInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
-	    final Log4JdbcOperationFactory factory) {
+    public Log4JdbcInvocationHandler(final Object implementation, final SqlOperationLogger[] logs, final Log4JdbcOperationFactory factory) {
 	this.invocationHandler = new TimeInvocationHandler(implementation);
-	this.connectionContext = connectionContext;
 	this.logs = logs;
 	this.factory = factory;
     }
@@ -33,7 +28,7 @@ public class Log4JdbcInvocationHandler implements InvocationHandler {
 	final Object invoke = timeInvocation.getInvoke();
 	final Throwable targetException = timeInvocation.getTargetException();
 
-	final Log4JdbcOperation operationContext = factory.newLog4JdbcOperation(connectionContext, timeInvocation, proxy, method, args);
+	final Log4JdbcOperation operationContext = factory.newLog4JdbcOperation(timeInvocation, proxy, method, args);
 
 	if (logs != null && logs.length != 0) {
 

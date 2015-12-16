@@ -14,21 +14,20 @@ import fr.ms.log4jdbc.sql.internal.QuerySQLFactory;
 
 public class StatementOperationFactory implements Log4JdbcOperationFactory {
 
+    protected final ConnectionContext connectionContext;
+
     private final Statement statement;
 
     protected QueryImpl query;
 
-    public StatementOperationFactory(final Statement statement) {
+    public StatementOperationFactory(final ConnectionContext connectionContext, final Statement statement) {
+	this.connectionContext = connectionContext;
 	this.statement = statement;
     }
 
-    public Log4JdbcOperation newLog4JdbcOperation(
-	    final ConnectionContext connectionContext,
-	    final TimeInvocation timeInvocation, final Object proxy,
-	    final Method method, final Object[] args) {
+    public Log4JdbcOperation newLog4JdbcOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
 
-	final Log4JdbcOperation operation = new StatementOperation(this,
-		connectionContext, timeInvocation, proxy, method, args);
+	final Log4JdbcOperation operation = new StatementOperation(this, connectionContext, timeInvocation, proxy, method, args);
 
 	return operation;
     }
