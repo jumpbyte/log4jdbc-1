@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.internal.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.log4jdbc.proxy.operation.factory.StatementOperationFactory;
 import fr.ms.log4jdbc.sql.Query;
@@ -20,7 +20,7 @@ public class StatementOperation extends AbstractOperation {
 
     protected QueryImpl query;
 
-    public StatementOperation(final StatementOperationFactory context, final ConnectionContext connectionContext, final TimeInvocation timeInvocation,
+    public StatementOperation(final StatementOperationFactory context, final ConnectionJDBCContext connectionContext, final TimeInvocation timeInvocation,
 	    final Object proxy, final Method method, final Object[] args) {
 	super(connectionContext, timeInvocation, proxy, method, args);
 	this.context = context;

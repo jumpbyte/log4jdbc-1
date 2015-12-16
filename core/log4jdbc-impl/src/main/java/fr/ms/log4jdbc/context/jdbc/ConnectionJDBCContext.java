@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.context.internal;
+package fr.ms.log4jdbc.context.jdbc;
 
 import java.sql.Driver;
 
@@ -25,7 +25,6 @@ import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
-import fr.ms.log4jdbc.context.TransactionContext;
 import fr.ms.log4jdbc.rdbms.GenericRdbmsSpecifics;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.QueryImpl;
@@ -39,7 +38,7 @@ import fr.ms.log4jdbc.utils.ServicesJDBC;
  * @author Marco Semiao
  *
  */
-public class ConnectionContext {
+public class ConnectionJDBCContext {
 
     private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
 
@@ -57,20 +56,20 @@ public class ConnectionContext {
 
     private boolean autoCommit = true;
 
-    private TransactionContext transactionContext;
+    private TransactionJDBCContext transactionContext;
 
     {
 	this.connectionNumber = totalConnectionNumber.incrementAndGet();
 	openConnection.incrementAndGet();
 
-	transactionContext = new TransactionContext();
+	transactionContext = new TransactionJDBCContext();
     }
 
-    public ConnectionContext(final Class clazz) {
+    public ConnectionJDBCContext(final Class clazz) {
 	this.rdbmsSpecifics = getRdbms(clazz);
     }
 
-    public ConnectionContext(final Driver driver, final String url) {
+    public ConnectionJDBCContext(final Driver driver, final String url) {
 	this.driver = driver;
 	this.url = url;
 	this.rdbmsSpecifics = getRdbms(driver.getClass());
@@ -116,7 +115,7 @@ public class ConnectionContext {
 	this.autoCommit = autoCommit;
     }
 
-    public TransactionContext getTransactionContext() {
+    public TransactionJDBCContext getTransactionContext() {
 	return transactionContext;
     }
 
@@ -139,7 +138,7 @@ public class ConnectionContext {
 
     public void resetTransaction() {
 	transactionContext.decrement();
-	transactionContext = new TransactionContext();
+	transactionContext = new TransactionJDBCContext();
     }
 
     private final static RdbmsSpecifics getRdbms(final Class driverClass) {

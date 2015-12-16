@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.context;
+package fr.ms.log4jdbc.context.jdbc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +28,7 @@ import fr.ms.lang.ref.ReferenceFactory;
 import fr.ms.lang.ref.ReferenceObject;
 import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
+import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
@@ -39,7 +40,7 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  * @author Marco Semiao
  *
  */
-public class TransactionContext implements Transaction, Cloneable {
+public class TransactionJDBCContext implements Transaction, Cloneable {
 
     private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
 
@@ -88,7 +89,7 @@ public class TransactionContext implements Transaction, Cloneable {
 	}
 
 	try {
-	    query.setTransactionContext((TransactionContext) this.clone());
+	    query.setTransactionContext((TransactionJDBCContext) this.clone());
 	} catch (final CloneNotSupportedException e) {
 	    e.printStackTrace();
 	}
@@ -232,7 +233,7 @@ public class TransactionContext implements Transaction, Cloneable {
 	if (getClass() != obj.getClass()) {
 	    return false;
 	}
-	final TransactionContext other = (TransactionContext) obj;
+	final TransactionJDBCContext other = (TransactionJDBCContext) obj;
 	if (getQueriesTransaction() == null) {
 	    if (other.getQueriesTransaction() != null) {
 		return false;
@@ -254,7 +255,7 @@ public class TransactionContext implements Transaction, Cloneable {
     }
 
     public Object clone() throws CloneNotSupportedException {
-	final TransactionContext t = (TransactionContext) super.clone();
+	final TransactionJDBCContext t = (TransactionJDBCContext) super.clone();
 	final List queriesTransaction = (List) refQueriesTransaction.get();
 	if (queriesTransaction == null) {
 	    t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());

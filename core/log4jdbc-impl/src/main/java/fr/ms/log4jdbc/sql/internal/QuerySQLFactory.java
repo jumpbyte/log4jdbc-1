@@ -17,7 +17,7 @@
  */
 package fr.ms.log4jdbc.sql.internal;
 
-import fr.ms.log4jdbc.context.internal.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
@@ -40,7 +40,7 @@ public class QuerySQLFactory implements QueryFactory {
 	return instance;
     }
 
-    public QueryImpl newQuery(final ConnectionContext connectionContext, final String jdbcQuery) {
+    public QueryImpl newQuery(final ConnectionJDBCContext connectionContext, final String jdbcQuery) {
 	if (jdbcQuery == null) {
 	    final QueryImpl wrapper = new QueryImpl(null);
 	    return wrapper;

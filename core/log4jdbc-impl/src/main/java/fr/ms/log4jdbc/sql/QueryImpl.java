@@ -29,8 +29,8 @@ import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.context.Transaction;
-import fr.ms.log4jdbc.context.TransactionContext;
-import fr.ms.log4jdbc.context.internal.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
+import fr.ms.log4jdbc.context.jdbc.TransactionJDBCContext;
 import fr.ms.log4jdbc.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
 import fr.ms.log4jdbc.sql.internal.QuerySQL;
@@ -160,13 +160,13 @@ public class QueryImpl implements Query, Cloneable {
 	}
     }
 
-    public void initResultSetCollector(final ConnectionContext connectionContext) {
+    public void initResultSetCollector(final ConnectionJDBCContext connectionContext) {
 	if (this.resultSetCollector == null) {
 	    this.resultSetCollector = new ResultSetCollectorImpl(connectionContext);
 	}
     }
 
-    public void initResultSetCollector(final ConnectionContext connectionContext, final ResultSet rs) {
+    public void initResultSetCollector(final ConnectionJDBCContext connectionContext, final ResultSet rs) {
 	initResultSetCollector(connectionContext);
 	this.resultSetCollector.setRs(rs);
     }
@@ -179,7 +179,7 @@ public class QueryImpl implements Query, Cloneable {
 	this.state = state;
     }
 
-    public void setTransactionContext(final TransactionContext transactionContext) {
+    public void setTransactionContext(final TransactionJDBCContext transactionContext) {
 	this.transaction = transactionContext;
     }
 

@@ -25,8 +25,8 @@ import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.context.Transaction;
-import fr.ms.log4jdbc.context.TransactionContext;
-import fr.ms.log4jdbc.context.internal.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
+import fr.ms.log4jdbc.context.jdbc.TransactionJDBCContext;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
@@ -43,15 +43,15 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
 
     private final TimeInvocation timeInvocation;
 
-    private final ConnectionContext connectionContext;
+    private final ConnectionJDBCContext connectionContext;
 
     private final long openConnection;
 
     private QueryImpl query;
 
-    private TransactionContext transaction;
+    private TransactionJDBCContext transaction;
 
-    public SqlOperationImpl(final TimeInvocation timeInvocation, final ConnectionContext connectionContext) {
+    public SqlOperationImpl(final TimeInvocation timeInvocation, final ConnectionJDBCContext connectionContext) {
 	this.timeInvocation = timeInvocation;
 	this.connectionContext = connectionContext;
 	this.openConnection = connectionContext.getOpenConnection().get();
@@ -63,7 +63,7 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
 	    query = (QueryImpl) query.clone();
 	}
 
-	transaction = (TransactionContext) transaction.clone();
+	transaction = (TransactionJDBCContext) transaction.clone();
 
 	return this;
     }

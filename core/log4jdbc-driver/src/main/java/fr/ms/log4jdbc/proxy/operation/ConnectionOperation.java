@@ -6,12 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.internal.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 
 public class ConnectionOperation extends AbstractOperation {
 
-    public ConnectionOperation(final ConnectionContext connectionContext, final TimeInvocation timeInvocation, final Object proxy, final Method method,
+    public ConnectionOperation(final ConnectionJDBCContext connectionContext, final TimeInvocation timeInvocation, final Object proxy, final Method method,
 	    final Object[] args) {
 	super(connectionContext, timeInvocation, proxy, method, args);
     }

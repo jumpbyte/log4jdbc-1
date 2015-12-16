@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.sql.Statement;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.internal.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperationFactory;
 import fr.ms.log4jdbc.proxy.operation.StatementOperation;
@@ -14,13 +14,13 @@ import fr.ms.log4jdbc.sql.internal.QuerySQLFactory;
 
 public class StatementOperationFactory implements Log4JdbcOperationFactory {
 
-    protected final ConnectionContext connectionContext;
+    protected final ConnectionJDBCContext connectionContext;
 
     private final Statement statement;
 
     protected QueryImpl query;
 
-    public StatementOperationFactory(final ConnectionContext connectionContext, final Statement statement) {
+    public StatementOperationFactory(final ConnectionJDBCContext connectionContext, final Statement statement) {
 	this.connectionContext = connectionContext;
 	this.statement = statement;
     }

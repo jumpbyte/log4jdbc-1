@@ -5,16 +5,16 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.internal.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperationFactory;
 import fr.ms.log4jdbc.proxy.operation.ConnectionOperation;
 
 public class ConnectionOperationFactory implements Log4JdbcOperationFactory {
 
-    private final ConnectionContext connectionContext;
+    private final ConnectionJDBCContext connectionContext;
 
-    public ConnectionOperationFactory(final ConnectionContext connectionContext, final Connection connection) {
+    public ConnectionOperationFactory(final ConnectionJDBCContext connectionContext, final Connection connection) {
 	this.connectionContext = connectionContext;
 	try {
 	    final boolean autoCommit = connection.getAutoCommit();

@@ -4,13 +4,13 @@ import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.internal.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.log4jdbc.proxy.operation.PreparedStatementOperation;
 
 public class PreparedStatementOperationFactory extends StatementOperationFactory {
 
-    public PreparedStatementOperationFactory(final ConnectionContext connectionContext, final PreparedStatement statement, final String sql) {
+    public PreparedStatementOperationFactory(final ConnectionJDBCContext connectionContext, final PreparedStatement statement, final String sql) {
 	super(connectionContext, statement);
 	query = getQueryFactory().newQuery(connectionContext, sql);
     }

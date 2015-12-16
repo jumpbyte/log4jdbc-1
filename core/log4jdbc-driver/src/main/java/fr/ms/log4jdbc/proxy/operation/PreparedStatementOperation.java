@@ -6,14 +6,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.internal.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
 import fr.ms.log4jdbc.proxy.operation.factory.PreparedStatementOperationFactory;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
 public class PreparedStatementOperation extends StatementOperation {
 
-    public PreparedStatementOperation(final PreparedStatementOperationFactory context, final ConnectionContext connectionContext,
+    public PreparedStatementOperation(final PreparedStatementOperationFactory context, final ConnectionJDBCContext connectionContext,
 	    final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
 	super(context, connectionContext, timeInvocation, proxy, method, args);
     }

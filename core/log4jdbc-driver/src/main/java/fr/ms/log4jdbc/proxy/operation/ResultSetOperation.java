@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.internal.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
 import fr.ms.log4jdbc.proxy.operation.factory.ResultSetOperationFactory;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
 import fr.ms.log4jdbc.sql.QueryImpl;
@@ -20,7 +20,7 @@ public class ResultSetOperation extends AbstractOperation {
 
     private ResultSet rs;
 
-    public ResultSetOperation(final ResultSetOperationFactory context, final ConnectionContext connectionContext, final TimeInvocation timeInvocation,
+    public ResultSetOperation(final ResultSetOperationFactory context, final ConnectionJDBCContext connectionContext, final TimeInvocation timeInvocation,
 	    final Object proxy, final Method method, final Object[] args) {
 	super(connectionContext, timeInvocation, proxy, method, args);
 	this.context = context;
