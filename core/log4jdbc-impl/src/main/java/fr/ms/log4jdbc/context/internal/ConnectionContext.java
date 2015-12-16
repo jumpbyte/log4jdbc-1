@@ -26,8 +26,6 @@ import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.context.TransactionContext;
-import fr.ms.log4jdbc.context.TransactionFactory;
-import fr.ms.log4jdbc.context.TransactionJDBCFactory;
 import fr.ms.log4jdbc.rdbms.GenericRdbmsSpecifics;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.QueryImpl;
@@ -57,7 +55,7 @@ public class ConnectionContext {
 
     private final RdbmsSpecifics rdbmsSpecifics;
 
-    private final TransactionFactory transactionFactory = new TransactionJDBCFactory();
+    private boolean autoCommit = true;
 
     private TransactionContext transactionContext;
 
@@ -65,7 +63,7 @@ public class ConnectionContext {
 	this.connectionNumber = totalConnectionNumber.incrementAndGet();
 	openConnection.incrementAndGet();
 
-	transactionContext = transactionFactory.newTransactionContext();
+	transactionContext = new TransactionContext();
     }
 
     public ConnectionContext(final Class clazz) {
@@ -79,7 +77,7 @@ public class ConnectionContext {
     }
 
     public QueryImpl addQuery(final QueryImpl query, final boolean batch) {
-	if (transactionContext.isEnabled()) {
+	if (!autoCommit) {
 	    transactionContext.addQuery(query, batch);
 	}
 
@@ -110,6 +108,14 @@ public class ConnectionContext {
 	return rdbmsSpecifics;
     }
 
+    public boolean isAutoCommit() {
+	return autoCommit;
+    }
+
+    public void setAutoCommit(final boolean autoCommit) {
+	this.autoCommit = autoCommit;
+    }
+
     public TransactionContext getTransactionContext() {
 	return transactionContext;
     }
@@ -132,8 +138,8 @@ public class ConnectionContext {
     }
 
     public void resetTransaction() {
-	transactionContext.reset();
-	transactionContext = transactionFactory.newTransactionContext();
+	transactionContext.decrement();
+	transactionContext = new TransactionContext();
     }
 
     private final static RdbmsSpecifics getRdbms(final Class driverClass) {
@@ -158,10 +164,11 @@ public class ConnectionContext {
 	buffer.append(connectionNumber);
 	buffer.append(", rdbmsSpecifics=");
 	buffer.append(rdbmsSpecifics);
+	buffer.append(", autoCommit=");
+	buffer.append(autoCommit);
 	buffer.append(", transactionContext=");
 	buffer.append(transactionContext);
 	buffer.append("]");
-
 	return buffer.toString();
     }
 }

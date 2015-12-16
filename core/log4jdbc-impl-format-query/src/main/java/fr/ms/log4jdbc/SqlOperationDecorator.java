@@ -96,6 +96,10 @@ public class SqlOperationDecorator implements SqlOperation {
 	return sqlOperation.getUrl();
     }
 
+    public boolean isAutoCommit() {
+	return sqlOperation.isAutoCommit();
+    }
+
     public int hashCode() {
 	return sqlOperation.hashCode();
     }

@@ -50,5 +50,7 @@ public interface SqlOperation {
 
     Query getQuery();
 
+    boolean isAutoCommit();
+
     Transaction getTransaction();
 }

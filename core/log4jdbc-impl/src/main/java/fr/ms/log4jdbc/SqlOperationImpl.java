@@ -104,8 +104,12 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
 	this.query = query;
     }
 
+    public boolean isAutoCommit() {
+	return connectionContext.isAutoCommit();
+    }
+
     public Transaction getTransaction() {
-	if (transaction == null || !transaction.isEnabled()) {
+	if (isAutoCommit() || transaction == null || transaction.getTransactionState() == null) {
 	    return null;
 	}
 	return transaction;
