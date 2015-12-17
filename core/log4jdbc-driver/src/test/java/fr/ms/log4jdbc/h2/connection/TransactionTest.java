@@ -62,7 +62,7 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation1.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation1.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation1.getUrl());
-	    Assert.assertFalse(sqlOperation1.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation1.getTransaction());
 
 	    // Query
@@ -95,7 +95,7 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation2.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation2.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation2.getUrl());
-	    Assert.assertFalse(sqlOperation2.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation2.getTransaction());
 
 	    // Query
@@ -128,7 +128,7 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation3.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation3.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation3.getUrl());
-	    Assert.assertFalse(sqlOperation3.isAutoCommit());
+
 	    Assert.assertNotNull(sqlOperation3.getTransaction());
 
 	    // Query
@@ -176,7 +176,7 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation4.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation4.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation4.getUrl());
-	    Assert.assertFalse(sqlOperation4.isAutoCommit());
+
 	    Assert.assertNotNull(sqlOperation4.getTransaction());
 	    Assert.assertEquals(query3.getTransaction().getTransactionState(), Transaction.STATE_EXECUTE);
 	    Assert.assertEquals(query3.getTransaction().getOpenTransaction(), 0);
@@ -191,7 +191,7 @@ public class TransactionTest {
 	    Assert.assertEquals(transactionQuery3Bis.getSQLQuery(),
 		    "INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction', 'SQL', '1970-01-01');");
 	    Assert.assertEquals(transactionQuery3Bis.getMethodQuery(), Query.METHOD_EXECUTE);
-	    Assert.assertEquals(transactionQuery3Bis.getState(), Query.STATE_COMMIT);
+	    Assert.assertEquals(transactionQuery3Bis.getState(), Query.STATE_EXECUTE);
 	    Assert.assertNull(transactionQuery3Bis.getResultSetCollector());
 
 	    final Query query4 = sqlOperation4.getQuery();
@@ -238,7 +238,7 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation.getUrl());
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Query query = sqlOperation.getQuery();
@@ -268,7 +268,7 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation.getUrl());
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    query = sqlOperation.getQuery();
@@ -298,7 +298,7 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation.getUrl());
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    final Transaction transaction1 = sqlOperation.getTransaction();
 	    Assert.assertNotNull(transaction1);
 
@@ -345,7 +345,7 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation.getUrl());
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    final Transaction transaction2 = sqlOperation.getTransaction();
 	    Assert.assertNotNull(transaction2);
 
@@ -391,8 +391,37 @@ public class TransactionTest {
 	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation.getUrl());
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNotNull(sqlOperation.getTransaction());
+
+	    Assert.assertEquals(sqlOperation.getTransaction().getTransactionState(), Transaction.STATE_COMMIT);
+	    Assert.assertEquals(sqlOperation.getTransaction().getOpenTransaction(), 0);
+	    Assert.assertEquals(sqlOperation.getTransaction().getQueriesTransaction().length, 2);
+
+	    transactionQuery1 = sqlOperation.getTransaction().getQueriesTransaction()[0];
+	    Assert.assertNotNull(transactionQuery1.getDate());
+	    Assert.assertNotNull(transactionQuery1.getExecTime());
+	    Assert.assertEquals(transactionQuery1.getJDBCQuery(),
+		    "INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction', 'SQL', '1970-01-01');");
+	    Assert.assertEquals(transactionQuery1.getJDBCParameters().size(), 0);
+	    Assert.assertEquals(transactionQuery1.getSQLQuery(),
+		    "INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction', 'SQL', '1970-01-01');");
+	    Assert.assertEquals(transactionQuery1.getMethodQuery(), Query.METHOD_EXECUTE);
+	    Assert.assertEquals(transactionQuery1.getState(), Query.STATE_COMMIT);
+	    Assert.assertNull(transactionQuery1.getResultSetCollector());
+
+	    transactionQuery1 = sqlOperation.getTransaction().getQueriesTransaction()[1];
+	    Assert.assertNotNull(transactionQuery1.getDate());
+	    Assert.assertNotNull(transactionQuery1.getExecTime());
+	    Assert.assertEquals(transactionQuery1.getJDBCQuery(),
+		    "INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction2', 'SQL2', '1970-01-01');");
+	    Assert.assertEquals(transactionQuery1.getJDBCParameters().size(), 0);
+	    Assert.assertEquals(transactionQuery1.getSQLQuery(),
+		    "INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction2', 'SQL2', '1970-01-01');");
+	    Assert.assertEquals(transactionQuery1.getMethodQuery(), Query.METHOD_EXECUTE);
+	    Assert.assertEquals(transactionQuery1.getState(), Query.STATE_COMMIT);
+	    Assert.assertNull(transactionQuery1.getResultSetCollector());
+
 	    Assert.assertEquals(query1.getTransaction().getTransactionState(), Transaction.STATE_EXECUTE);
 	    Assert.assertEquals(query1.getTransaction().getOpenTransaction(), 0);
 	    Assert.assertEquals(query1.getTransaction().getQueriesTransaction().length, 1);
@@ -406,7 +435,7 @@ public class TransactionTest {
 	    Assert.assertEquals(transactionQuery1.getSQLQuery(),
 		    "INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('Transaction', 'SQL', '1970-01-01');");
 	    Assert.assertEquals(transactionQuery1.getMethodQuery(), Query.METHOD_EXECUTE);
-	    Assert.assertEquals(transactionQuery1.getState(), Query.STATE_COMMIT);
+	    Assert.assertEquals(transactionQuery1.getState(), Query.STATE_EXECUTE);
 	    Assert.assertNull(transactionQuery1.getResultSetCollector());
 
 	    query = sqlOperation.getQuery();

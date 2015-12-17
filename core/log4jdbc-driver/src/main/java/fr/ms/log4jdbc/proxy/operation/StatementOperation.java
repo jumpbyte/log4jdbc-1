@@ -44,7 +44,6 @@ public class StatementOperation extends AbstractOperation {
 
 	    connectionContext.addQuery(query, true);
 
-	    query.execute();
 	    sqlOperation.setQuery(query);
 	    return;
 	}
@@ -77,7 +76,6 @@ public class StatementOperation extends AbstractOperation {
 
 	    connectionContext.addQuery(query, false);
 
-	    query.execute();
 	    sqlOperation.setQuery(query);
 
 	    // execute retourne true boolean - GetResultSet
@@ -107,9 +105,6 @@ public class StatementOperation extends AbstractOperation {
 		    query.setTimeInvocation(timeInvocation);
 
 		    connectionContext.addQuery(query, true);
-
-		    query.execute();
-
 		}
 
 		query.initResultSetCollector(connectionContext, resultSet);

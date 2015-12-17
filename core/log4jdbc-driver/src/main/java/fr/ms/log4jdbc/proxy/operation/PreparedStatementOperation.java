@@ -29,7 +29,6 @@ public class PreparedStatementOperation extends StatementOperation {
 
 	    connectionContext.addQuery(query, true);
 
-	    query.execute();
 	    sqlOperation.setQuery(query);
 
 	    // Creation de la prochaine requete
@@ -65,7 +64,6 @@ public class PreparedStatementOperation extends StatementOperation {
 
 	    connectionContext.addQuery(query, false);
 
-	    query.execute();
 	    sqlOperation.setQuery(query);
 
 	    // Creation de la prochaine requete

@@ -12,13 +12,15 @@ import fr.ms.log4jdbc.proxy.operation.ConnectionOperation;
 
 public class ConnectionOperationFactory implements Log4JdbcOperationFactory {
 
+    private boolean autoCommit = true;
+
     private final ConnectionJDBCContext connectionContext;
 
     public ConnectionOperationFactory(final ConnectionJDBCContext connectionContext, final Connection connection) {
 	this.connectionContext = connectionContext;
+
 	try {
-	    final boolean autoCommit = connection.getAutoCommit();
-	    connectionContext.setAutoCommit(autoCommit);
+	    autoCommit = connection.getAutoCommit();
 	} catch (final SQLException e) {
 
 	}
@@ -26,8 +28,17 @@ public class ConnectionOperationFactory implements Log4JdbcOperationFactory {
 
     public Log4JdbcOperation newLog4JdbcOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
 
-	final Log4JdbcOperation operation = new ConnectionOperation(connectionContext, timeInvocation, proxy, method, args);
+	final Log4JdbcOperation operation = new ConnectionOperation(this, connectionContext, timeInvocation, proxy, method, args);
 
 	return operation;
     }
+
+    public boolean isAutoCommit() {
+	return autoCommit;
+    }
+
+    public void setAutoCommit(final boolean autoCommit) {
+	this.autoCommit = autoCommit;
+    }
+
 }

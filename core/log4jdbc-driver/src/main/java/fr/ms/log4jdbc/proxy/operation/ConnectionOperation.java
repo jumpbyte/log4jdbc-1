@@ -8,12 +8,16 @@ import java.sql.Statement;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
+import fr.ms.log4jdbc.proxy.operation.factory.ConnectionOperationFactory;
 
 public class ConnectionOperation extends AbstractOperation {
 
-    public ConnectionOperation(final ConnectionJDBCContext connectionContext, final TimeInvocation timeInvocation, final Object proxy, final Method method,
-	    final Object[] args) {
+    private final ConnectionOperationFactory connectionOperationFactory;
+
+    public ConnectionOperation(final ConnectionOperationFactory connectionOperationFactory, final ConnectionJDBCContext connectionContext,
+	    final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
 	super(connectionContext, timeInvocation, proxy, method, args);
+	this.connectionOperationFactory = connectionOperationFactory;
     }
 
     public void buildSqlOperation() {
@@ -26,13 +30,14 @@ public class ConnectionOperation extends AbstractOperation {
 
 	final boolean setAutoCommitMethod = nameMethod.equals("setAutoCommit");
 	if (setAutoCommitMethod) {
-	    final Boolean autoCommit = (Boolean) args[0];
-	    final boolean etatActuel = connectionContext.isAutoCommit();
-	    connectionContext.setAutoCommit(autoCommit.booleanValue());
+	    final boolean autoCommitNew = ((Boolean) args[0]).booleanValue();
 
-	    if (etatActuel == false && connectionContext.isAutoCommit()) {
+	    if (autoCommitNew && !connectionOperationFactory.isAutoCommit()) {
 		commitMethod = true;
 	    }
+
+	    connectionOperationFactory.setAutoCommit(autoCommitNew);
+	    connectionContext.getTransactionContext().setEnabled(!autoCommitNew);
 	}
 
 	if (commitMethod) {

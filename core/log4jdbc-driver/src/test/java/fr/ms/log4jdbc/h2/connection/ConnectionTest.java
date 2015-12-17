@@ -42,15 +42,12 @@ public class ConnectionTest {
 		final SqlOperationMessage sqlOperationMessage = sqlMessages.get(0);
 
 		Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
-		// Assert.assertEquals(1,
-		// sqlOperationMessage.getSqlOperation().getConnectionNumber());
-		// Assert.assertEquals(1,
-		// sqlOperationMessage.getSqlOperation().getOpenConnection());
+
 		Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
 		Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 		final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
-		Assert.assertTrue(sqlOperation.isAutoCommit());
+
 		Assert.assertNull(sqlOperation.getTransaction());
 		Assert.assertNull(sqlOperation.getQuery());
 	    }
@@ -77,7 +74,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertTrue(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 	    Assert.assertNull(sqlOperation.getQuery());
 	} finally {
@@ -108,7 +105,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 	    Assert.assertNull(sqlOperation.getQuery());
 	} finally {
@@ -139,7 +136,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 	    Assert.assertNull(sqlOperation.getQuery());
 
@@ -156,7 +153,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertTrue(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Assert.assertNull(sqlOperation.getQuery());
@@ -189,7 +186,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertTrue(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Assert.assertNull(sqlOperation.getQuery());
@@ -221,7 +218,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Assert.assertNull(sqlOperation.getQuery());
@@ -239,8 +236,8 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
-	    Assert.assertNotNull(sqlOperation.getTransaction());
+
+	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Assert.assertNull(sqlOperation.getQuery());
 	} finally {
@@ -273,7 +270,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertTrue(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Assert.assertNull(sqlOperation.getQuery());
@@ -307,7 +304,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertTrue(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Assert.assertNull(sqlOperation.getQuery());
@@ -339,7 +336,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Assert.assertNull(sqlOperation.getQuery());
@@ -357,7 +354,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Assert.assertNull(sqlOperation.getQuery());
@@ -389,7 +386,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Assert.assertNull(sqlOperation.getQuery());
@@ -407,7 +404,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Assert.assertNull(sqlOperation.getQuery());
@@ -439,7 +436,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Assert.assertNull(sqlOperation.getQuery());
@@ -457,7 +454,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Assert.assertNull(sqlOperation.getQuery());
@@ -476,8 +473,8 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
-	    Assert.assertNotNull(sqlOperation.getTransaction());
+
+	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Assert.assertNull(sqlOperation.getQuery());
 	} finally {
@@ -508,7 +505,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Assert.assertNull(sqlOperation.getQuery());
@@ -526,7 +523,7 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
+
 	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Assert.assertNull(sqlOperation.getQuery());
@@ -545,8 +542,8 @@ public class ConnectionTest {
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
-	    Assert.assertFalse(sqlOperation.isAutoCommit());
-	    Assert.assertNotNull(sqlOperation.getTransaction());
+
+	    Assert.assertNull(sqlOperation.getTransaction());
 
 	    Assert.assertNull(sqlOperation.getQuery());
 	} finally {

@@ -48,6 +48,8 @@ public class TransactionJDBCContext implements Transaction, Cloneable {
 
     private final static SyncLong openTransaction = syncLongFactory.newLong();
 
+    private boolean enabled;
+
     private String state;
 
     private boolean transactionInit = false;
@@ -58,6 +60,14 @@ public class TransactionJDBCContext implements Transaction, Cloneable {
     private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean Queries Transaction";
     private ReferenceObject refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
 
+    public boolean isEnabled() {
+	return enabled && state != null;
+    }
+
+    public void setEnabled(final boolean enabled) {
+	this.enabled = enabled;
+    }
+
     private void initTransaction() {
 	if (!transactionInit) {
 	    transactionInit = true;
@@ -67,31 +77,33 @@ public class TransactionJDBCContext implements Transaction, Cloneable {
     }
 
     public void addQuery(final QueryImpl query, final boolean batch) {
-	if (savePoint != null) {
-	    query.setSavePoint(savePoint);
-	}
-
-	final List queriesTransaction = (List) refQueriesTransaction.get();
-	if (queriesTransaction != null) {
-	    queriesTransaction.add(query);
-	}
-
-	initTransaction();
-
-	if (batch) {
-	    if (!Transaction.STATE_EXECUTE.equals(state)) {
-		state = Transaction.STATE_NOT_EXECUTE;
+	if (enabled) {
+	    if (savePoint != null) {
+		query.setSavePoint(savePoint);
 	    }
-	    query.setState(Query.STATE_NOT_EXECUTE);
-	} else {
-	    state = Transaction.STATE_EXECUTE;
-	    query.setState(Query.STATE_EXECUTE);
-	}
 
-	try {
-	    query.setTransactionContext((TransactionJDBCContext) this.clone());
-	} catch (final CloneNotSupportedException e) {
-	    e.printStackTrace();
+	    final List queriesTransaction = (List) refQueriesTransaction.get();
+	    if (queriesTransaction != null) {
+		queriesTransaction.add(query);
+	    }
+
+	    initTransaction();
+
+	    if (batch) {
+		if (!Transaction.STATE_EXECUTE.equals(state)) {
+		    state = Transaction.STATE_NOT_EXECUTE;
+		}
+		query.setState(Query.STATE_NOT_EXECUTE);
+	    } else {
+		state = Transaction.STATE_EXECUTE;
+		query.setState(Query.STATE_EXECUTE);
+	    }
+
+	    try {
+		query.setTransactionContext((TransactionJDBCContext) this.clone());
+	    } catch (final CloneNotSupportedException e) {
+		e.printStackTrace();
+	    }
 	}
     }
 

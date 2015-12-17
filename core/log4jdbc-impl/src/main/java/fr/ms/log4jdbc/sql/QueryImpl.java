@@ -70,10 +70,6 @@ public class QueryImpl implements Query, Cloneable {
 	this.query = query;
     }
 
-    public void execute() {
-	this.queryNumber = nbQueryTotal.incrementAndGet();
-    }
-
     public Date getDate() {
 	if (timeInvocation == null) {
 	    return null;
@@ -176,6 +172,9 @@ public class QueryImpl implements Query, Cloneable {
     }
 
     public void setState(final String state) {
+	if (Query.STATE_NOT_EXECUTE.equals(this.state) && Query.STATE_EXECUTE.equals(state)) {
+	    this.queryNumber = nbQueryTotal.incrementAndGet();
+	}
 	this.state = state;
     }
 
