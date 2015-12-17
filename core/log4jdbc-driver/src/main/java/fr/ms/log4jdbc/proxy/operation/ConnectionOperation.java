@@ -21,50 +21,18 @@ public class ConnectionOperation extends AbstractOperation {
     }
 
     public void buildSqlOperation() {
-
-	final Object invoke = timeInvocation.getInvoke();
-
 	final String nameMethod = method.getName();
 
-	boolean commitMethod = nameMethod.equals("commit");
-
-	final boolean setAutoCommitMethod = nameMethod.equals("setAutoCommit");
-	if (setAutoCommitMethod) {
-	    final boolean autoCommitNew = ((Boolean) args[0]).booleanValue();
-
-	    if (autoCommitNew && !connectionOperationFactory.isAutoCommit()) {
-		commitMethod = true;
-	    }
-
-	    connectionOperationFactory.setAutoCommit(autoCommitNew);
-	    connectionContext.getTransactionContext().setEnabled(!autoCommitNew);
-	}
-
-	if (commitMethod) {
-	    connectionContext.commit();
-	    connectionContext.resetTransaction();
-	}
-
-	final boolean rollbackMethod = nameMethod.equals("rollback");
-	if (rollbackMethod) {
-	    Object savePoint = null;
-	    if (args != null && args[0] != null) {
-		savePoint = args[0];
-	    }
-	    connectionContext.rollback(savePoint);
-	    if (savePoint == null) {
-		connectionContext.resetTransaction();
-	    }
-	}
-
-	final boolean setSavepointMethod = nameMethod.equals("setSavepoint");
-	if (setSavepointMethod) {
-	    connectionContext.setSavePoint(invoke);
-	}
-
-	final boolean closeMethod = nameMethod.equals("close");
-	if (closeMethod) {
-	    connectionContext.resetContext();
+	if (nameMethod.equals("setAutoCommit")) {
+	    connectionOperationFactory.executeAutoCommit(args);
+	} else if (nameMethod.equals("commit")) {
+	    connectionOperationFactory.executeCommit();
+	} else if (nameMethod.equals("rollback")) {
+	    connectionOperationFactory.executeRollback(args);
+	} else if (nameMethod.equals("setSavepoint")) {
+	    connectionOperationFactory.executeSavePoint(timeInvocation.getInvoke());
+	} else if (nameMethod.equals("close")) {
+	    connectionOperationFactory.executeClose();
 	}
     }
 
