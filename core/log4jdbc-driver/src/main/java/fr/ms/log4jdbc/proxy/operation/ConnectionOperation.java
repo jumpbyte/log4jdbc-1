@@ -24,15 +24,15 @@ public class ConnectionOperation extends AbstractOperation {
 	final String nameMethod = method.getName();
 
 	if (nameMethod.equals("setAutoCommit")) {
-	    connectionOperationFactory.executeAutoCommit(args);
+	    executeAutoCommit(args);
 	} else if (nameMethod.equals("commit")) {
-	    connectionOperationFactory.executeCommit();
+	    executeCommit();
 	} else if (nameMethod.equals("rollback")) {
-	    connectionOperationFactory.executeRollback(args);
+	    executeRollback(args);
 	} else if (nameMethod.equals("setSavepoint")) {
-	    connectionOperationFactory.executeSavePoint(timeInvocation.getInvoke());
+	    executeSavePoint(timeInvocation.getInvoke());
 	} else if (nameMethod.equals("close")) {
-	    connectionOperationFactory.executeClose();
+	    executeClose();
 	}
     }
 
@@ -53,5 +53,49 @@ public class ConnectionOperation extends AbstractOperation {
 	    }
 	}
 	return invoke;
+    }
+
+    private void executeAutoCommit(final Object[] args) {
+	final boolean autoCommit = ((Boolean) args[0]).booleanValue();
+	executeAutoCommit(autoCommit);
+    }
+
+    private void executeAutoCommit(final boolean autoCommit) {
+
+	final boolean commit = connectionOperationFactory.executeAutoCommit(autoCommit);
+	connectionContext.getTransactionContext().setEnabled(!autoCommit);
+
+	if (commit) {
+	    executeCommit();
+	}
+
+    }
+
+    private void executeCommit() {
+	connectionContext.commit();
+	connectionContext.resetTransaction();
+    }
+
+    private void executeSavePoint(final Object savePoint) {
+	connectionContext.setSavePoint(savePoint);
+    }
+
+    private void executeRollback(final Object[] args) {
+	Object savePoint = null;
+	if (args != null && args[0] != null) {
+	    savePoint = args[0];
+	}
+	executeRollback(savePoint);
+    }
+
+    private void executeRollback(final Object savePoint) {
+	connectionContext.rollback(savePoint);
+	if (savePoint == null) {
+	    connectionContext.resetTransaction();
+	}
+    }
+
+    private void executeClose() {
+	connectionContext.resetContext();
     }
 }

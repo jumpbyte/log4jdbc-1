@@ -41,12 +41,7 @@ public class ConnectionOperationFactory implements Log4JdbcOperationFactory {
 	this.autoCommit = autoCommit;
     }
 
-    public void executeAutoCommit(final Object[] args) {
-	final boolean autoCommit = ((Boolean) args[0]).booleanValue();
-	executeAutoCommit(autoCommit);
-    }
-
-    private void executeAutoCommit(final boolean autoCommit) {
+    public boolean executeAutoCommit(final boolean autoCommit) {
 	boolean commit = false;
 
 	if (autoCommit && !this.autoCommit) {
@@ -54,38 +49,7 @@ public class ConnectionOperationFactory implements Log4JdbcOperationFactory {
 	}
 
 	this.autoCommit = autoCommit;
-	connectionContext.getTransactionContext().setEnabled(!this.autoCommit);
 
-	if (commit) {
-	    executeCommit();
-	}
-    }
-
-    public void executeCommit() {
-	connectionContext.commit();
-	connectionContext.resetTransaction();
-    }
-
-    public void executeSavePoint(final Object savePoint) {
-	connectionContext.setSavePoint(savePoint);
-    }
-
-    public void executeRollback(final Object[] args) {
-	Object savePoint = null;
-	if (args != null && args[0] != null) {
-	    savePoint = args[0];
-	}
-	executeRollback(savePoint);
-    }
-
-    private void executeRollback(final Object savePoint) {
-	connectionContext.rollback(savePoint);
-	if (savePoint == null) {
-	    connectionContext.resetTransaction();
-	}
-    }
-
-    public void executeClose() {
-	connectionContext.resetContext();
+	return commit;
     }
 }
