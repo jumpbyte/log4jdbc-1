@@ -24,15 +24,15 @@ public class ConnectionOperation extends AbstractOperation {
 	final String nameMethod = method.getName();
 
 	if (nameMethod.equals("setAutoCommit")) {
-	    executeAutoCommit(args);
+	    setAutoCommit(args);
 	} else if (nameMethod.equals("commit")) {
-	    executeCommit();
+	    commit();
 	} else if (nameMethod.equals("rollback")) {
-	    executeRollback(args);
+	    rollback(args);
 	} else if (nameMethod.equals("setSavepoint")) {
-	    executeSavePoint(timeInvocation.getInvoke());
+	    setSavepoint(timeInvocation.getInvoke());
 	} else if (nameMethod.equals("close")) {
-	    executeClose();
+	    close();
 	}
     }
 
@@ -55,47 +55,46 @@ public class ConnectionOperation extends AbstractOperation {
 	return invoke;
     }
 
-    private void executeAutoCommit(final Object[] args) {
+    private void setAutoCommit(final Object[] args) {
 	final boolean autoCommit = ((Boolean) args[0]).booleanValue();
-	executeAutoCommit(autoCommit);
+	setAutoCommit(autoCommit);
     }
 
-    private void executeAutoCommit(final boolean autoCommit) {
+    private void setAutoCommit(final boolean autoCommit) {
 
 	final boolean commit = connectionOperationFactory.executeAutoCommit(autoCommit);
 	connectionContext.getTransactionContext().setEnabled(!autoCommit);
 
 	if (commit) {
-	    executeCommit();
+	    commit();
 	}
-
     }
 
-    private void executeCommit() {
+    private void commit() {
 	connectionContext.commit();
 	connectionContext.resetTransaction();
     }
 
-    private void executeSavePoint(final Object savePoint) {
+    private void setSavepoint(final Object savePoint) {
 	connectionContext.setSavePoint(savePoint);
     }
 
-    private void executeRollback(final Object[] args) {
+    private void rollback(final Object[] args) {
 	Object savePoint = null;
 	if (args != null && args[0] != null) {
 	    savePoint = args[0];
 	}
-	executeRollback(savePoint);
+	rollback(savePoint);
     }
 
-    private void executeRollback(final Object savePoint) {
+    private void rollback(final Object savePoint) {
 	connectionContext.rollback(savePoint);
 	if (savePoint == null) {
 	    connectionContext.resetTransaction();
 	}
     }
 
-    private void executeClose() {
+    private void close() {
 	connectionContext.resetContext();
     }
 }

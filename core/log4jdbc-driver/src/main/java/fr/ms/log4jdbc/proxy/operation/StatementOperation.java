@@ -34,61 +34,13 @@ public class StatementOperation extends AbstractOperation {
     public void buildSqlOperation() {
 	final String nameMethod = method.getName();
 
-	final boolean addBatchMethod = nameMethod.equals("addBatch") && args != null && args.length >= 1;
-	if (addBatchMethod) {
-	    final String sql = (String) args[0];
-
-	    query = queryFactory.newQuery(connectionContext, sql);
-	    query.setMethodQuery(Query.METHOD_BATCH);
-	    query.setTimeInvocation(timeInvocation);
-
-	    connectionContext.addQuery(query, true);
-
-	    sqlOperation.setQuery(query);
-	    return;
+	if (nameMethod.equals("addBatch") && args != null && args.length >= 1) {
+	    addBatch(args);
+	} else if (nameMethod.equals("executeBatch") && args == null) {
+	    executeBatch(timeInvocation.getInvoke());
+	} else if (nameMethod.startsWith("execute") && args != null && args.length >= 1) {
+	    execute(args);
 	}
-
-	final boolean executeBatchMethod = nameMethod.equals("executeBatch") && args == null;
-	if (executeBatchMethod) {
-	    final Object invoke = timeInvocation.getInvoke();
-	    int[] updateCounts = null;
-
-	    final Class returnType = method.getReturnType();
-	    if (invoke != null) {
-		if (int[].class.equals(returnType)) {
-		    updateCounts = (int[]) invoke;
-		}
-	    }
-
-	    connectionContext.getTransactionContext().executeBatch(updateCounts);
-	    return;
-	}
-
-	final boolean executeMethod = nameMethod.startsWith("execute") && args != null && args.length >= 1;
-	if (executeMethod) {
-	    final String sql = (String) args[0];
-
-	    query = queryFactory.newQuery(connectionContext, sql);
-	    query.setMethodQuery(Query.METHOD_EXECUTE);
-	    query.setTimeInvocation(timeInvocation);
-	    final Integer updateCount = getUpdateCount(method);
-	    query.setUpdateCount(updateCount);
-
-	    connectionContext.addQuery(query, false);
-
-	    sqlOperation.setQuery(query);
-
-	    // execute retourne true boolean - GetResultSet
-	    final Class returnType = method.getReturnType();
-	    if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
-		final Boolean invokeBoolean = (Boolean) timeInvocation.getInvoke();
-		if (invokeBoolean != null && invokeBoolean.booleanValue()) {
-		    query.initResultSetCollector(connectionContext);
-		    context.setQuery(query);
-		}
-	    }
-	}
-	return;
     }
 
     public Object buildResultMethod() {
@@ -113,6 +65,61 @@ public class StatementOperation extends AbstractOperation {
 	    }
 	}
 	return invoke;
+    }
+
+    private void addBatch(final Object[] args) {
+	final String sql = (String) args[0];
+	addBatch(sql);
+    }
+
+    private void addBatch(final String sql) {
+	query = queryFactory.newQuery(connectionContext, sql);
+	query.setMethodQuery(Query.METHOD_BATCH);
+	query.setTimeInvocation(timeInvocation);
+
+	connectionContext.addQuery(query, true);
+
+	sqlOperation.setQuery(query);
+    }
+
+    private void executeBatch(final Object invoke) {
+	int[] updateCounts = null;
+
+	final Class returnType = method.getReturnType();
+	if (invoke != null) {
+	    if (int[].class.equals(returnType)) {
+		updateCounts = (int[]) invoke;
+	    }
+	}
+
+	connectionContext.getTransactionContext().executeBatch(updateCounts);
+    }
+
+    private void execute(final Object[] args) {
+	final String sql = (String) args[0];
+	execute(sql);
+    }
+
+    private void execute(final String sql) {
+	query = queryFactory.newQuery(connectionContext, sql);
+	query.setMethodQuery(Query.METHOD_EXECUTE);
+	query.setTimeInvocation(timeInvocation);
+	final Integer updateCount = getUpdateCount(method);
+	query.setUpdateCount(updateCount);
+
+	connectionContext.addQuery(query, false);
+
+	sqlOperation.setQuery(query);
+
+	// execute retourne true boolean - GetResultSet
+	final Class returnType = method.getReturnType();
+	if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
+	    final Boolean invokeBoolean = (Boolean) timeInvocation.getInvoke();
+	    if (invokeBoolean != null && invokeBoolean.booleanValue()) {
+		query.initResultSetCollector(connectionContext);
+		context.setQuery(query);
+	    }
+	}
     }
 
     protected Integer getUpdateCount(final Method method) {

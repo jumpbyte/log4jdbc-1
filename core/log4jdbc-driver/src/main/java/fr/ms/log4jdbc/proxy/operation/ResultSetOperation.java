@@ -32,79 +32,10 @@ public class ResultSetOperation extends AbstractOperation {
 	this.resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();
     }
 
-    public void buildSqlOperation() {
-
-	final Object invoke = timeInvocation.getInvoke();
-	final Throwable targetException = timeInvocation.getTargetException();
-	final String nameMethod = method.getName();
-
-	final boolean nextMethod = nameMethod.equals("next") && invoke != null && ((Boolean) invoke).booleanValue();
-	if (nextMethod) {
-	    if (context.position == -1) {
-		try {
-		    if (targetException == null) {
-			context.position = rs.getRow();
-		    } else {
-			context.position = Integer.MAX_VALUE;
-		    }
-		} catch (final Throwable e) {
-		    context.position = Integer.MAX_VALUE;
-		}
-	    } else {
-		context.position++;
-	    }
-
-	    resultSetCollector.getRow(context.position);
-
-	    if (!resultSetCollector.isClosed()) {
-		sqlOperation.setQuery(query);
-	    }
-
-	    return;
-	}
-
-	final boolean previousMethod = nameMethod.equals("previous") && invoke != null && ((Boolean) invoke).booleanValue();
-	if (previousMethod) {
-	    if (context.position == -1) {
-		try {
-		    if (targetException == null) {
-			context.position = rs.getRow();
-		    } else {
-			context.position = Integer.MAX_VALUE;
-		    }
-		} catch (final Throwable e) {
-		    context.position = Integer.MAX_VALUE;
-		}
-	    } else {
-		context.position--;
-	    }
-
-	    resultSetCollector.getRow(context.position);
-
-	    if (!resultSetCollector.isClosed()) {
-		sqlOperation.setQuery(query);
-	    }
-
-	    return;
-	}
-
-	final boolean firstMethod = nameMethod.equals("first") && invoke != null && ((Boolean) invoke).booleanValue();
-	if (firstMethod) {
-	    context.position = 1;
-
-	    resultSetCollector.getRow(context.position);
-
-	    if (!resultSetCollector.isClosed()) {
-		sqlOperation.setQuery(query);
-	    }
-
-	    return;
-	}
-
-	final boolean lastMethod = nameMethod.equals("last") && invoke != null && ((Boolean) invoke).booleanValue();
-	if (lastMethod) {
+    private void next(final Throwable exception) {
+	if (context.position == -1) {
 	    try {
-		if (targetException == null) {
+		if (exception == null) {
 		    context.position = rs.getRow();
 		} else {
 		    context.position = Integer.MAX_VALUE;
@@ -112,73 +43,136 @@ public class ResultSetOperation extends AbstractOperation {
 	    } catch (final Throwable e) {
 		context.position = Integer.MAX_VALUE;
 	    }
-
-	    resultSetCollector.getRow(context.position);
-
-	    if (!resultSetCollector.isClosed()) {
-		sqlOperation.setQuery(query);
-	    }
-
-	    return;
+	} else {
+	    context.position++;
 	}
 
-	final boolean beforeFirstMethod = nameMethod.equals("beforeFirst");
-	if (beforeFirstMethod) {
-	    context.position = 0;
+	resultSetCollector.getRow(context.position);
 
-	    if (!resultSetCollector.isClosed()) {
-		sqlOperation.setQuery(query);
-	    }
-
-	    return;
-	}
-
-	final boolean afterLastMethod = nameMethod.equals("afterLast");
-	if (afterLastMethod) {
-	    context.position = -1;
-
-	    if (!resultSetCollector.isClosed()) {
-		sqlOperation.setQuery(query);
-	    }
-
-	    return;
-	}
-
-	final boolean wasNullMethod = nameMethod.equals("wasNull") && context.lastCell != null && invoke != null && ((Boolean) invoke).booleanValue();
-	if (wasNullMethod) {
-	    context.lastCell.wasNull();
-	    return;
-	}
-
-	final boolean getMetaDataMethod = nameMethod.startsWith("getMetaData") && invoke != null;
-	if (getMetaDataMethod) {
-
-	    if (resultSetCollector.getColumns().length == 0) {
-		final ResultSetMetaData resultSetMetaData = (ResultSetMetaData) invoke;
-		resultSetCollector.setColumnsDetail(resultSetMetaData);
-	    }
-	    return;
-	}
-
-	final boolean closeMethod = nameMethod.startsWith("close") && !resultSetCollector.isClosed();
-	if (closeMethod) {
+	if (!resultSetCollector.isClosed()) {
 	    sqlOperation.setQuery(query);
-	    resultSetCollector.close();
-	    return;
 	}
+    }
 
-	final boolean getValueColumn = nameMethod.startsWith("get") && targetException == null && args != null && args.length > 0;
-	if (getValueColumn) {
-	    final Class arg0Type = method.getParameterTypes()[0];
-	    if (Integer.class.equals(arg0Type) || Integer.TYPE.equals(arg0Type)) {
-		final Integer arg = (Integer) args[0];
-		context.lastCell = resultSetCollector.addValueColumn(context.position, invoke, arg.intValue());
-	    } else if (String.class.equals(arg0Type)) {
-		final String arg = (String) args[0];
-		context.lastCell = resultSetCollector.addValueColumn(context.position, invoke, arg);
+    private void previous(final Throwable exception) {
+	if (context.position == -1) {
+	    try {
+		if (exception == null) {
+		    context.position = rs.getRow();
+		} else {
+		    context.position = Integer.MAX_VALUE;
+		}
+	    } catch (final Throwable e) {
+		context.position = Integer.MAX_VALUE;
 	    }
+	} else {
+	    context.position--;
 	}
 
-	return;
+	resultSetCollector.getRow(context.position);
+
+	if (!resultSetCollector.isClosed()) {
+	    sqlOperation.setQuery(query);
+	}
+    }
+
+    private void first() {
+	context.position = 1;
+
+	resultSetCollector.getRow(context.position);
+
+	if (!resultSetCollector.isClosed()) {
+	    sqlOperation.setQuery(query);
+	}
+    }
+
+    private void last(final Throwable exception) {
+	try {
+	    if (exception == null) {
+		context.position = rs.getRow();
+	    } else {
+		context.position = Integer.MAX_VALUE;
+	    }
+	} catch (final Throwable e) {
+	    context.position = Integer.MAX_VALUE;
+	}
+
+	resultSetCollector.getRow(context.position);
+
+	if (!resultSetCollector.isClosed()) {
+	    sqlOperation.setQuery(query);
+	}
+    }
+
+    private void beforeFirst() {
+	context.position = 0;
+
+	if (!resultSetCollector.isClosed()) {
+	    sqlOperation.setQuery(query);
+	}
+    }
+
+    private void afterLast() {
+	context.position = -1;
+
+	if (!resultSetCollector.isClosed()) {
+	    sqlOperation.setQuery(query);
+	}
+    }
+
+    private void wasNull() {
+	context.lastCell.wasNull();
+    }
+
+    private void getMetaData(final Object invoke) {
+	if (resultSetCollector.getColumns().length == 0) {
+	    final ResultSetMetaData resultSetMetaData = (ResultSetMetaData) invoke;
+	    resultSetCollector.setColumnsDetail(resultSetMetaData);
+	}
+    }
+
+    private void close() {
+	sqlOperation.setQuery(query);
+	resultSetCollector.close();
+    }
+
+    private void get(final Object invoke) {
+	final Class arg0Type = method.getParameterTypes()[0];
+	if (Integer.class.equals(arg0Type) || Integer.TYPE.equals(arg0Type)) {
+	    final Integer arg = (Integer) args[0];
+	    context.lastCell = resultSetCollector.addValueColumn(context.position, invoke, arg.intValue());
+	} else if (String.class.equals(arg0Type)) {
+	    final String arg = (String) args[0];
+	    context.lastCell = resultSetCollector.addValueColumn(context.position, invoke, arg);
+	}
+    }
+
+    public void buildSqlOperation() {
+
+	final Object invoke = timeInvocation.getInvoke();
+	final Throwable exception = timeInvocation.getTargetException();
+	final String nameMethod = method.getName();
+
+	if (nameMethod.equals("next") && invoke != null && ((Boolean) invoke).booleanValue()) {
+	    next(exception);
+	} else if (nameMethod.equals("previous") && invoke != null && ((Boolean) invoke).booleanValue()) {
+	    previous(exception);
+	} else if (nameMethod.equals("first") && invoke != null && ((Boolean) invoke).booleanValue()) {
+	    first();
+	} else if (nameMethod.equals("last") && invoke != null && ((Boolean) invoke).booleanValue()) {
+	    last(exception);
+	} else if (nameMethod.equals("beforeFirst")) {
+	    beforeFirst();
+	} else if (nameMethod.equals("afterLast")) {
+	    afterLast();
+	} else if (nameMethod.equals("wasNull") && context.lastCell != null && invoke != null && ((Boolean) invoke).booleanValue()) {
+	    wasNull();
+	} else if (nameMethod.startsWith("getMetaData") && invoke != null) {
+	    getMetaData(invoke);
+	} else if (nameMethod.startsWith("close") && !resultSetCollector.isClosed()) {
+	    close();
+	} else if (nameMethod.startsWith("get") && exception == null && args != null && args.length > 0) {
+	    get(invoke);
+	}
     }
 }

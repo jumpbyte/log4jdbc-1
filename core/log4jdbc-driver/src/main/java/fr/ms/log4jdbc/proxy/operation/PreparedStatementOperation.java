@@ -18,59 +18,60 @@ public class PreparedStatementOperation extends StatementOperation {
 	super(context, connectionContext, timeInvocation, proxy, method, args);
     }
 
-    public void buildSqlOperation() {
+    private void addBatch() {
+	query.setMethodQuery(Query.METHOD_BATCH);
+	query.setTimeInvocation(timeInvocation);
 
+	connectionContext.addQuery(query, true);
+
+	sqlOperation.setQuery(query);
+
+	// Creation de la prochaine requete
+	final QueryImpl newQuery = createWrapperQuery(query);
+	context.setQuery(newQuery);
+    }
+
+    private void setNull(final Object[] args) {
+	final Object param = args[0];
+	set(param, null);
+    }
+
+    private void set(final Object[] args) {
+	final Object param = args[0];
+	final Object value = args[1];
+	set(param, value);
+    }
+
+    private void set(final Object param, final Object value) {
+	query.putParams(param, value);
+    }
+
+    private void execute() {
+	query.setMethodQuery(Query.METHOD_EXECUTE);
+	query.setTimeInvocation(timeInvocation);
+	final Integer updateCount = getUpdateCount(method);
+	query.setUpdateCount(updateCount);
+
+	connectionContext.addQuery(query, false);
+
+	sqlOperation.setQuery(query);
+
+	// Creation de la prochaine requete
+	final QueryImpl newQuery = createWrapperQuery(query);
+	context.setQuery(newQuery);
+    }
+
+    public void buildSqlOperation() {
 	final String nameMethod = method.getName();
 
-	final boolean addBatchMethod = nameMethod.equals("addBatch") && args == null;
-	if (addBatchMethod) {
-	    query.setMethodQuery(Query.METHOD_BATCH);
-	    query.setTimeInvocation(timeInvocation);
-
-	    connectionContext.addQuery(query, true);
-
-	    sqlOperation.setQuery(query);
-
-	    // Creation de la prochaine requete
-	    final QueryImpl newQuery = createWrapperQuery(query);
-	    context.setQuery(newQuery);
-
-	    return;
-	}
-
-	final boolean setNullMethod = nameMethod.equals("setNull") && args != null && args.length >= 1;
-	if (setNullMethod) {
-	    final Object param = args[0];
-	    final Object value = null;
-	    query.putParams(param, value);
-	    return;
-	}
-
-	final boolean setMethod = nameMethod.startsWith("set") && args != null && args.length >= 2;
-	if (setMethod) {
-	    final Object param = args[0];
-	    final Object value = args[1];
-	    query.putParams(param, value);
-	    return;
-	}
-
-	final boolean executeMethod = nameMethod.startsWith("execute") && !nameMethod.equals("executeBatch") && args == null;
-	if (executeMethod) {
-
-	    query.setMethodQuery(Query.METHOD_EXECUTE);
-	    query.setTimeInvocation(timeInvocation);
-	    final Integer updateCount = getUpdateCount(method);
-	    query.setUpdateCount(updateCount);
-
-	    connectionContext.addQuery(query, false);
-
-	    sqlOperation.setQuery(query);
-
-	    // Creation de la prochaine requete
-	    final QueryImpl newQuery = createWrapperQuery(query);
-	    context.setQuery(newQuery);
-
-	    return;
+	if (nameMethod.equals("addBatch") && args == null) {
+	    addBatch();
+	} else if (nameMethod.equals("setNull") && args != null && args.length >= 1) {
+	    setNull(args);
+	} else if (nameMethod.startsWith("set") && args != null && args.length >= 2) {
+	    set(args);
+	} else if (nameMethod.startsWith("execute") && !nameMethod.equals("executeBatch") && args == null) {
+	    execute();
 	}
 
 	super.buildSqlOperation();
