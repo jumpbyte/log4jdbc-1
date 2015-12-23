@@ -3,15 +3,15 @@ package fr.ms.util.logging;
 public class SystemOutLogger implements Logger {
 
     public boolean isDebugEnabled() {
-	return true;
+	return false;
     }
 
     public boolean isInfoEnabled() {
-	return true;
+	return false;
     }
 
     public boolean isErrorEnabled() {
-	return true;
+	return false;
     }
 
     public void info(final String message) {

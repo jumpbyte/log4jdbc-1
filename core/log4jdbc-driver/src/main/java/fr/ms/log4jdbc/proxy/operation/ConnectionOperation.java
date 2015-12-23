@@ -61,7 +61,6 @@ public class ConnectionOperation extends AbstractOperation {
     }
 
     private void setAutoCommit(final boolean autoCommit) {
-
 	final boolean commit = connectionOperationFactory.executeAutoCommit(autoCommit);
 	connectionContext.getTransactionContext().setEnabled(!autoCommit);
 
