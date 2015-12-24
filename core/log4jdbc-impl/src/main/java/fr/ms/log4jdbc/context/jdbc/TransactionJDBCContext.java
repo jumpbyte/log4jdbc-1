@@ -76,7 +76,7 @@ public class TransactionJDBCContext implements Transaction, Cloneable {
 	}
     }
 
-    public void addQuery(final QueryImpl query, final boolean batch) {
+    public void addQuery(final QueryImpl query) {
 	if (enabled) {
 	    if (savePoint != null) {
 		query.setSavePoint(savePoint);
@@ -89,7 +89,7 @@ public class TransactionJDBCContext implements Transaction, Cloneable {
 
 	    initTransaction();
 
-	    if (batch) {
+	    if (Query.METHOD_BATCH.equals(query.getMethodQuery())) {
 		if (!Transaction.STATE_EXECUTE.equals(state)) {
 		    state = Transaction.STATE_NOT_EXECUTE;
 		}

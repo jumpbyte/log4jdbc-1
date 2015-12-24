@@ -29,29 +29,13 @@ public class ResultSetOperation extends AbstractOperation {
     public void init() {
 	this.query = context.query;
 	this.rs = context.rs;
-	this.resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();
+	this.resultSetCollector = query.getResultSetCollector();
     }
 
-    private void next(final Throwable exception) {
-	if (context.position == -1) {
-	    try {
-		if (exception == null) {
-		    context.position = rs.getRow();
-		} else {
-		    context.position = Integer.MAX_VALUE;
-		}
-	    } catch (final Throwable e) {
-		context.position = Integer.MAX_VALUE;
-	    }
-	} else {
-	    context.position++;
-	}
+    private void next(final boolean exception) {
+	final QueryImpl query = context.next(exception);
 
-	resultSetCollector.getRow(context.position);
-
-	if (!resultSetCollector.isClosed()) {
-	    sqlOperation.setQuery(query);
-	}
+	sqlOperation.setQuery(query);
     }
 
     private void previous(final Throwable exception) {

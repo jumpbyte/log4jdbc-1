@@ -73,8 +73,8 @@ public class ConnectionJDBCContext {
 	this.rdbmsSpecifics = getRdbms(driver.getClass());
     }
 
-    public QueryImpl addQuery(final QueryImpl query, final boolean batch) {
-	transactionContext.addQuery(query, batch);
+    public QueryImpl addQuery(final QueryImpl query) {
+	transactionContext.addQuery(query);
 
 	return query;
     }

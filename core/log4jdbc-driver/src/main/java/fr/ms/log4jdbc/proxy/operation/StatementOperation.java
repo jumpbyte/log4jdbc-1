@@ -8,27 +8,16 @@ import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.log4jdbc.proxy.operation.factory.StatementOperationFactory;
-import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
-import fr.ms.log4jdbc.sql.internal.QueryFactory;
 
 public class StatementOperation extends AbstractOperation {
 
     protected StatementOperationFactory context;
 
-    protected QueryFactory queryFactory;
-
-    protected QueryImpl query;
-
     public StatementOperation(final StatementOperationFactory context, final ConnectionJDBCContext connectionContext, final TimeInvocation timeInvocation,
 	    final Object proxy, final Method method, final Object[] args) {
 	super(connectionContext, timeInvocation, proxy, method, args);
 	this.context = context;
-	this.queryFactory = context.getQueryFactory();
-    }
-
-    public void init() {
-	query = context.getQuery();
     }
 
     public void buildSqlOperation() {
@@ -51,12 +40,9 @@ public class StatementOperation extends AbstractOperation {
 
 		final ResultSet resultSet = (ResultSet) invoke;
 
+		QueryImpl query = context.getQuery();
 		if (query == null) {
-		    query = queryFactory.newQuery(connectionContext, null);
-		    query.setMethodQuery(Query.STATE_EXECUTE);
-		    query.setTimeInvocation(timeInvocation);
-
-		    connectionContext.addQuery(query, true);
+		    query = context.execute(null);
 		}
 
 		query.initResultSetCollector(connectionContext, resultSet);
@@ -73,11 +59,8 @@ public class StatementOperation extends AbstractOperation {
     }
 
     private void addBatch(final String sql) {
-	query = queryFactory.newQuery(connectionContext, sql);
-	query.setMethodQuery(Query.METHOD_BATCH);
+	final QueryImpl query = context.addBatch(sql);
 	query.setTimeInvocation(timeInvocation);
-
-	connectionContext.addQuery(query, true);
 
 	sqlOperation.setQuery(query);
     }
@@ -101,13 +84,11 @@ public class StatementOperation extends AbstractOperation {
     }
 
     private void execute(final String sql) {
-	query = queryFactory.newQuery(connectionContext, sql);
-	query.setMethodQuery(Query.METHOD_EXECUTE);
+	final QueryImpl query = context.addBatch(sql);
 	query.setTimeInvocation(timeInvocation);
+
 	final Integer updateCount = getUpdateCount(method);
 	query.setUpdateCount(updateCount);
-
-	connectionContext.addQuery(query, false);
 
 	sqlOperation.setQuery(query);
 

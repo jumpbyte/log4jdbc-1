@@ -8,6 +8,7 @@ import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperationFactory;
 import fr.ms.log4jdbc.proxy.operation.StatementOperation;
+import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
 import fr.ms.log4jdbc.sql.internal.QueryFactory;
 import fr.ms.log4jdbc.sql.internal.QuerySQLFactory;
@@ -30,6 +31,24 @@ public class StatementOperationFactory implements Log4JdbcOperationFactory {
 	final Log4JdbcOperation operation = new StatementOperation(this, connectionContext, timeInvocation, proxy, method, args);
 
 	return operation;
+    }
+
+    public QueryImpl addBatch(final String sql) {
+	query = getQueryFactory().newQuery(connectionContext, sql);
+	query.setMethodQuery(Query.METHOD_BATCH);
+
+	connectionContext.addQuery(query);
+
+	return query;
+    }
+
+    public QueryImpl execute(final String sql) {
+	query = getQueryFactory().newQuery(connectionContext, sql);
+	query.setMethodQuery(Query.METHOD_EXECUTE);
+
+	connectionContext.addQuery(query);
+
+	return query;
     }
 
     public QueryImpl getQuery() {
