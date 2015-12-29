@@ -30,7 +30,11 @@ public class ResultSetOperationFactory implements Log4JdbcOperationFactory {
 	this.rs = rs;
 	this.query = query;
 
-	// Set Compteur sinon 0;
+	position = 0;
+	try {
+	    position = rs.getRow();
+	} catch (final Throwable e) {
+	}
     }
 
     public Log4JdbcOperation newLog4JdbcOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
@@ -51,7 +55,11 @@ public class ResultSetOperationFactory implements Log4JdbcOperationFactory {
 
     public QueryImpl previous(final boolean valid) {
 	if (valid) {
-	    addPosition(-1);
+	    if (position == null) {
+		getMaxValue();
+	    } else {
+		addPosition(-1);
+	    }
 	    return getQuery();
 	} else {
 	    position = null;
@@ -111,9 +119,16 @@ public class ResultSetOperationFactory implements Log4JdbcOperationFactory {
 	}
     }
 
-    public void close() {
+    public QueryImpl close() {
 	final ResultSetCollectorImpl resultSetCollector = query.getResultSetCollector();
-	resultSetCollector.close();
+
+	if (!resultSetCollector.isClosed()) {
+	    resultSetCollector.close();
+
+	    return query;
+	}
+
+	return null;
     }
 
     private void getMaxValue() {
