@@ -3,7 +3,7 @@ package fr.ms.log4jdbc.proxy.operation;
 import java.lang.reflect.Method;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
+import fr.ms.log4jdbc.context.ConnectionContext;
 import fr.ms.log4jdbc.proxy.operation.factory.PreparedStatementOperationFactory;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
@@ -11,16 +11,14 @@ public class PreparedStatementOperation extends StatementOperation {
 
     private final PreparedStatementOperationFactory context;
 
-    public PreparedStatementOperation(final PreparedStatementOperationFactory context, final ConnectionJDBCContext connectionContext,
+    public PreparedStatementOperation(final PreparedStatementOperationFactory context, final ConnectionContext connectionContext,
 	    final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
 	super(context, connectionContext, timeInvocation, proxy, method, args);
 	this.context = context;
     }
 
     private void addBatch() {
-	final QueryImpl query = context.addBatch();
-
-	query.setTimeInvocation(timeInvocation);
+	final QueryImpl query = context.addBatch(timeInvocation);
 
 	sqlOperation.setQuery(query);
     }
@@ -37,11 +35,9 @@ public class PreparedStatementOperation extends StatementOperation {
     }
 
     private void execute() {
-	final QueryImpl query = context.execute();
-
-	query.setTimeInvocation(timeInvocation);
 	final Integer updateCount = getUpdateCount(method);
-	query.setUpdateCount(updateCount);
+
+	final QueryImpl query = context.execute(timeInvocation, updateCount);
 
 	sqlOperation.setQuery(query);
     }

@@ -40,7 +40,7 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  * @author Marco Semiao
  *
  */
-public class TransactionJDBCContext implements Transaction, Cloneable {
+public class TransactionContextJDBC implements Transaction, Cloneable {
 
     private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
 
@@ -100,7 +100,7 @@ public class TransactionJDBCContext implements Transaction, Cloneable {
 	    }
 
 	    try {
-		query.setTransactionContext((TransactionJDBCContext) this.clone());
+		query.setTransaction((TransactionContextJDBC) this.clone());
 	    } catch (final CloneNotSupportedException e) {
 		e.printStackTrace();
 	    }
@@ -245,7 +245,7 @@ public class TransactionJDBCContext implements Transaction, Cloneable {
 	if (getClass() != obj.getClass()) {
 	    return false;
 	}
-	final TransactionJDBCContext other = (TransactionJDBCContext) obj;
+	final TransactionContextJDBC other = (TransactionContextJDBC) obj;
 	if (getQueriesTransaction() == null) {
 	    if (other.getQueriesTransaction() != null) {
 		return false;
@@ -267,7 +267,7 @@ public class TransactionJDBCContext implements Transaction, Cloneable {
     }
 
     public Object clone() throws CloneNotSupportedException {
-	final TransactionJDBCContext t = (TransactionJDBCContext) super.clone();
+	final TransactionContextJDBC t = (TransactionContextJDBC) super.clone();
 	final List queriesTransaction = (List) refQueriesTransaction.get();
 	if (queriesTransaction == null) {
 	    t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());

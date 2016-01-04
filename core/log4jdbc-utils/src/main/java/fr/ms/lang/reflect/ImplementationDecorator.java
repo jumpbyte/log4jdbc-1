@@ -63,7 +63,7 @@ public class ImplementationDecorator implements InvocationHandler {
 	final Object invoke = method.invoke(impl, args);
 
 	final Object createProxy = ip.createProxy(this, invoke);
-	if (createProxy != null) {
+	if (createProxy != invoke) {
 	    return createProxy;
 	}
 

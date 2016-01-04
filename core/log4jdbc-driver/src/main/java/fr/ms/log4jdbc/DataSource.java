@@ -23,6 +23,8 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
+import fr.ms.log4jdbc.context.Log4JdbcContext;
+import fr.ms.log4jdbc.context.jdbc.Log4JdbcContextJDBC;
 import fr.ms.log4jdbc.datasource.AbstractRewriteDataSource;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 
@@ -37,6 +39,8 @@ import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 public class DataSource extends AbstractRewriteDataSource implements javax.sql.DataSource {
 
     private final static String PROPERTY = "fr.ms.log4jdbc.DataSource";
+
+    final Log4JdbcContext log4JdbcContext = new Log4JdbcContextJDBC();
 
     private final javax.sql.DataSource dataSource;
 
@@ -62,14 +66,14 @@ public class DataSource extends AbstractRewriteDataSource implements javax.sql.D
 
     public Connection getConnection() throws SQLException {
 	final Connection c = dataSource.getConnection();
-	final Connection wrap = Log4JdbcProxy.proxyConnection(c, dataSource.getClass());
+	final Connection wrap = Log4JdbcProxy.proxyConnection(c, log4JdbcContext, dataSource.getClass());
 
 	return wrap;
     }
 
     public Connection getConnection(final String username, final String password) throws SQLException {
 	final Connection c = dataSource.getConnection(username, password);
-	final Connection wrap = Log4JdbcProxy.proxyConnection(c, dataSource.getClass());
+	final Connection wrap = Log4JdbcProxy.proxyConnection(c, log4JdbcContext, dataSource.getClass());
 
 	return wrap;
     }

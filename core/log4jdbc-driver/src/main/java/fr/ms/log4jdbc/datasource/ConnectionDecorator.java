@@ -24,6 +24,7 @@ import java.sql.Connection;
 import fr.ms.lang.ClassUtils;
 import fr.ms.lang.reflect.ImplementationDecorator;
 import fr.ms.lang.reflect.ImplementationDecorator.ImplementationProxy;
+import fr.ms.log4jdbc.context.Log4JdbcContext;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 
 /**
@@ -36,14 +37,17 @@ import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
  */
 public class ConnectionDecorator implements ImplementationProxy {
 
+    private final Log4JdbcContext log4JdbcContext;
+
     private final Object sourceImpl;
 
-    private ConnectionDecorator(final Object sourceImpl) {
+    private ConnectionDecorator(final Log4JdbcContext log4JdbcContext, final Object sourceImpl) {
+	this.log4JdbcContext = log4JdbcContext;
 	this.sourceImpl = sourceImpl;
     }
 
-    public static Object proxyConnection(final Object impl, final Object sourceImpl) {
-	final ImplementationProxy ip = new ConnectionDecorator(sourceImpl);
+    public static Object proxyConnection(final Log4JdbcContext log4JdbcContext, final Object impl, final Object sourceImpl) {
+	final ImplementationProxy ip = new ConnectionDecorator(log4JdbcContext, sourceImpl);
 	final InvocationHandler ih = new ImplementationDecorator(impl, ip);
 
 	final Class clazz = impl.getClass();
@@ -59,9 +63,9 @@ public class ConnectionDecorator implements ImplementationProxy {
 
 	    final Connection c = (Connection) invoke;
 
-	    final Connection wrapObject = Log4JdbcProxy.proxyConnection(c, sourceImpl.getClass());
+	    final Connection wrapObject = Log4JdbcProxy.proxyConnection(c, log4JdbcContext, sourceImpl.getClass());
 	    return wrapObject;
 	}
-	return null;
+	return invoke;
     }
 }

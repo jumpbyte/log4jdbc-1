@@ -3,7 +3,7 @@ package fr.ms.log4jdbc.proxy.operation;
 import java.lang.reflect.Method;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
+import fr.ms.log4jdbc.context.ConnectionContext;
 import fr.ms.log4jdbc.proxy.operation.factory.ResultSetOperationFactory;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
@@ -11,7 +11,7 @@ public class ResultSetOperation extends AbstractOperation {
 
     private final ResultSetOperationFactory context;
 
-    public ResultSetOperation(final ResultSetOperationFactory context, final ConnectionJDBCContext connectionContext, final TimeInvocation timeInvocation,
+    public ResultSetOperation(final ResultSetOperationFactory context, final ConnectionContext connectionContext, final TimeInvocation timeInvocation,
 	    final Object proxy, final Method method, final Object[] args) {
 	super(connectionContext, timeInvocation, proxy, method, args);
 	this.context = context;

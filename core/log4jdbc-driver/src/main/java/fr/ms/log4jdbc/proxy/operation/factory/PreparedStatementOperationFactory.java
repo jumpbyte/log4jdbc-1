@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
+import fr.ms.log4jdbc.context.ConnectionContext;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.log4jdbc.proxy.operation.PreparedStatementOperation;
 import fr.ms.log4jdbc.sql.Query;
@@ -15,7 +15,7 @@ import fr.ms.log4jdbc.sql.QueryImpl;
 
 public class PreparedStatementOperationFactory extends StatementOperationFactory {
 
-    public PreparedStatementOperationFactory(final ConnectionJDBCContext connectionContext, final PreparedStatement statement, final String sql) {
+    public PreparedStatementOperationFactory(final ConnectionContext connectionContext, final PreparedStatement statement, final String sql) {
 	super(connectionContext, statement);
 	query = getQueryFactory().newQuery(connectionContext, sql);
     }
@@ -27,26 +27,29 @@ public class PreparedStatementOperationFactory extends StatementOperationFactory
 	return operation;
     }
 
-    public QueryImpl addBatch() {
+    public QueryImpl addBatch(final TimeInvocation timeInvocation) {
+	query.setTimeInvocation(timeInvocation);
+	query.setMethodQuery(Query.METHOD_BATCH);
+
+	connectionContext.addQuery(query);
+
 	final QueryImpl queryCurrent = query;
 
 	query = createWrapperQuery(queryCurrent);
-
-	queryCurrent.setMethodQuery(Query.METHOD_BATCH);
-
-	connectionContext.addQuery(queryCurrent);
 
 	return queryCurrent;
     }
 
-    public QueryImpl execute() {
+    public QueryImpl execute(final TimeInvocation timeInvocation, final Integer updateCount) {
+	query.setTimeInvocation(timeInvocation);
+	query.setMethodQuery(Query.METHOD_EXECUTE);
+	query.setUpdateCount(updateCount);
+
+	connectionContext.addQuery(query);
+
 	final QueryImpl queryCurrent = query;
 
 	query = createWrapperQuery(queryCurrent);
-
-	queryCurrent.setMethodQuery(Query.METHOD_EXECUTE);
-
-	connectionContext.addQuery(queryCurrent);
 
 	return queryCurrent;
     }

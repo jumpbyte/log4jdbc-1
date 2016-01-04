@@ -24,6 +24,8 @@ import java.util.logging.Logger;
 
 import javax.sql.XAConnection;
 
+import fr.ms.log4jdbc.context.Log4JdbcContext;
+import fr.ms.log4jdbc.context.jdbc.Log4JdbcContextJDBC;
 import fr.ms.log4jdbc.datasource.AbstractRewriteDataSource;
 import fr.ms.log4jdbc.datasource.ConnectionDecorator;
 
@@ -38,6 +40,8 @@ import fr.ms.log4jdbc.datasource.ConnectionDecorator;
 public class XADataSource extends AbstractRewriteDataSource implements javax.sql.XADataSource {
 
     private final static String PROPERTY = "fr.ms.log4jdbc.XADataSource";
+
+    private final Log4JdbcContext log4JdbcContext = new Log4JdbcContextJDBC();
 
     private final javax.sql.XADataSource xaDataSource;
 
@@ -63,14 +67,14 @@ public class XADataSource extends AbstractRewriteDataSource implements javax.sql
 
     public XAConnection getXAConnection() throws SQLException {
 	final XAConnection xaConnection = xaDataSource.getXAConnection();
-	final XAConnection wrap = (XAConnection) ConnectionDecorator.proxyConnection(xaConnection, xaDataSource);
+	final XAConnection wrap = (XAConnection) ConnectionDecorator.proxyConnection(log4JdbcContext, xaConnection, xaDataSource);
 
 	return wrap;
     }
 
     public XAConnection getXAConnection(final String user, final String password) throws SQLException {
 	final XAConnection xaConnection = xaDataSource.getXAConnection(user, password);
-	final XAConnection wrap = (XAConnection) ConnectionDecorator.proxyConnection(xaConnection, xaDataSource);
+	final XAConnection wrap = (XAConnection) ConnectionDecorator.proxyConnection(log4JdbcContext, xaConnection, xaDataSource);
 
 	return wrap;
     }

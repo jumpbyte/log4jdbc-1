@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
+import fr.ms.log4jdbc.context.ConnectionContext;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.log4jdbc.proxy.operation.factory.StatementOperationFactory;
 import fr.ms.log4jdbc.sql.QueryImpl;
@@ -14,7 +14,7 @@ public class StatementOperation extends AbstractOperation {
 
     protected StatementOperationFactory context;
 
-    public StatementOperation(final StatementOperationFactory context, final ConnectionJDBCContext connectionContext, final TimeInvocation timeInvocation,
+    public StatementOperation(final StatementOperationFactory context, final ConnectionContext connectionContext, final TimeInvocation timeInvocation,
 	    final Object proxy, final Method method, final Object[] args) {
 	super(connectionContext, timeInvocation, proxy, method, args);
 	this.context = context;
@@ -24,43 +24,18 @@ public class StatementOperation extends AbstractOperation {
 	final String nameMethod = method.getName();
 
 	if (nameMethod.equals("addBatch") && args != null && args.length >= 1) {
-	    addBatch(args);
+	    final String sql = (String) args[0];
+	    addBatch(sql);
 	} else if (nameMethod.equals("executeBatch") && args == null) {
 	    executeBatch(timeInvocation.getInvoke());
 	} else if (nameMethod.startsWith("execute") && args != null && args.length >= 1) {
-	    execute(args);
+	    final String sql = (String) args[0];
+	    execute(sql);
 	}
-    }
-
-    public Object buildResultMethod() {
-	final Object invoke = timeInvocation.getInvoke();
-
-	if (invoke != null) {
-	    if (invoke instanceof ResultSet) {
-
-		final ResultSet resultSet = (ResultSet) invoke;
-
-		QueryImpl query = context.getQuery();
-		if (query == null) {
-		    query = context.execute(null);
-		}
-
-		query.initResultSetCollector(connectionContext, resultSet);
-
-		return Log4JdbcProxy.proxyResultSet(resultSet, connectionContext, query);
-	    }
-	}
-	return invoke;
-    }
-
-    private void addBatch(final Object[] args) {
-	final String sql = (String) args[0];
-	addBatch(sql);
     }
 
     private void addBatch(final String sql) {
-	final QueryImpl query = context.addBatch(sql);
-	query.setTimeInvocation(timeInvocation);
+	final QueryImpl query = context.addBatch(sql, timeInvocation);
 
 	sqlOperation.setQuery(query);
     }
@@ -75,20 +50,12 @@ public class StatementOperation extends AbstractOperation {
 	    }
 	}
 
-	connectionContext.getTransactionContext().executeBatch(updateCounts);
-    }
-
-    private void execute(final Object[] args) {
-	final String sql = (String) args[0];
-	execute(sql);
+	connectionContext.executeBatch(updateCounts);
     }
 
     private void execute(final String sql) {
-	final QueryImpl query = context.addBatch(sql);
-	query.setTimeInvocation(timeInvocation);
-
 	final Integer updateCount = getUpdateCount(method);
-	query.setUpdateCount(updateCount);
+	final QueryImpl query = context.execute(sql, timeInvocation, updateCount);
 
 	sqlOperation.setQuery(query);
 
@@ -120,5 +87,26 @@ public class StatementOperation extends AbstractOperation {
 	    }
 	}
 	return updateCount;
+    }
+
+    public Object buildResultMethod() {
+	final Object invoke = timeInvocation.getInvoke();
+
+	if (invoke != null) {
+	    if (invoke instanceof ResultSet) {
+
+		final ResultSet resultSet = (ResultSet) invoke;
+
+		QueryImpl query = context.getQuery();
+		if (query == null) {
+		    query = context.execute(null, null, null);
+		}
+
+		query.initResultSetCollector(connectionContext, resultSet);
+
+		return Log4JdbcProxy.proxyResultSet(resultSet, connectionContext, query);
+	    }
+	}
+	return invoke;
     }
 }

@@ -26,6 +26,8 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import fr.ms.log4jdbc.context.Log4JdbcContext;
+import fr.ms.log4jdbc.context.jdbc.Log4JdbcContextJDBC;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.sql.JdbcDriverManager;
 import fr.ms.sql.JdbcDriverManagerFactory;
@@ -47,6 +49,8 @@ public class Driver implements java.sql.Driver {
     private final static String LOG4JDBC_PREFIX = "jdbc:log4";
 
     private final static JdbcDriverManager driverManager = JdbcDriverManagerFactory.getInstance();
+
+    private final Log4JdbcContext log4JdbcContext = new Log4JdbcContextJDBC();
 
     private java.sql.Driver driver;
 
@@ -72,7 +76,7 @@ public class Driver implements java.sql.Driver {
 	    throw new SQLException("invalid or unknown driver url: " + url);
 	}
 
-	final Connection wrap = Log4JdbcProxy.proxyConnection(c, d, url);
+	final Connection wrap = Log4JdbcProxy.proxyConnection(c, log4JdbcContext, d, url);
 
 	driver = d;
 	return wrap;

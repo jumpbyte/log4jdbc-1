@@ -24,9 +24,8 @@ import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.lang.stringmaker.impl.StringMaker;
+import fr.ms.log4jdbc.context.ConnectionContext;
 import fr.ms.log4jdbc.context.Transaction;
-import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
-import fr.ms.log4jdbc.context.jdbc.TransactionJDBCContext;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
@@ -43,19 +42,20 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
 
     private final TimeInvocation timeInvocation;
 
-    private final ConnectionJDBCContext connectionContext;
+    private final ConnectionContext connectionContext;
 
     private final long openConnection;
 
     private QueryImpl query;
 
-    private TransactionJDBCContext transaction;
+    private Transaction transaction;
 
-    public SqlOperationImpl(final TimeInvocation timeInvocation, final ConnectionJDBCContext connectionContext) {
+    public SqlOperationImpl(final TimeInvocation timeInvocation, final ConnectionContext connectionContext) {
 	this.timeInvocation = timeInvocation;
 	this.connectionContext = connectionContext;
 	this.openConnection = connectionContext.getOpenConnection().get();
-	transaction = connectionContext.getTransactionContext();
+
+	this.transaction = connectionContext.getTransaction();
     }
 
     public Object clone() throws CloneNotSupportedException {
@@ -63,7 +63,9 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
 	    query = (QueryImpl) query.clone();
 	}
 
-	transaction = (TransactionJDBCContext) transaction.clone();
+	if (transaction != null) {
+	    transaction = connectionContext.cloneTransaction(transaction);
+	}
 
 	return this;
     }

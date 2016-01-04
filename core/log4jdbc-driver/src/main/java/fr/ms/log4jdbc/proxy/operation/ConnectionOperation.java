@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
+import fr.ms.log4jdbc.context.ConnectionContext;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.log4jdbc.proxy.operation.factory.ConnectionOperationFactory;
 
@@ -14,7 +14,7 @@ public class ConnectionOperation extends AbstractOperation {
 
     private final ConnectionOperationFactory connectionOperationFactory;
 
-    public ConnectionOperation(final ConnectionOperationFactory connectionOperationFactory, final ConnectionJDBCContext connectionContext,
+    public ConnectionOperation(final ConnectionOperationFactory connectionOperationFactory, final ConnectionContext connectionContext,
 	    final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
 	super(connectionContext, timeInvocation, proxy, method, args);
 	this.connectionOperationFactory = connectionOperationFactory;
@@ -62,7 +62,7 @@ public class ConnectionOperation extends AbstractOperation {
 
     private void setAutoCommit(final boolean autoCommit) {
 	final boolean commit = connectionOperationFactory.executeAutoCommit(autoCommit);
-	connectionContext.getTransactionContext().setEnabled(!autoCommit);
+	connectionContext.setEnabledTransaction(!autoCommit);
 
 	if (commit) {
 	    commit();

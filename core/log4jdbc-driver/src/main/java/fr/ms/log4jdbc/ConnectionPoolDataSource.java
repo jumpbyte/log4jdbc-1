@@ -24,6 +24,8 @@ import java.util.logging.Logger;
 
 import javax.sql.PooledConnection;
 
+import fr.ms.log4jdbc.context.Log4JdbcContext;
+import fr.ms.log4jdbc.context.jdbc.Log4JdbcContextJDBC;
 import fr.ms.log4jdbc.datasource.AbstractRewriteDataSource;
 import fr.ms.log4jdbc.datasource.ConnectionDecorator;
 
@@ -38,6 +40,8 @@ import fr.ms.log4jdbc.datasource.ConnectionDecorator;
 public class ConnectionPoolDataSource extends AbstractRewriteDataSource implements javax.sql.ConnectionPoolDataSource {
 
     private final static String PROPERTY = "fr.ms.log4jdbc.ConnectionPoolDataSource";
+
+    private final Log4JdbcContext log4JdbcContext = new Log4JdbcContextJDBC();
 
     private final javax.sql.ConnectionPoolDataSource connectionPoolDataSource;
 
@@ -64,14 +68,14 @@ public class ConnectionPoolDataSource extends AbstractRewriteDataSource implemen
     public PooledConnection getPooledConnection() throws SQLException {
 	final PooledConnection pooledConnection = connectionPoolDataSource.getPooledConnection();
 
-	final PooledConnection wrap = (PooledConnection) ConnectionDecorator.proxyConnection(pooledConnection, connectionPoolDataSource);
+	final PooledConnection wrap = (PooledConnection) ConnectionDecorator.proxyConnection(log4JdbcContext, pooledConnection, connectionPoolDataSource);
 
 	return wrap;
     }
 
     public PooledConnection getPooledConnection(final String user, final String password) throws SQLException {
 	final PooledConnection pooledConnection = connectionPoolDataSource.getPooledConnection(user, password);
-	final PooledConnection wrap = (PooledConnection) ConnectionDecorator.proxyConnection(pooledConnection, connectionPoolDataSource);
+	final PooledConnection wrap = (PooledConnection) ConnectionDecorator.proxyConnection(log4JdbcContext, pooledConnection, connectionPoolDataSource);
 
 	return wrap;
     }

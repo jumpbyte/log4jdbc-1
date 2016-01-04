@@ -7,14 +7,14 @@ import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationDecorator;
 import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.SqlOperationLogger;
-import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
+import fr.ms.log4jdbc.context.ConnectionContext;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.FormatQueryFactory;
 
 public abstract class AbstractOperation implements Log4JdbcOperation {
 
-    protected final ConnectionJDBCContext connectionContext;
+    protected final ConnectionContext connectionContext;
     protected final TimeInvocation timeInvocation;
     protected final Object proxy;
     protected final Method method;
@@ -24,7 +24,7 @@ public abstract class AbstractOperation implements Log4JdbcOperation {
 
     private Object invoke;
 
-    public AbstractOperation(final ConnectionJDBCContext connectionContext, final TimeInvocation timeInvocation, final Object proxy, final Method method,
+    public AbstractOperation(final ConnectionContext connectionContext, final TimeInvocation timeInvocation, final Object proxy, final Method method,
 	    final Object[] args) {
 	this.connectionContext = connectionContext;
 	this.timeInvocation = timeInvocation;
@@ -46,6 +46,7 @@ public abstract class AbstractOperation implements Log4JdbcOperation {
 
     public void buildOperation() {
 	init();
+
 	buildSqlOperation();
 	invoke = buildResultMethod();
 

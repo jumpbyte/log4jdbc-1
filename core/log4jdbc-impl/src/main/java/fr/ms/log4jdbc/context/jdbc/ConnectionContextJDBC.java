@@ -25,6 +25,8 @@ import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
+import fr.ms.log4jdbc.context.ConnectionContext;
+import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.rdbms.GenericRdbmsSpecifics;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.QueryImpl;
@@ -38,7 +40,7 @@ import fr.ms.log4jdbc.utils.ServicesJDBC;
  * @author Marco Semiao
  *
  */
-public class ConnectionJDBCContext {
+public class ConnectionContextJDBC implements ConnectionContext {
 
     private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
 
@@ -54,20 +56,20 @@ public class ConnectionJDBCContext {
 
     private final RdbmsSpecifics rdbmsSpecifics;
 
-    private TransactionJDBCContext transactionContext;
+    private TransactionContextJDBC transactionContext;
 
     {
 	this.connectionNumber = totalConnectionNumber.incrementAndGet();
 	openConnection.incrementAndGet();
 
-	transactionContext = new TransactionJDBCContext();
+	transactionContext = new TransactionContextJDBC();
     }
 
-    public ConnectionJDBCContext(final Class clazz) {
+    public ConnectionContextJDBC(final Class clazz) {
 	this.rdbmsSpecifics = getRdbms(clazz);
     }
 
-    public ConnectionJDBCContext(final Driver driver, final String url) {
+    public ConnectionContextJDBC(final Driver driver, final String url) {
 	this.driver = driver;
 	this.url = url;
 	this.rdbmsSpecifics = getRdbms(driver.getClass());
@@ -103,7 +105,7 @@ public class ConnectionJDBCContext {
 	return rdbmsSpecifics;
     }
 
-    public TransactionJDBCContext getTransactionContext() {
+    public TransactionContextJDBC getTransaction() {
 	return transactionContext;
     }
 
@@ -126,7 +128,7 @@ public class ConnectionJDBCContext {
 
     public void resetTransaction() {
 	transactionContext.decrement();
-	transactionContext = new TransactionJDBCContext();
+	transactionContext = new TransactionContextJDBC();
     }
 
     private final static RdbmsSpecifics getRdbms(final Class driverClass) {
@@ -137,6 +139,14 @@ public class ConnectionJDBCContext {
 	}
 
 	return rdbmsSpecifics;
+    }
+
+    public void setEnabledTransaction(final boolean enabled) {
+	transactionContext.setEnabled(enabled);
+    }
+
+    public void executeBatch(final int[] updateCounts) {
+	transactionContext.executeBatch(updateCounts);
     }
 
     public String toString() {
@@ -157,4 +167,13 @@ public class ConnectionJDBCContext {
 
 	return buffer.toString();
     }
+
+    public Transaction cloneTransaction(final Transaction transaction) throws CloneNotSupportedException {
+	final TransactionContextJDBC current = (TransactionContextJDBC) transaction;
+
+	final Transaction clone = (Transaction) current.clone();
+
+	return clone;
+    }
+
 }

@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.sql.Statement;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
+import fr.ms.log4jdbc.context.ConnectionContext;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperationFactory;
 import fr.ms.log4jdbc.proxy.operation.StatementOperation;
@@ -15,13 +15,13 @@ import fr.ms.log4jdbc.sql.internal.QuerySQLFactory;
 
 public class StatementOperationFactory implements Log4JdbcOperationFactory {
 
-    protected final ConnectionJDBCContext connectionContext;
+    protected final ConnectionContext connectionContext;
 
     private final Statement statement;
 
     protected QueryImpl query;
 
-    public StatementOperationFactory(final ConnectionJDBCContext connectionContext, final Statement statement) {
+    public StatementOperationFactory(final ConnectionContext connectionContext, final Statement statement) {
 	this.connectionContext = connectionContext;
 	this.statement = statement;
     }
@@ -33,18 +33,21 @@ public class StatementOperationFactory implements Log4JdbcOperationFactory {
 	return operation;
     }
 
-    public QueryImpl addBatch(final String sql) {
+    public QueryImpl addBatch(final String sql, final TimeInvocation timeInvocation) {
 	query = getQueryFactory().newQuery(connectionContext, sql);
 	query.setMethodQuery(Query.METHOD_BATCH);
+	query.setTimeInvocation(timeInvocation);
 
 	connectionContext.addQuery(query);
 
 	return query;
     }
 
-    public QueryImpl execute(final String sql) {
+    public QueryImpl execute(final String sql, final TimeInvocation timeInvocation, final Integer updateCount) {
 	query = getQueryFactory().newQuery(connectionContext, sql);
 	query.setMethodQuery(Query.METHOD_EXECUTE);
+	query.setTimeInvocation(timeInvocation);
+	query.setUpdateCount(updateCount);
 
 	connectionContext.addQuery(query);
 

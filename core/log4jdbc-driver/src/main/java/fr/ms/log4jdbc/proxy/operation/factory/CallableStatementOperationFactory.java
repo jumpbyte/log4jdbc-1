@@ -2,13 +2,13 @@ package fr.ms.log4jdbc.proxy.operation.factory;
 
 import java.sql.CallableStatement;
 
-import fr.ms.log4jdbc.context.jdbc.ConnectionJDBCContext;
+import fr.ms.log4jdbc.context.ConnectionContext;
 import fr.ms.log4jdbc.sql.internal.QueryFactory;
 import fr.ms.log4jdbc.sql.internal.QueryNamedFactory;
 
 public class CallableStatementOperationFactory extends PreparedStatementOperationFactory {
 
-    public CallableStatementOperationFactory(final ConnectionJDBCContext connectionContext, final CallableStatement statement, final String sql) {
+    public CallableStatementOperationFactory(final ConnectionContext connectionContext, final CallableStatement statement, final String sql) {
 	super(connectionContext, statement, sql);
     }
 
