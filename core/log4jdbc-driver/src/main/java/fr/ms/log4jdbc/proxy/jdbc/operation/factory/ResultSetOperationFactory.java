@@ -1,19 +1,19 @@
-package fr.ms.log4jdbc.proxy.operation.factory;
+package fr.ms.log4jdbc.proxy.jdbc.operation.factory;
 
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
+import fr.ms.lang.reflect.ProxyOperation;
+import fr.ms.lang.reflect.ProxyOperationFactory;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.ConnectionContext;
-import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
-import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperationFactory;
-import fr.ms.log4jdbc.proxy.operation.ResultSetOperation;
+import fr.ms.log4jdbc.proxy.jdbc.operation.ResultSetOperation;
 import fr.ms.log4jdbc.resultset.CellImpl;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
-public class ResultSetOperationFactory implements Log4JdbcOperationFactory {
+public class ResultSetOperationFactory implements ProxyOperationFactory {
 
     private final ConnectionContext connectionContext;
 
@@ -37,8 +37,8 @@ public class ResultSetOperationFactory implements Log4JdbcOperationFactory {
 	}
     }
 
-    public Log4JdbcOperation newLog4JdbcOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
-	final Log4JdbcOperation operation = new ResultSetOperation(this, connectionContext, timeInvocation, proxy, method, args);
+    public ProxyOperation newOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
+	final ProxyOperation operation = new ResultSetOperation(this, connectionContext, timeInvocation, method, args);
 
 	return operation;
     }
@@ -160,7 +160,6 @@ public class ResultSetOperationFactory implements Log4JdbcOperationFactory {
     }
 
     private QueryImpl getQuery() {
-
 	final ResultSetCollectorImpl resultSetCollector = query.getResultSetCollector();
 	resultSetCollector.getRow(position);
 

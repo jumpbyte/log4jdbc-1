@@ -37,17 +37,22 @@ import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
  */
 public class ConnectionDecorator implements ImplementationProxy {
 
-    private final Log4JdbcContext log4JdbcContext;
+    protected final Log4JdbcContext log4JdbcContext;
 
     private final Object sourceImpl;
 
-    private ConnectionDecorator(final Log4JdbcContext log4JdbcContext, final Object sourceImpl) {
+    protected ConnectionDecorator(final Log4JdbcContext log4JdbcContext, final Object sourceImpl) {
 	this.log4JdbcContext = log4JdbcContext;
 	this.sourceImpl = sourceImpl;
     }
 
     public static Object proxyConnection(final Log4JdbcContext log4JdbcContext, final Object impl, final Object sourceImpl) {
 	final ImplementationProxy ip = new ConnectionDecorator(log4JdbcContext, sourceImpl);
+
+	return proxyConnection(ip, impl, sourceImpl);
+    }
+
+    public static Object proxyConnection(final ImplementationProxy ip, final Object impl, final Object sourceImpl) {
 	final InvocationHandler ih = new ImplementationDecorator(impl, ip);
 
 	final Class clazz = impl.getClass();

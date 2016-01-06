@@ -1,26 +1,43 @@
-package fr.ms.log4jdbc.proxy.operation;
+package fr.ms.log4jdbc.proxy.jdbc.operation;
 
 import java.lang.reflect.Method;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
+import fr.ms.lang.reflect.ProxyOperation;
 import fr.ms.lang.reflect.TimeInvocation;
+import fr.ms.log4jdbc.SqlOperation;
+import fr.ms.log4jdbc.SqlOperationContext;
 import fr.ms.log4jdbc.context.ConnectionContext;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
-import fr.ms.log4jdbc.proxy.operation.factory.ConnectionOperationFactory;
+import fr.ms.log4jdbc.proxy.jdbc.operation.factory.ConnectionOperationFactory;
 
-public class ConnectionOperation extends AbstractOperation {
+public class ConnectionOperation implements ProxyOperation {
+
+    private final ConnectionContext connectionContext;
+
+    private final TimeInvocation timeInvocation;
+    private final Method method;
+    private final Object[] args;
+
+    private final SqlOperationContext sqlOperation;
 
     private final ConnectionOperationFactory connectionOperationFactory;
 
     public ConnectionOperation(final ConnectionOperationFactory connectionOperationFactory, final ConnectionContext connectionContext,
-	    final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
-	super(connectionContext, timeInvocation, proxy, method, args);
+	    final TimeInvocation timeInvocation, final Method method, final Object[] args) {
+	this.connectionContext = connectionContext;
+	this.timeInvocation = timeInvocation;
+	this.method = method;
+	this.args = args;
+
+	this.sqlOperation = new SqlOperationContext(timeInvocation, connectionContext);
+
 	this.connectionOperationFactory = connectionOperationFactory;
     }
 
-    public void buildSqlOperation() {
+    public SqlOperation getOperation() {
 	final String nameMethod = method.getName();
 
 	if (nameMethod.equals("setAutoCommit")) {
@@ -34,25 +51,8 @@ public class ConnectionOperation extends AbstractOperation {
 	} else if (nameMethod.equals("close")) {
 	    close();
 	}
-    }
 
-    public Object buildResultMethod() {
-	final Object invoke = timeInvocation.getInvoke();
-	if (invoke != null) {
-	    if (invoke instanceof CallableStatement) {
-		final CallableStatement callableStatement = (CallableStatement) invoke;
-		final String sql = (String) args[0];
-		return Log4JdbcProxy.proxyCallableStatement(callableStatement, connectionContext, sql);
-	    } else if (invoke instanceof PreparedStatement) {
-		final PreparedStatement preparedStatement = (PreparedStatement) invoke;
-		final String sql = (String) args[0];
-		return Log4JdbcProxy.proxyPreparedStatement(preparedStatement, connectionContext, sql);
-	    } else if (invoke instanceof Statement) {
-		final Statement statement = (Statement) invoke;
-		return Log4JdbcProxy.proxyStatement(statement, connectionContext);
-	    }
-	}
-	return invoke;
+	return sqlOperation.valid();
     }
 
     private void setAutoCommit(final Object[] args) {
@@ -95,5 +95,24 @@ public class ConnectionOperation extends AbstractOperation {
 
     private void close() {
 	connectionContext.resetContext();
+    }
+
+    public Object getInvoke() {
+	final Object invoke = timeInvocation.getInvoke();
+	if (invoke != null) {
+	    if (invoke instanceof CallableStatement) {
+		final CallableStatement callableStatement = (CallableStatement) invoke;
+		final String sql = (String) args[0];
+		return Log4JdbcProxy.proxyCallableStatement(callableStatement, connectionContext, sql);
+	    } else if (invoke instanceof PreparedStatement) {
+		final PreparedStatement preparedStatement = (PreparedStatement) invoke;
+		final String sql = (String) args[0];
+		return Log4JdbcProxy.proxyPreparedStatement(preparedStatement, connectionContext, sql);
+	    } else if (invoke instanceof Statement) {
+		final Statement statement = (Statement) invoke;
+		return Log4JdbcProxy.proxyStatement(statement, connectionContext);
+	    }
+	}
+	return invoke;
     }
 }

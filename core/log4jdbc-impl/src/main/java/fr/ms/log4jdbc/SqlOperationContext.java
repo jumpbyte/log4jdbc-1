@@ -18,7 +18,6 @@
 package fr.ms.log4jdbc;
 
 import java.sql.Driver;
-import java.util.Date;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.StringMakerFactory;
@@ -38,9 +37,7 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  * @author Marco Semiao
  *
  */
-public class SqlOperationImpl implements SqlOperation, Cloneable {
-
-    private final TimeInvocation timeInvocation;
+public class SqlOperationContext extends SqlOperationDefault implements SqlOperation {
 
     private final ConnectionContext connectionContext;
 
@@ -50,32 +47,31 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
 
     private Transaction transaction;
 
-    public SqlOperationImpl(final TimeInvocation timeInvocation, final ConnectionContext connectionContext) {
-	this.timeInvocation = timeInvocation;
+    public SqlOperationContext(final TimeInvocation timeInvocation, final ConnectionContext connectionContext) {
+	super(timeInvocation);
+
 	this.connectionContext = connectionContext;
 	this.openConnection = connectionContext.getOpenConnection().get();
 
 	this.transaction = connectionContext.getTransaction();
     }
 
-    public Object clone() throws CloneNotSupportedException {
-	if (query != null) {
-	    query = (QueryImpl) query.clone();
-	}
+    public SqlOperationContext valid() {
+	try {
+	    if (query != null) {
+		query = (QueryImpl) query.clone();
+	    }
 
-	if (transaction != null) {
-	    transaction = connectionContext.cloneTransaction(transaction);
+	    if (transaction != null && transaction.isEnabled() && transaction.getTransactionState() != null) {
+		transaction = connectionContext.cloneTransaction(transaction);
+	    } else {
+		transaction = null;
+	    }
+	} catch (final CloneNotSupportedException e) {
+	    e.printStackTrace();
 	}
 
 	return this;
-    }
-
-    public Date getDate() {
-	return timeInvocation.getStartDate();
-    }
-
-    public long getExecTime() {
-	return timeInvocation.getExecTime();
     }
 
     public long getConnectionNumber() {
@@ -107,10 +103,7 @@ public class SqlOperationImpl implements SqlOperation, Cloneable {
     }
 
     public Transaction getTransaction() {
-	if (transaction.isEnabled()) {
-	    return transaction;
-	}
-	return null;
+	return transaction;
     }
 
     public String toString() {

@@ -1,66 +1,69 @@
 package fr.ms.log4jdbc.proxy.handler;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+import fr.ms.lang.reflect.ProxyOperation;
+import fr.ms.lang.reflect.ProxyOperationFactory;
+import fr.ms.lang.reflect.ProxyOperationInvocationHandler;
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.lang.reflect.TimeInvocationHandler;
 import fr.ms.log4jdbc.SqlOperation;
+import fr.ms.log4jdbc.SqlOperationDecorator;
 import fr.ms.log4jdbc.SqlOperationLogger;
+import fr.ms.log4jdbc.sql.FormatQuery;
+import fr.ms.log4jdbc.sql.FormatQueryFactory;
 
-public class Log4JdbcInvocationHandler implements InvocationHandler {
-
-    private final TimeInvocationHandler invocationHandler;
+public class Log4JdbcInvocationHandler extends ProxyOperationInvocationHandler {
 
     private final SqlOperationLogger[] logs;
 
-    private final Log4JdbcOperationFactory factory;
-
-    public Log4JdbcInvocationHandler(final Object implementation, final SqlOperationLogger[] logs, final Log4JdbcOperationFactory factory) {
-	this.invocationHandler = new TimeInvocationHandler(implementation);
+    public Log4JdbcInvocationHandler(final Object implementation, final SqlOperationLogger[] logs, final ProxyOperationFactory factory) {
+	super(implementation, factory);
 	this.logs = logs;
-	this.factory = factory;
     }
 
-    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-	final TimeInvocation timeInvocation = (TimeInvocation) invocationHandler.invoke(proxy, method, args);
+    public boolean preProcess() {
+	final boolean buildOperation = (logs != null && logs.length != 0);
+	return buildOperation;
+    }
+
+    public void postProcess(final ProxyOperation operationContext, final TimeInvocation timeInvocation, final Object proxy, final Method method,
+	    final Object[] args) {
+	final Object proxyOperation = operationContext.getOperation();
+
+	final SqlOperation sqlOperation = (SqlOperation) proxyOperation;
 
 	final Object invoke = timeInvocation.getInvoke();
 	final Throwable targetException = timeInvocation.getTargetException();
+	for (int i = 0; i < logs.length; i++) {
+	    final SqlOperationLogger log = logs[i];
 
-	final Log4JdbcOperation operationContext = factory.newLog4JdbcOperation(timeInvocation, proxy, method, args);
-
-	if (logs != null && logs.length != 0) {
-
-	    boolean buildSqlOperation = false;
-	    for (int i = 0; i < logs.length; i++) {
-		final SqlOperationLogger log = logs[i];
-
-		if (log != null && log.isEnabled()) {
-		    if (!buildSqlOperation) {
-			operationContext.buildOperation();
-			buildSqlOperation = true;
+	    if (log != null && log.isEnabled()) {
+		try {
+		    final SqlOperation sqlOperationFormatQuery = getSqlOperation(sqlOperation, log);
+		    if (targetException == null) {
+			log.buildLog(sqlOperationFormatQuery, method, args, invoke);
+		    } else {
+			log.buildLog(sqlOperationFormatQuery, method, args, targetException);
 		    }
-		    try {
-			final SqlOperation sqlOperation = operationContext.getSqlOperation(log);
-			if (targetException == null) {
-			    log.buildLog(sqlOperation, method, args, invoke);
-			} else {
-			    log.buildLog(sqlOperation, method, args, targetException);
-			}
-		    } catch (final Throwable t) {
-			t.printStackTrace();
-		    }
+		} catch (final Throwable t) {
+		    t.printStackTrace();
 		}
 	    }
 	}
+    }
 
-	if (targetException != null) {
-	    throw targetException;
+    public static SqlOperation getSqlOperation(final SqlOperation sqlOperation, final SqlOperationLogger log) {
+	if (log instanceof FormatQueryFactory) {
+	    final FormatQueryFactory formatQueryFactory = (FormatQueryFactory) log;
+
+	    final FormatQuery formatQuery = formatQueryFactory.getFormatQuery();
+
+	    if (formatQuery != null) {
+		final SqlOperation wrap = new SqlOperationDecorator(sqlOperation, formatQuery);
+		return wrap;
+	    }
 	}
 
-	final Object wrapInvoke = operationContext.getResultMethod();
-
-	return wrapInvoke;
+	return sqlOperation;
     }
 }

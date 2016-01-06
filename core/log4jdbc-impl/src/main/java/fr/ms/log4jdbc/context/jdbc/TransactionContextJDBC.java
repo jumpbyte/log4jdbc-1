@@ -61,7 +61,7 @@ public class TransactionContextJDBC implements Transaction, Cloneable {
     private ReferenceObject refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
 
     public boolean isEnabled() {
-	return enabled && state != null;
+	return enabled;
     }
 
     public void setEnabled(final boolean enabled) {
@@ -89,14 +89,10 @@ public class TransactionContextJDBC implements Transaction, Cloneable {
 
 	    initTransaction();
 
-	    if (Query.METHOD_BATCH.equals(query.getMethodQuery())) {
-		if (!Transaction.STATE_EXECUTE.equals(state)) {
-		    state = Transaction.STATE_NOT_EXECUTE;
-		}
-		query.setState(Query.STATE_NOT_EXECUTE);
+	    if (Query.METHOD_BATCH.equals(query.getMethodQuery()) && !Transaction.STATE_EXECUTE.equals(state)) {
+		state = Transaction.STATE_NOT_EXECUTE;
 	    } else {
 		state = Transaction.STATE_EXECUTE;
-		query.setState(Query.STATE_EXECUTE);
 	    }
 
 	    try {

@@ -33,7 +33,7 @@
 			<artifactId>log4jdbc-impl-format-query</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.github.marcosemiao.log4jdbc</groupId>
 			<artifactId>log4jdbc-utils</artifactId>
@@ -55,6 +55,13 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.4.1207.jre7</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

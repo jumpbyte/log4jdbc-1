@@ -25,16 +25,12 @@ public class XATransaction {
 
 	final XAConnection xaConnection = ds.getXAConnection();
 
-	final Connection connection2 = xaConnection.getConnection();
-
 	final Connection connection = xaConnection.getConnection();
 	DatabaseUtil.createDatabase(connection);
 
 	final Statement statement = connection.createStatement();
 
 	final Xid xid = new SimpleXid(100, new byte[] { 0x01 }, new byte[] { 0x02 });
-
-	final XAResource xaResource2 = xaConnection.getXAResource();
 
 	final XAResource xaResource = xaConnection.getXAResource();
 

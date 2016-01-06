@@ -1,16 +1,16 @@
-package fr.ms.log4jdbc.proxy.operation.factory;
+package fr.ms.log4jdbc.proxy.jdbc.operation.factory;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import fr.ms.lang.reflect.ProxyOperation;
+import fr.ms.lang.reflect.ProxyOperationFactory;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.ConnectionContext;
-import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
-import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperationFactory;
-import fr.ms.log4jdbc.proxy.operation.ConnectionOperation;
+import fr.ms.log4jdbc.proxy.jdbc.operation.ConnectionOperation;
 
-public class ConnectionOperationFactory implements Log4JdbcOperationFactory {
+public class ConnectionOperationFactory implements ProxyOperationFactory {
 
     private boolean autoCommit = true;
 
@@ -26,9 +26,8 @@ public class ConnectionOperationFactory implements Log4JdbcOperationFactory {
 	}
     }
 
-    public Log4JdbcOperation newLog4JdbcOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
-
-	final Log4JdbcOperation operation = new ConnectionOperation(this, connectionContext, timeInvocation, proxy, method, args);
+    public ProxyOperation newOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
+	final ProxyOperation operation = new ConnectionOperation(this, connectionContext, timeInvocation, method, args);
 
 	return operation;
     }

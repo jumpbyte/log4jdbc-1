@@ -17,6 +17,10 @@
  */
 package fr.ms.log4jdbc.sql.internal;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import fr.ms.log4jdbc.context.ConnectionContext;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.QueryImpl;
@@ -51,5 +55,20 @@ public class QuerySQLFactory implements QueryFactory {
 	final QueryImpl wrapper = new QueryImpl(query);
 
 	return wrapper;
+    }
+
+    public QueryImpl newQuery(final ConnectionContext connectionContext, final String jdbcQuery, final Map jdbcParameters) {
+	final QueryImpl query = newQuery(connectionContext, jdbcQuery);
+
+	final Iterator entries = jdbcParameters.entrySet().iterator();
+	while (entries.hasNext()) {
+	    final Entry thisEntry = (Entry) entries.next();
+	    final Object key = thisEntry.getKey();
+	    final Object value = thisEntry.getValue();
+
+	    query.putParams(key, value);
+	}
+
+	return query;
     }
 }

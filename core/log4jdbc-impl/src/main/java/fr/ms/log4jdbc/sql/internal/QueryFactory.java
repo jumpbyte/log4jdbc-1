@@ -17,6 +17,8 @@
  */
 package fr.ms.log4jdbc.sql.internal;
 
+import java.util.Map;
+
 import fr.ms.log4jdbc.context.ConnectionContext;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
@@ -30,4 +32,6 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  */
 public interface QueryFactory {
     QueryImpl newQuery(ConnectionContext connectionContext, String jdbcQuery);
+
+    QueryImpl newQuery(ConnectionContext connectionContext, String jdbcQuery, Map jdbcParameters);
 }

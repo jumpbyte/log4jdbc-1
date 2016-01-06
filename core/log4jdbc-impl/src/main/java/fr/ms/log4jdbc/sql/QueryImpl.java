@@ -17,7 +17,6 @@
  */
 package fr.ms.log4jdbc.sql;
 
-import java.sql.ResultSet;
 import java.util.Date;
 import java.util.Map;
 
@@ -122,6 +121,13 @@ public class QueryImpl implements Query, Cloneable {
 	return updateCount;
     }
 
+    public ResultSetCollectorImpl createResultSetCollector(final ConnectionContext connectionContext) {
+	if (resultSetCollector == null) {
+	    resultSetCollector = new ResultSetCollectorImpl(connectionContext);
+	}
+	return resultSetCollector;
+    }
+
     public ResultSetCollectorImpl getResultSetCollector() {
 	if (resultSetCollector == null || resultSetCollector.isMetaDataError()) {
 	    return null;
@@ -152,17 +158,6 @@ public class QueryImpl implements Query, Cloneable {
 	if (updateCount != null && updateCount.intValue() >= 0) {
 	    this.updateCount = updateCount;
 	}
-    }
-
-    public void initResultSetCollector(final ConnectionContext connectionContext) {
-	if (this.resultSetCollector == null) {
-	    this.resultSetCollector = new ResultSetCollectorImpl(connectionContext);
-	}
-    }
-
-    public void initResultSetCollector(final ConnectionContext connectionContext, final ResultSet rs) {
-	initResultSetCollector(connectionContext);
-	this.resultSetCollector.setRs(rs);
     }
 
     public void setMethodQuery(final String methodQuery) {

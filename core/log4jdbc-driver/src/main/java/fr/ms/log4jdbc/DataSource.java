@@ -40,7 +40,7 @@ public class DataSource extends AbstractRewriteDataSource implements javax.sql.D
 
     private final static String PROPERTY = "fr.ms.log4jdbc.DataSource";
 
-    final Log4JdbcContext log4JdbcContext = new Log4JdbcContextJDBC();
+    private final Log4JdbcContext log4JdbcContext = new Log4JdbcContextJDBC();
 
     private final javax.sql.DataSource dataSource;
 
