@@ -32,6 +32,11 @@ public class XAResourceOperation implements ProxyOperation {
 	this.args = args;
 
 	this.sqlOperation = new SqlOperationContext(timeInvocation, connectionContext);
+
+	final String declaringClass = method.getDeclaringClass().getName();
+	final String name = method.getName();
+
+	System.out.println(declaringClass + "." + name);
     }
 
     public SqlOperation getOperation() {
