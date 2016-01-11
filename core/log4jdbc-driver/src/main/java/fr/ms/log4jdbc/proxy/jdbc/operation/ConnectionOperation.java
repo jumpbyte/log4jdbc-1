@@ -57,10 +57,6 @@ public class ConnectionOperation implements ProxyOperation {
 
     private void setAutoCommit(final Object[] args) {
 	final boolean autoCommit = ((Boolean) args[0]).booleanValue();
-	setAutoCommit(autoCommit);
-    }
-
-    private void setAutoCommit(final boolean autoCommit) {
 	final boolean commit = connectionOperationFactory.executeAutoCommit(autoCommit);
 	connectionContext.setEnabledTransaction(!autoCommit);
 

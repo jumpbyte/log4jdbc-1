@@ -62,7 +62,7 @@ public class ConnectionContextJDBC implements ConnectionContext {
 	this.connectionNumber = totalConnectionNumber.incrementAndGet();
 	openConnection.incrementAndGet();
 
-	transactionContext = new TransactionContextJDBC();
+	transactionContext = new TransactionContextJDBC(false);
     }
 
     public ConnectionContextJDBC(final Class clazz) {
@@ -76,7 +76,9 @@ public class ConnectionContextJDBC implements ConnectionContext {
     }
 
     public QueryImpl addQuery(final QueryImpl query) {
-	transactionContext.addQuery(query);
+	if (transactionContext.isEnabled()) {
+	    transactionContext.addQuery(query);
+	}
 
 	return query;
     }
@@ -128,7 +130,7 @@ public class ConnectionContextJDBC implements ConnectionContext {
 
     public void resetTransaction() {
 	transactionContext.decrement();
-	transactionContext = new TransactionContextJDBC();
+	transactionContext = new TransactionContextJDBC(transactionContext.isEnabled());
     }
 
     private final static RdbmsSpecifics getRdbms(final Class driverClass) {

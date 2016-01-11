@@ -1,5 +1,6 @@
 package fr.ms.log4jdbc.context.xa;
 
+import java.sql.Connection;
 import java.sql.Driver;
 
 import fr.ms.log4jdbc.context.ConnectionContext;
@@ -12,13 +13,17 @@ public class Log4JdbcContextXA implements Log4JdbcContext {
 
     private final XAResourceContextXA xaResourceContext = new XAResourceContextXA();
 
-    public ConnectionContext newConnectionContext(final Class clazz) {
+    public ConnectionContext newConnectionContext(final Connection connection, final Class clazz) {
 	connectionContext = new ConnectionContextJDBC(clazz);
+	connectionContext.setEnabledTransaction(xaResourceContext.isTransactionEnabled());
+
 	return connectionContext;
     }
 
-    public ConnectionContext newConnectionContext(final Driver driver, final String url) {
+    public ConnectionContext newConnectionContext(final Connection connection, final Driver driver, final String url) {
 	connectionContext = new ConnectionContextJDBC(driver, url);
+	connectionContext.setEnabledTransaction(xaResourceContext.isTransactionEnabled());
+
 	return connectionContext;
     }
 

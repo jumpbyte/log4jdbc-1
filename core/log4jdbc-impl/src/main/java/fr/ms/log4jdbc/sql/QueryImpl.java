@@ -168,7 +168,7 @@ public class QueryImpl implements Query, Cloneable {
 	if (state == null) {
 	    throw new NullPointerException();
 	}
-	if (!Query.STATE_NOT_EXECUTE.equals(state)) {
+	if (this.queryNumber == 0 && !Query.STATE_NOT_EXECUTE.equals(state)) {
 	    this.queryNumber = nbQueryTotal.incrementAndGet();
 	}
 	this.state = state;

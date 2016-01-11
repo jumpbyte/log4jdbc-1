@@ -40,7 +40,7 @@ public class ConnectionLogger extends AbstractLogger implements SqlOperationLogg
     }
 
     public boolean isLogger(final String typeLogger) {
-	return SqlOperationLogger.CONNECTION.equals(typeLogger);
+	return SqlOperationLogger.CONNECTION.equals(typeLogger) || SqlOperationLogger.XA_RESOURCE.equals(typeLogger);
     }
 
     public boolean isEnabled() {

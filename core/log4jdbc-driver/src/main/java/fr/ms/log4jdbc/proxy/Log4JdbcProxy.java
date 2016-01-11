@@ -57,14 +57,14 @@ public final class Log4JdbcProxy {
     private final static boolean devMode = SystemPropertyUtils.getProperty("log4jdbc.devMode", false);
 
     public static Connection proxyConnection(final Connection connection, final Log4JdbcContext log4JdbcContext, final Driver driver, final String url) {
-	final ConnectionContext connectionContext = log4JdbcContext.newConnectionContext(driver, url);
+	final ConnectionContext connectionContext = log4JdbcContext.newConnectionContext(connection, driver, url);
 	final Connection wrap = proxyConnection(connection, connectionContext);
 
 	return wrap;
     }
 
     public static Connection proxyConnection(final Connection connection, final Log4JdbcContext log4JdbcContext, final Class clazz) {
-	final ConnectionContext connectionContext = log4JdbcContext.newConnectionContext(clazz);
+	final ConnectionContext connectionContext = log4JdbcContext.newConnectionContext(connection, clazz);
 	final Connection wrap = proxyConnection(connection, connectionContext);
 
 	return wrap;

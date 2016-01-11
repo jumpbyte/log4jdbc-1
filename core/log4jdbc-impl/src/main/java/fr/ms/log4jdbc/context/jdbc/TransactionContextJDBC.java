@@ -60,6 +60,10 @@ public class TransactionContextJDBC implements Transaction, Cloneable {
     private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean Queries Transaction";
     private ReferenceObject refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
 
+    public TransactionContextJDBC(final boolean enabled) {
+	this.enabled = enabled;
+    }
+
     public boolean isEnabled() {
 	return enabled;
     }
@@ -77,29 +81,27 @@ public class TransactionContextJDBC implements Transaction, Cloneable {
     }
 
     public void addQuery(final QueryImpl query) {
-	if (enabled) {
-	    if (savePoint != null) {
-		query.setSavePoint(savePoint);
-	    }
+	if (savePoint != null) {
+	    query.setSavePoint(savePoint);
+	}
 
-	    final List queriesTransaction = (List) refQueriesTransaction.get();
-	    if (queriesTransaction != null) {
-		queriesTransaction.add(query);
-	    }
+	final List queriesTransaction = (List) refQueriesTransaction.get();
+	if (queriesTransaction != null) {
+	    queriesTransaction.add(query);
+	}
 
-	    initTransaction();
+	initTransaction();
 
-	    if (Query.METHOD_BATCH.equals(query.getMethodQuery()) && !Transaction.STATE_EXECUTE.equals(state)) {
-		state = Transaction.STATE_NOT_EXECUTE;
-	    } else {
-		state = Transaction.STATE_EXECUTE;
-	    }
+	if (Query.METHOD_BATCH.equals(query.getMethodQuery()) && !Transaction.STATE_EXECUTE.equals(state)) {
+	    state = Transaction.STATE_NOT_EXECUTE;
+	} else {
+	    state = Transaction.STATE_EXECUTE;
+	}
 
-	    try {
-		query.setTransaction((TransactionContextJDBC) this.clone());
-	    } catch (final CloneNotSupportedException e) {
-		e.printStackTrace();
-	    }
+	try {
+	    query.setTransaction((TransactionContextJDBC) this.clone());
+	} catch (final CloneNotSupportedException e) {
+	    e.printStackTrace();
 	}
     }
 
