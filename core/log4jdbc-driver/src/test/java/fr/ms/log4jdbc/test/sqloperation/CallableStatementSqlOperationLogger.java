@@ -5,9 +5,9 @@ import java.lang.reflect.Method;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationLogger;
 
-public class ResultSetOperationLogger implements SqlOperationLogger {
+public class CallableStatementSqlOperationLogger implements SqlOperationLogger {
 
-    private final static String TYPE_LOGGER = SqlOperationLogger.RESULT_SET;
+    private final static String TYPE_LOGGER = SqlOperationLogger.CALLABLE_STATEMENT;
 
     public boolean isEnabled() {
 	return true;

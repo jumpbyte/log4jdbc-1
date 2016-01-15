@@ -81,6 +81,12 @@ public class ConnectionMessage extends AbstractMessage {
 
 		final StringMaker queries = stringFactory.newString();
 
+		queries.append("commit : " + commit + " - rollback : " + rollback);
+		queries.append(nl);
+		queries.append("transaction " + transaction.getTransactionNumber() + ". " + transaction.getTransactionState() + " - Type : "
+			+ transaction.getTransactionType());
+		queries.append(nl);
+
 		for (int i = 0; i < queriesTransaction.length; i++) {
 		    final Query q = queriesTransaction[i];
 
@@ -94,10 +100,7 @@ public class ConnectionMessage extends AbstractMessage {
 		    queries.append(nl);
 		}
 
-		final String m = "commit : " + commit + " - rollback : " + rollback + nl + "transaction " + transaction.getTransactionNumber() + ". "
-			+ transaction.getTransactionState() + nl + queries.toString();
-
-		messageWriter.traceMessage(m);
+		messageWriter.traceMessage(queries.toString());
 	    }
 	} else if (batchEnabled) {
 	    // A implementer

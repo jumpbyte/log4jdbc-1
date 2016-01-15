@@ -82,10 +82,6 @@ public class XAResourceOperation implements ProxyOperation {
 		}
 	    }
 	}
-	final String declaringClass = method.getDeclaringClass().getName();
-	final String name = method.getName();
-
-	System.out.println(declaringClass + "." + name);
 
 	if (connectionContext == null) {
 	    return sqlOperationWithOutConnectionContext;

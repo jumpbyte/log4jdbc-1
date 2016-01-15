@@ -48,6 +48,8 @@ public class ConnectionContextJDBC implements ConnectionContext {
 
     private final static SyncLong openConnection = syncLongFactory.newLong();
 
+    private final String typeTransaction;
+
     private long connectionNumber;
 
     private Driver driver;
@@ -61,15 +63,17 @@ public class ConnectionContextJDBC implements ConnectionContext {
     {
 	this.connectionNumber = totalConnectionNumber.incrementAndGet();
 	openConnection.incrementAndGet();
-
-	transactionContext = new TransactionContextJDBC(false);
     }
 
-    public ConnectionContextJDBC(final Class clazz) {
+    public ConnectionContextJDBC(final String typeTransaction, final Class clazz) {
+	this.typeTransaction = typeTransaction;
+	transactionContext = new TransactionContextJDBC(typeTransaction, false);
 	this.rdbmsSpecifics = getRdbms(clazz);
     }
 
-    public ConnectionContextJDBC(final Driver driver, final String url) {
+    public ConnectionContextJDBC(final String typeTransaction, final Driver driver, final String url) {
+	this.typeTransaction = typeTransaction;
+	transactionContext = new TransactionContextJDBC(typeTransaction, false);
 	this.driver = driver;
 	this.url = url;
 	this.rdbmsSpecifics = getRdbms(driver.getClass());
@@ -130,7 +134,7 @@ public class ConnectionContextJDBC implements ConnectionContext {
 
     public void resetTransaction() {
 	transactionContext.decrement();
-	transactionContext = new TransactionContextJDBC(transactionContext.isEnabled());
+	transactionContext = new TransactionContextJDBC(typeTransaction, transactionContext.isEnabled());
     }
 
     private final static RdbmsSpecifics getRdbms(final Class driverClass) {

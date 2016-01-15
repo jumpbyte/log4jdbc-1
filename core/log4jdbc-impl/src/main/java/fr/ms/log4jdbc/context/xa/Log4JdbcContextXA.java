@@ -14,14 +14,14 @@ public class Log4JdbcContextXA implements Log4JdbcContext {
     private final XAResourceContextXA xaResourceContext = new XAResourceContextXA();
 
     public ConnectionContext newConnectionContext(final Connection connection, final Class clazz) {
-	connectionContext = new ConnectionContextJDBC(clazz);
+	connectionContext = new ConnectionContextJDBC("XA", clazz);
 	connectionContext.setEnabledTransaction(xaResourceContext.isTransactionEnabled());
 
 	return connectionContext;
     }
 
     public ConnectionContext newConnectionContext(final Connection connection, final Driver driver, final String url) {
-	connectionContext = new ConnectionContextJDBC(driver, url);
+	connectionContext = new ConnectionContextJDBC("XA", driver, url);
 	connectionContext.setEnabledTransaction(xaResourceContext.isTransactionEnabled());
 
 	return connectionContext;
