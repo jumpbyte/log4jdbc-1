@@ -7,20 +7,21 @@ import java.sql.SQLException;
 import fr.ms.lang.reflect.ProxyOperation;
 import fr.ms.lang.reflect.ProxyOperationFactory;
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.proxy.jdbc.operation.ConnectionOperation;
 
 public class ConnectionOperationFactory implements ProxyOperationFactory {
 
     private boolean autoCommit = true;
 
-    private final ConnectionContext connectionContext;
+    private final ConnectionContextJDBC connectionContext;
 
-    public ConnectionOperationFactory(final ConnectionContext connectionContext, final Connection connection) {
+    public ConnectionOperationFactory(final ConnectionContextJDBC connectionContext, final Connection connection) {
 	this.connectionContext = connectionContext;
 
 	try {
 	    autoCommit = connection.getAutoCommit();
+	    connectionContext.setTransactionEnabled(!autoCommit);
 	} catch (final SQLException e) {
 
 	}

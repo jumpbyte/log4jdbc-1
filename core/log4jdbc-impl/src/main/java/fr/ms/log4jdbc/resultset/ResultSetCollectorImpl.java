@@ -29,7 +29,7 @@ import java.util.Map;
 
 import fr.ms.lang.ref.ReferenceFactory;
 import fr.ms.lang.ref.ReferenceObject;
-import fr.ms.log4jdbc.context.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 
 /**
  *
@@ -68,7 +68,7 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
 
     private final boolean caseSensitive;
 
-    public ResultSetCollectorImpl(final ConnectionContext connectionContext) {
+    public ResultSetCollectorImpl(final ConnectionContextJDBC connectionContext) {
 	this.caseSensitive = connectionContext.getRdbmsSpecifics().isCaseSensitive();
     }
 

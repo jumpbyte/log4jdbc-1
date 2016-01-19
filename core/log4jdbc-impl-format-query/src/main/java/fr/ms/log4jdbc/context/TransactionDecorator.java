@@ -50,10 +50,6 @@ public class TransactionDecorator implements Transaction {
 	this.formatQuery = formatQuery;
     }
 
-    public boolean isEnabled() {
-	return transaction.isEnabled();
-    }
-
     public Query[] getQueriesTransaction() {
 	final Query[] queries = transaction.getQueriesTransaction();
 	if (queries == null) {

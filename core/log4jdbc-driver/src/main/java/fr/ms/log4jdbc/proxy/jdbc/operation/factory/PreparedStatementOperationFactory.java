@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 
 import fr.ms.lang.reflect.ProxyOperation;
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.proxy.jdbc.operation.PreparedStatementOperation;
 import fr.ms.log4jdbc.sql.internal.QueryFactory;
 
@@ -13,7 +13,7 @@ public class PreparedStatementOperationFactory extends StatementOperationFactory
 
     private final String sql;
 
-    public PreparedStatementOperationFactory(final ConnectionContext connectionContext, final PreparedStatement statement, final QueryFactory queryFactory,
+    public PreparedStatementOperationFactory(final ConnectionContextJDBC connectionContext, final PreparedStatement statement, final QueryFactory queryFactory,
 	    final String sql) {
 	super(connectionContext, statement, queryFactory);
 	this.sql = sql;
@@ -21,8 +21,7 @@ public class PreparedStatementOperationFactory extends StatementOperationFactory
     }
 
     public ProxyOperation newOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
-	final ProxyOperation operation = new PreparedStatementOperation(queryFactory, this, statement, query, connectionContext, timeInvocation, method,
-		args);
+	final ProxyOperation operation = new PreparedStatementOperation(queryFactory, this, statement, query, connectionContext, timeInvocation, method, args);
 
 	return operation;
     }

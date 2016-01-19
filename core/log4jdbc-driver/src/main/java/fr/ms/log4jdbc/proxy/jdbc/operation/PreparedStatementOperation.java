@@ -5,7 +5,7 @@ import java.sql.Statement;
 
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
-import fr.ms.log4jdbc.context.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.proxy.jdbc.operation.factory.PreparedStatementOperationFactory;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
@@ -16,7 +16,7 @@ public class PreparedStatementOperation extends StatementOperation {
     private final PreparedStatementOperationFactory context;
 
     public PreparedStatementOperation(final QueryFactory queryFactory, final PreparedStatementOperationFactory context, final Statement statement,
-	    final QueryImpl query, final ConnectionContext connectionContext, final TimeInvocation timeInvocation, final Method method, final Object[] args) {
+	    final QueryImpl query, final ConnectionContextJDBC connectionContext, final TimeInvocation timeInvocation, final Method method, final Object[] args) {
 	super(queryFactory, context, statement, connectionContext, timeInvocation, method, args);
 	this.context = context;
 	this.query = query;
@@ -64,7 +64,7 @@ public class PreparedStatementOperation extends StatementOperation {
     private void execute() {
 	query.setTimeInvocation(timeInvocation);
 	query.setMethodQuery(Query.METHOD_EXECUTE);
-	if (connectionContext.getTransaction().isEnabled()) {
+	if (connectionContext.isTransactionEnabled()) {
 	    query.setState(Query.STATE_EXECUTE);
 	} else {
 	    query.setState(Query.STATE_COMMIT);

@@ -9,7 +9,8 @@ import fr.ms.lang.reflect.ProxyOperation;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationContext;
-import fr.ms.log4jdbc.context.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
+import fr.ms.log4jdbc.context.jdbc.TransactionContextJDBC;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.log4jdbc.proxy.jdbc.operation.factory.StatementOperationFactory;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
@@ -19,7 +20,7 @@ import fr.ms.log4jdbc.sql.internal.QueryFactory;
 
 public class StatementOperation implements ProxyOperation {
 
-    protected final ConnectionContext connectionContext;
+    protected final ConnectionContextJDBC connectionContext;
     protected final TimeInvocation timeInvocation;
     protected final Method method;
     protected final Object[] args;
@@ -37,7 +38,7 @@ public class StatementOperation implements ProxyOperation {
     private Object invokeWrapper;
 
     public StatementOperation(final QueryFactory queryFactory, final StatementOperationFactory context, final Statement statement,
-	    final ConnectionContext connectionContext, final TimeInvocation timeInvocation, final Method method, final Object[] args) {
+	    final ConnectionContextJDBC connectionContext, final TimeInvocation timeInvocation, final Method method, final Object[] args) {
 	this.connectionContext = connectionContext;
 	this.timeInvocation = timeInvocation;
 	this.method = method;
@@ -90,14 +91,17 @@ public class StatementOperation implements ProxyOperation {
 	    }
 	}
 
-	connectionContext.executeBatch(updateCounts);
+	final TransactionContextJDBC transactionContext = connectionContext.getTransactionContext();
+	if (transactionContext != null) {
+	    transactionContext.executeBatch(updateCounts);
+	}
     }
 
     private void execute(final String sql) {
 	query = queryFactory.newQuery(connectionContext, sql);
 	query.setTimeInvocation(timeInvocation);
 	query.setMethodQuery(Query.METHOD_EXECUTE);
-	if (connectionContext.getTransaction().isEnabled()) {
+	if (connectionContext.isTransactionEnabled()) {
 	    query.setState(Query.STATE_EXECUTE);
 	} else {
 	    query.setState(Query.STATE_COMMIT);

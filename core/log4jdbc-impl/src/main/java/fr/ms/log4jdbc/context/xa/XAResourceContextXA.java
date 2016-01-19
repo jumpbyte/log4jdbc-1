@@ -2,6 +2,7 @@ package fr.ms.log4jdbc.context.xa;
 
 import javax.transaction.xa.Xid;
 
+@Deprecated
 public class XAResourceContextXA {
 
     public void start(final Xid xid, final int flags) {

@@ -6,7 +6,7 @@ import fr.ms.lang.reflect.ProxyOperation;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationContext;
-import fr.ms.log4jdbc.context.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.proxy.jdbc.operation.factory.ResultSetOperationFactory;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
@@ -20,7 +20,7 @@ public class ResultSetOperation implements ProxyOperation {
 
     private final ResultSetOperationFactory context;
 
-    public ResultSetOperation(final ResultSetOperationFactory context, final ConnectionContext connectionContext, final TimeInvocation timeInvocation,
+    public ResultSetOperation(final ResultSetOperationFactory context, final ConnectionContextJDBC connectionContext, final TimeInvocation timeInvocation,
 	    final Method method, final Object[] args) {
 	this.timeInvocation = timeInvocation;
 	this.method = method;

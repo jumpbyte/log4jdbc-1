@@ -71,7 +71,9 @@ public final class QueryString {
 
 	final Transaction transaction = query.getTransaction();
 	if (transaction != null) {
-	    sb.append("Transaction Number : " + transaction.getTransactionNumber() + " - State : " + transaction.getTransactionState());
+	    sb.append("Transaction Number : " + transaction.getTransactionNumber());
+	    sb.append(" - Type : " + transaction.getTransactionType());
+	    sb.append(" - State : " + transaction.getTransactionState());
 	    sb.append(nl);
 	}
 

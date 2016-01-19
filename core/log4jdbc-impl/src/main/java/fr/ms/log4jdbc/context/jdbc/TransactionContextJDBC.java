@@ -21,14 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.DefaultSyncLongFactory;
 import fr.ms.lang.delegate.StringMakerFactory;
-import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.ref.ReferenceFactory;
 import fr.ms.lang.ref.ReferenceObject;
 import fr.ms.lang.stringmaker.impl.StringMaker;
-import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.context.Transaction;
+import fr.ms.log4jdbc.context.TransactionContextDefault;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
@@ -40,47 +38,12 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  * @author Marco Semiao
  *
  */
-public class TransactionContextJDBC implements Transaction, Cloneable {
-
-    private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
-
-    private final static SyncLong totalTransactionNumber = syncLongFactory.newLong();
-
-    private final static SyncLong openTransaction = syncLongFactory.newLong();
-
-    private final String typeTransaction;
-    private boolean enabled;
-
-    private String state;
-
-    private boolean transactionInit = false;
-    private long transactionNumber;
+public class TransactionContextJDBC extends TransactionContextDefault implements Transaction, Cloneable {
 
     private Object savePoint = null;
 
     private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean Queries Transaction";
     private ReferenceObject refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
-
-    public TransactionContextJDBC(final String typeTransaction, final boolean enabled) {
-	this.typeTransaction = typeTransaction;
-	this.enabled = enabled;
-    }
-
-    public boolean isEnabled() {
-	return enabled;
-    }
-
-    public void setEnabled(final boolean enabled) {
-	this.enabled = enabled;
-    }
-
-    private void initTransaction() {
-	if (!transactionInit) {
-	    transactionInit = true;
-	    transactionNumber = totalTransactionNumber.incrementAndGet();
-	    openTransaction.incrementAndGet();
-	}
-    }
 
     public void addQuery(final QueryImpl query) {
 	if (savePoint != null) {
@@ -92,8 +55,6 @@ public class TransactionContextJDBC implements Transaction, Cloneable {
 	    queriesTransaction.add(query);
 	}
 
-	initTransaction();
-
 	if (Query.METHOD_BATCH.equals(query.getMethodQuery()) && !Transaction.STATE_EXECUTE.equals(state)) {
 	    state = Transaction.STATE_NOT_EXECUTE;
 	} else {
@@ -101,7 +62,7 @@ public class TransactionContextJDBC implements Transaction, Cloneable {
 	}
 
 	try {
-	    query.setTransaction((TransactionContextJDBC) this.clone());
+	    query.setTransaction((Transaction) this.clone());
 	} catch (final CloneNotSupportedException e) {
 	    e.printStackTrace();
 	}
@@ -197,20 +158,6 @@ public class TransactionContextJDBC implements Transaction, Cloneable {
 	this.savePoint = savePoint;
     }
 
-    public long getOpenTransaction() {
-	return openTransaction.get();
-    }
-
-    public void decrement() {
-	if (transactionInit) {
-	    openTransaction.decrementAndGet();
-	}
-    }
-
-    public long getTransactionNumber() {
-	return transactionNumber;
-    }
-
     public Query[] getQueriesTransaction() {
 	final List queriesTransaction = (List) refQueriesTransaction.get();
 	if (queriesTransaction == null) {
@@ -219,12 +166,8 @@ public class TransactionContextJDBC implements Transaction, Cloneable {
 	return (Query[]) queriesTransaction.toArray(new Query[queriesTransaction.size()]);
     }
 
-    public String getTransactionState() {
-	return state;
-    }
-
     public String getTransactionType() {
-	return typeTransaction;
+	return "JDBC";
     }
 
     public int hashCode() {

@@ -20,17 +20,10 @@ package fr.ms.log4jdbc.context.jdbc;
 import java.sql.Driver;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.DefaultSyncLongFactory;
 import fr.ms.lang.delegate.StringMakerFactory;
-import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.stringmaker.impl.StringMaker;
-import fr.ms.lang.sync.impl.SyncLong;
-import fr.ms.log4jdbc.context.ConnectionContext;
-import fr.ms.log4jdbc.context.Transaction;
-import fr.ms.log4jdbc.rdbms.GenericRdbmsSpecifics;
-import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
+import fr.ms.log4jdbc.context.ConnectionContextDefault;
 import fr.ms.log4jdbc.sql.QueryImpl;
-import fr.ms.log4jdbc.utils.ServicesJDBC;
 
 /**
  *
@@ -40,119 +33,63 @@ import fr.ms.log4jdbc.utils.ServicesJDBC;
  * @author Marco Semiao
  *
  */
-public class ConnectionContextJDBC implements ConnectionContext {
+public class ConnectionContextJDBC extends ConnectionContextDefault {
 
-    private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
-
-    private final static SyncLong totalConnectionNumber = syncLongFactory.newLong();
-
-    private final static SyncLong openConnection = syncLongFactory.newLong();
-
-    private final String typeTransaction;
-
-    private long connectionNumber;
-
-    private Driver driver;
-
-    private String url;
-
-    private final RdbmsSpecifics rdbmsSpecifics;
+    protected boolean transactionEnabled;
 
     private TransactionContextJDBC transactionContext;
 
-    {
-	this.connectionNumber = totalConnectionNumber.incrementAndGet();
-	openConnection.incrementAndGet();
+    public ConnectionContextJDBC(final Class clazz) {
+	super(clazz);
     }
 
-    public ConnectionContextJDBC(final String typeTransaction, final Class clazz) {
-	this.typeTransaction = typeTransaction;
-	transactionContext = new TransactionContextJDBC(typeTransaction, false);
-	this.rdbmsSpecifics = getRdbms(clazz);
+    public ConnectionContextJDBC(final Driver driver, final String url) {
+	super(driver, url);
     }
 
-    public ConnectionContextJDBC(final String typeTransaction, final Driver driver, final String url) {
-	this.typeTransaction = typeTransaction;
-	transactionContext = new TransactionContextJDBC(typeTransaction, false);
-	this.driver = driver;
-	this.url = url;
-	this.rdbmsSpecifics = getRdbms(driver.getClass());
+    public boolean isTransactionEnabled() {
+	return transactionEnabled;
+    }
+
+    public void setTransactionEnabled(final boolean transactionEnabled) {
+	if (!transactionEnabled) {
+	    transactionContext = null;
+	}
+
+	this.transactionEnabled = transactionEnabled;
     }
 
     public QueryImpl addQuery(final QueryImpl query) {
-	if (transactionContext.isEnabled()) {
+	if (transactionEnabled) {
+	    if (transactionContext == null) {
+		transactionContext = new TransactionContextJDBC();
+	    }
 	    transactionContext.addQuery(query);
 	}
 
 	return query;
     }
 
-    public long getConnectionNumber() {
-	return connectionNumber;
-    }
-
-    public SyncLong getTotalConnectionNumber() {
-	return totalConnectionNumber;
-    }
-
-    public SyncLong getOpenConnection() {
-	return openConnection;
-    }
-
-    public Driver getDriver() {
-	return driver;
-    }
-
-    public String getUrl() {
-	return url;
-    }
-
-    public RdbmsSpecifics getRdbmsSpecifics() {
-	return rdbmsSpecifics;
-    }
-
-    public TransactionContextJDBC getTransaction() {
+    public TransactionContextJDBC getTransactionContext() {
 	return transactionContext;
     }
 
     public void commit() {
-	transactionContext.commit();
+	if (transactionContext != null) {
+	    transactionContext.commit();
+	    transactionContext.close();
+	    transactionContext = null;
+	}
     }
 
     public void rollback(final Object savePoint) {
-	transactionContext.rollback(savePoint);
-    }
-
-    public void setSavePoint(final Object savePoint) {
-	transactionContext.setSavePoint(savePoint);
-    }
-
-    public void resetContext() {
-	openConnection.decrementAndGet();
-	resetTransaction();
-    }
-
-    public void resetTransaction() {
-	transactionContext.decrement();
-	transactionContext = new TransactionContextJDBC(typeTransaction, transactionContext.isEnabled());
-    }
-
-    private final static RdbmsSpecifics getRdbms(final Class driverClass) {
-	final String classType = driverClass.getName();
-	RdbmsSpecifics rdbmsSpecifics = ServicesJDBC.getRdbmsSpecifics(classType);
-	if (rdbmsSpecifics == null) {
-	    rdbmsSpecifics = GenericRdbmsSpecifics.getInstance();
+	if (transactionContext != null) {
+	    transactionContext.rollback(savePoint);
+	    if (savePoint == null) {
+		transactionContext.close();
+		transactionContext = null;
+	    }
 	}
-
-	return rdbmsSpecifics;
-    }
-
-    public void setEnabledTransaction(final boolean enabled) {
-	transactionContext.setEnabled(enabled);
-    }
-
-    public void executeBatch(final int[] updateCounts) {
-	transactionContext.executeBatch(updateCounts);
     }
 
     public String toString() {
@@ -173,13 +110,4 @@ public class ConnectionContextJDBC implements ConnectionContext {
 
 	return buffer.toString();
     }
-
-    public Transaction cloneTransaction(final Transaction transaction) throws CloneNotSupportedException {
-	final TransactionContextJDBC current = (TransactionContextJDBC) transaction;
-
-	final Transaction clone = (Transaction) current.clone();
-
-	return clone;
-    }
-
 }

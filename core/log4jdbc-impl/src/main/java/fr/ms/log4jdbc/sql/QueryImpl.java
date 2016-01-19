@@ -27,8 +27,8 @@ import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
-import fr.ms.log4jdbc.context.ConnectionContext;
 import fr.ms.log4jdbc.context.Transaction;
+import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
 import fr.ms.log4jdbc.sql.internal.QuerySQL;
 
@@ -121,7 +121,7 @@ public class QueryImpl implements Query, Cloneable {
 	return updateCount;
     }
 
-    public ResultSetCollectorImpl createResultSetCollector(final ConnectionContext connectionContext) {
+    public ResultSetCollectorImpl createResultSetCollector(final ConnectionContextJDBC connectionContext) {
 	if (resultSetCollector == null) {
 	    resultSetCollector = new ResultSetCollectorImpl(connectionContext);
 	}

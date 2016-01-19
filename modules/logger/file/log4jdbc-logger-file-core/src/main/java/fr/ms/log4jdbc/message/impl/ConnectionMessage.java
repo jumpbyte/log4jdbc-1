@@ -63,29 +63,23 @@ public class ConnectionMessage extends AbstractMessage {
 	return null;
     }
 
-    public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method, final Object[] args, final Object invoke) {
+    public void buildLog(final MessageWriter messageWriter, final SqlOperation sqlOperation, final Method method, final Object[] args, final Object invoke) {
 
 	final boolean transactionEnabled = props.logTransaction();
 	final boolean batchEnabled = props.logBatch();
 	final boolean allMethodEnabled = props.logGenericMessage();
 
 	if (transactionEnabled) {
-	    final Transaction transaction = message.getTransaction();
+	    final Transaction transaction = sqlOperation.getTransaction();
 
 	    if (transaction != null
-		    && (Transaction.STATE_COMMIT.equals(transaction.getTransactionState()) || Transaction.STATE_ROLLBACK.equals(transaction
-			    .getTransactionState()))) {
+		    && (transaction.getTransactionState().startsWith(Transaction.STATE_COMMIT) || transaction.getTransactionState().startsWith(
+			    Transaction.STATE_ROLLBACK))) {
 		final Query[] queriesTransaction = transaction.getQueriesTransaction();
 		int commit = 0;
 		int rollback = 0;
 
 		final StringMaker queries = stringFactory.newString();
-
-		queries.append("commit : " + commit + " - rollback : " + rollback);
-		queries.append(nl);
-		queries.append("transaction " + transaction.getTransactionNumber() + ". " + transaction.getTransactionState() + " - Type : "
-			+ transaction.getTransactionType());
-		queries.append(nl);
 
 		for (int i = 0; i < queriesTransaction.length; i++) {
 		    final Query q = queriesTransaction[i];
@@ -100,12 +94,23 @@ public class ConnectionMessage extends AbstractMessage {
 		    queries.append(nl);
 		}
 
-		messageWriter.traceMessage(queries.toString());
+		final StringMaker message = stringFactory.newString();
+
+		message.append("commit : " + commit + " - rollback : " + rollback);
+		message.append(nl);
+		message.append("Transaction " + transaction.getTransactionNumber());
+		message.append(". Total " + transaction.getOpenTransaction());
+		message.append(" - State : " + transaction.getTransactionState());
+		message.append(" - Type : " + transaction.getTransactionType());
+		message.append(nl);
+		message.append(nl);
+
+		messageWriter.traceMessage(message.toString() + queries.toString());
 	    }
 	} else if (batchEnabled) {
 	    // A implementer
 	} else if (allMethodEnabled) {
-	    generic.buildLog(messageWriter, message, method, args, invoke);
+	    generic.buildLog(messageWriter, sqlOperation, method, args, invoke);
 	}
 
     }

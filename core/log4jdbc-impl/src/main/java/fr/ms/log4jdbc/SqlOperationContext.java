@@ -23,8 +23,9 @@ import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.lang.stringmaker.impl.StringMaker;
-import fr.ms.log4jdbc.context.ConnectionContext;
 import fr.ms.log4jdbc.context.Transaction;
+import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
+import fr.ms.log4jdbc.context.jdbc.TransactionContextJDBC;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
@@ -39,21 +40,21 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  */
 public class SqlOperationContext extends SqlOperationDefault implements SqlOperation {
 
-    private final ConnectionContext connectionContext;
+    private final ConnectionContextJDBC connectionContext;
 
     private final long openConnection;
 
     private QueryImpl query;
 
-    private Transaction transaction;
+    private TransactionContextJDBC transaction;
 
-    public SqlOperationContext(final TimeInvocation timeInvocation, final ConnectionContext connectionContext) {
+    public SqlOperationContext(final TimeInvocation timeInvocation, final ConnectionContextJDBC connectionContext) {
 	super(timeInvocation);
 
 	this.connectionContext = connectionContext;
 	this.openConnection = connectionContext.getOpenConnection().get();
 
-	this.transaction = connectionContext.getTransaction();
+	this.transaction = connectionContext.getTransactionContext();
     }
 
     public SqlOperationContext valid() {
@@ -62,10 +63,8 @@ public class SqlOperationContext extends SqlOperationDefault implements SqlOpera
 		query = (QueryImpl) query.clone();
 	    }
 
-	    if (transaction != null && transaction.isEnabled() && transaction.getTransactionState() != null) {
-		transaction = connectionContext.cloneTransaction(transaction);
-	    } else {
-		transaction = null;
+	    if (transaction != null) {
+		transaction = (TransactionContextJDBC) transaction.clone();
 	    }
 	} catch (final CloneNotSupportedException e) {
 	    e.printStackTrace();

@@ -9,13 +9,14 @@ import fr.ms.lang.reflect.ProxyOperation;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationContext;
-import fr.ms.log4jdbc.context.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
+import fr.ms.log4jdbc.context.jdbc.TransactionContextJDBC;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.log4jdbc.proxy.jdbc.operation.factory.ConnectionOperationFactory;
 
 public class ConnectionOperation implements ProxyOperation {
 
-    private final ConnectionContext connectionContext;
+    private final ConnectionContextJDBC connectionContext;
 
     private final TimeInvocation timeInvocation;
     private final Method method;
@@ -25,7 +26,7 @@ public class ConnectionOperation implements ProxyOperation {
 
     private final ConnectionOperationFactory connectionOperationFactory;
 
-    public ConnectionOperation(final ConnectionOperationFactory connectionOperationFactory, final ConnectionContext connectionContext,
+    public ConnectionOperation(final ConnectionOperationFactory connectionOperationFactory, final ConnectionContextJDBC connectionContext,
 	    final TimeInvocation timeInvocation, final Method method, final Object[] args) {
 	this.connectionContext = connectionContext;
 	this.timeInvocation = timeInvocation;
@@ -58,7 +59,8 @@ public class ConnectionOperation implements ProxyOperation {
     private void setAutoCommit(final Object[] args) {
 	final boolean autoCommit = ((Boolean) args[0]).booleanValue();
 	final boolean commit = connectionOperationFactory.executeAutoCommit(autoCommit);
-	connectionContext.setEnabledTransaction(!autoCommit);
+
+	connectionContext.setTransactionEnabled(!autoCommit);
 
 	if (commit) {
 	    commit();
@@ -67,11 +69,13 @@ public class ConnectionOperation implements ProxyOperation {
 
     private void commit() {
 	connectionContext.commit();
-	connectionContext.resetTransaction();
     }
 
     private void setSavepoint(final Object savePoint) {
-	connectionContext.setSavePoint(savePoint);
+	final TransactionContextJDBC transactionContext = connectionContext.getTransactionContext();
+	if (transactionContext != null) {
+	    transactionContext.setSavePoint(savePoint);
+	}
     }
 
     private void rollback(final Object[] args) {
@@ -84,13 +88,10 @@ public class ConnectionOperation implements ProxyOperation {
 
     private void rollback(final Object savePoint) {
 	connectionContext.rollback(savePoint);
-	if (savePoint == null) {
-	    connectionContext.resetTransaction();
-	}
     }
 
     private void close() {
-	connectionContext.resetContext();
+	connectionContext.close();
     }
 
     public Object getInvoke() {

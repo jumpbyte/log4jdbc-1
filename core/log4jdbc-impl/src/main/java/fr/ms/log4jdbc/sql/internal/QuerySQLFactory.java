@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import fr.ms.log4jdbc.context.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
@@ -44,7 +44,7 @@ public class QuerySQLFactory implements QueryFactory {
 	return instance;
     }
 
-    public QueryImpl newQuery(final ConnectionContext connectionContext, final String jdbcQuery) {
+    public QueryImpl newQuery(final ConnectionContextJDBC connectionContext, final String jdbcQuery) {
 	if (jdbcQuery == null) {
 	    final QueryImpl wrapper = new QueryImpl(null);
 	    return wrapper;
@@ -57,7 +57,7 @@ public class QuerySQLFactory implements QueryFactory {
 	return wrapper;
     }
 
-    public QueryImpl newQuery(final ConnectionContext connectionContext, final String jdbcQuery, final Map jdbcParameters) {
+    public QueryImpl newQuery(final ConnectionContextJDBC connectionContext, final String jdbcQuery, final Map jdbcParameters) {
 	final QueryImpl query = newQuery(connectionContext, jdbcQuery);
 
 	final Iterator entries = jdbcParameters.entrySet().iterator();

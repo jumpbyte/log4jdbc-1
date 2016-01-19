@@ -7,7 +7,7 @@ import java.sql.ResultSetMetaData;
 import fr.ms.lang.reflect.ProxyOperation;
 import fr.ms.lang.reflect.ProxyOperationFactory;
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.ConnectionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.proxy.jdbc.operation.ResultSetOperation;
 import fr.ms.log4jdbc.resultset.CellImpl;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
@@ -15,7 +15,7 @@ import fr.ms.log4jdbc.sql.QueryImpl;
 
 public class ResultSetOperationFactory implements ProxyOperationFactory {
 
-    private final ConnectionContext connectionContext;
+    private final ConnectionContextJDBC connectionContext;
 
     public final QueryImpl query;
 
@@ -25,7 +25,7 @@ public class ResultSetOperationFactory implements ProxyOperationFactory {
 
     public CellImpl lastCell;
 
-    public ResultSetOperationFactory(final ConnectionContext connectionContext, final ResultSet rs, final QueryImpl query) {
+    public ResultSetOperationFactory(final ConnectionContextJDBC connectionContext, final ResultSet rs, final QueryImpl query) {
 	this.connectionContext = connectionContext;
 	this.rs = rs;
 	this.query = query;
