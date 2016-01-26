@@ -45,8 +45,6 @@ public class PreparedStatementOperation extends StatementOperation {
 
 	connectionContext.addQuery(query);
 
-	sqlOperation.setQuery(query);
-
 	context.newQuery();
     }
 
@@ -74,8 +72,6 @@ public class PreparedStatementOperation extends StatementOperation {
 	query.setUpdateCount(updateCount);
 
 	connectionContext.addQuery(query);
-
-	sqlOperation.setQuery(query);
 
 	context.newQuery();
     }

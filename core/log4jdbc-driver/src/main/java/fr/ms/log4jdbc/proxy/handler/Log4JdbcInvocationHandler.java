@@ -26,11 +26,11 @@ public class Log4JdbcInvocationHandler extends ProxyOperationInvocationHandler {
 	return buildOperation;
     }
 
-    public void postProcess(final ProxyOperation operationContext, final TimeInvocation timeInvocation, final Object proxy, final Method method,
+    public void postProcess(final ProxyOperation proxyOperation, final TimeInvocation timeInvocation, final Object proxy, final Method method,
 	    final Object[] args) {
-	final Object proxyOperation = operationContext.getOperation();
+	final Log4JdbcOperation log4JdbcOperation = (Log4JdbcOperation) proxyOperation;
 
-	final SqlOperation sqlOperation = (SqlOperation) proxyOperation;
+	final SqlOperation sqlOperation = log4JdbcOperation.getOperation();
 
 	final Object invoke = timeInvocation.getInvoke();
 	final Throwable targetException = timeInvocation.getTargetException();
@@ -50,6 +50,8 @@ public class Log4JdbcInvocationHandler extends ProxyOperationInvocationHandler {
 		}
 	    }
 	}
+
+	log4JdbcOperation.postOperation();
     }
 
     public static SqlOperation getSqlOperation(final SqlOperation sqlOperation, final SqlOperationLogger log) {

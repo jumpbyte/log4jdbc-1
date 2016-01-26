@@ -8,7 +8,9 @@ import fr.ms.log4jdbc.sql.QueryImpl;
 
 public class ConnectionContextXA extends ConnectionContextJDBC {
 
-    private TransactionContextXA transactionContext;
+    private boolean transactionActive = false;
+
+    private TransactionContextXA transactionContextXA;
 
     public ConnectionContextXA(final Class clazz) {
 	super(clazz);
@@ -18,62 +20,70 @@ public class ConnectionContextXA extends ConnectionContextJDBC {
 	super(driver, url);
     }
 
-    public void setTransactionContext(final TransactionContextXA transactionContext) {
-	this.transactionContext = transactionContext;
-
-	setTransactionEnabled(transactionContext != null);
-    }
-
     @Override
     public void setTransactionEnabled(final boolean transactionEnabled) {
 	if (!transactionEnabled) {
-	    transactionContext = null;
+	    transactionContextXA = null;
+	    transactionActive = false;
 	}
 	super.setTransactionEnabled(transactionEnabled);
     }
 
     @Override
     public QueryImpl addQuery(final QueryImpl query) {
-	if (transactionContext == null) {
+	if (transactionContextXA == null) {
 	    return super.addQuery(query);
 	}
 
 	if (transactionEnabled) {
-	    transactionContext.addQuery(query);
+	    if (!transactionActive) {
+		transactionActive = true;
+	    }
+	    transactionContextXA.addQuery(query);
 	}
 
 	return query;
 
     }
 
+    public void setTransactionContextXA(final TransactionContextXA transactionContextXA) {
+	this.transactionContextXA = transactionContextXA;
+    }
+
     @Override
     public TransactionContextJDBC getTransactionContext() {
-	if (transactionContext == null) {
+	if (transactionContextXA == null) {
 	    return super.getTransactionContext();
 	}
-	return transactionContext;
+	if (transactionActive) {
+	    return transactionContextXA;
+	}
+
+	return null;
     }
 
     @Override
     public void commit() {
-	if (transactionContext == null) {
+	if (transactionContextXA == null) {
 	    super.commit();
 	} else {
-	    transactionContext.commit();
-	    transactionContext.close();
-	    transactionContext = null;
+	    transactionContextXA.commit();
 	}
 
     }
 
     @Override
     public void rollback(final Object savePoint) {
-	if (transactionContext == null) {
+	if (transactionContextXA == null) {
 	    super.rollback(savePoint);
 	} else {
-	    transactionContext.rollback(null);
-	    transactionContext.close();
-	    transactionContext = null;
+	    transactionContextXA.rollback(null);
 	}
+    }
+
+    @Override
+    public void resetTransaction() {
+	transactionContextXA.close();
+	setTransactionEnabled(false);
     }
 }

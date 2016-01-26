@@ -145,7 +145,6 @@ public class TransactionTest {
 	    Assert.assertNull(query3.getResultSetCollector());
 	    Assert.assertNotNull(query3.getTransaction());
 	    Assert.assertEquals(query3.getTransaction().getTransactionState(), Transaction.STATE_EXECUTE);
-	    Assert.assertEquals(query3.getTransaction().getOpenTransaction(), 1);
 	    Assert.assertEquals(query3.getTransaction().getQueriesTransaction().length, 1);
 	    final Query transactionQuery3 = query3.getTransaction().getQueriesTransaction()[0];
 
@@ -179,7 +178,6 @@ public class TransactionTest {
 
 	    Assert.assertNotNull(sqlOperation4.getTransaction());
 	    Assert.assertEquals(query3.getTransaction().getTransactionState(), Transaction.STATE_EXECUTE);
-	    Assert.assertEquals(query3.getTransaction().getOpenTransaction(), 0);
 	    Assert.assertEquals(query3.getTransaction().getQueriesTransaction().length, 1);
 	    final Query transactionQuery3Bis = query3.getTransaction().getQueriesTransaction()[0];
 
@@ -314,7 +312,6 @@ public class TransactionTest {
 	    Assert.assertNull(query1.getResultSetCollector());
 	    Assert.assertNotNull(query1.getTransaction());
 	    Assert.assertEquals(query1.getTransaction().getTransactionState(), Transaction.STATE_EXECUTE);
-	    Assert.assertEquals(query1.getTransaction().getOpenTransaction(), 1);
 	    Assert.assertEquals(query1.getTransaction().getQueriesTransaction().length, 1);
 	    Query transactionQuery1 = query1.getTransaction().getQueriesTransaction()[0];
 
@@ -361,7 +358,6 @@ public class TransactionTest {
 	    Assert.assertNull(query2.getResultSetCollector());
 	    Assert.assertNotNull(query2.getTransaction());
 	    Assert.assertEquals(query2.getTransaction().getTransactionState(), Transaction.STATE_EXECUTE);
-	    Assert.assertEquals(query2.getTransaction().getOpenTransaction(), 1);
 	    Assert.assertEquals(query2.getTransaction().getQueriesTransaction().length, 2);
 	    final Query transactionQuery2 = query2.getTransaction().getQueriesTransaction()[1];
 
@@ -395,7 +391,6 @@ public class TransactionTest {
 	    Assert.assertNotNull(sqlOperation.getTransaction());
 
 	    Assert.assertEquals(sqlOperation.getTransaction().getTransactionState(), Transaction.STATE_COMMIT);
-	    Assert.assertEquals(sqlOperation.getTransaction().getOpenTransaction(), 0);
 	    Assert.assertEquals(sqlOperation.getTransaction().getQueriesTransaction().length, 2);
 
 	    transactionQuery1 = sqlOperation.getTransaction().getQueriesTransaction()[0];
@@ -423,7 +418,6 @@ public class TransactionTest {
 	    Assert.assertNull(transactionQuery1.getResultSetCollector());
 
 	    Assert.assertEquals(query1.getTransaction().getTransactionState(), Transaction.STATE_EXECUTE);
-	    Assert.assertEquals(query1.getTransaction().getOpenTransaction(), 0);
 	    Assert.assertEquals(query1.getTransaction().getQueriesTransaction().length, 1);
 	    transactionQuery1 = query1.getTransaction().getQueriesTransaction()[0];
 

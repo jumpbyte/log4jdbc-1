@@ -5,27 +5,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import fr.ms.lang.reflect.ProxyOperation;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationContext;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.context.jdbc.TransactionContextJDBC;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
+import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.log4jdbc.proxy.jdbc.operation.factory.StatementOperationFactory;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
 import fr.ms.log4jdbc.sql.internal.QueryFactory;
 
-public class StatementOperation implements ProxyOperation {
+public class StatementOperation implements Log4JdbcOperation {
 
     protected final ConnectionContextJDBC connectionContext;
     protected final TimeInvocation timeInvocation;
     protected final Method method;
     protected final Object[] args;
-
-    protected SqlOperationContext sqlOperation;
 
     private final QueryFactory queryFactory;
 
@@ -43,8 +41,6 @@ public class StatementOperation implements ProxyOperation {
 	this.timeInvocation = timeInvocation;
 	this.method = method;
 	this.args = args;
-
-	this.sqlOperation = new SqlOperationContext(timeInvocation, connectionContext);
 
 	this.queryFactory = queryFactory;
 	this.statement = statement;
@@ -65,9 +61,14 @@ public class StatementOperation implements ProxyOperation {
 	}
 
 	// Create ResultSetCollector and Proxy ResultSet
-	invokeWrapper = wrapInvoke();
+	wrapInvoke();
 
-	return sqlOperation.valid();
+	final SqlOperationContext sqlOperationContext = new SqlOperationContext(timeInvocation, connectionContext, query);
+	return sqlOperationContext;
+    }
+
+    public void postOperation() {
+	// NO-OP
     }
 
     private void addBatch(final String sql) {
@@ -77,8 +78,6 @@ public class StatementOperation implements ProxyOperation {
 	query.setState(Query.STATE_NOT_EXECUTE);
 
 	connectionContext.addQuery(query);
-
-	sqlOperation.setQuery(query);
     }
 
     private void executeBatch(final Object invoke) {
@@ -122,7 +121,6 @@ public class StatementOperation implements ProxyOperation {
 	connectionContext.addQuery(query);
 
 	context.setQuery(query);
-	sqlOperation.setQuery(query);
     }
 
     protected Integer getUpdateCount(final Method method) {
@@ -144,8 +142,8 @@ public class StatementOperation implements ProxyOperation {
 	return updateCount;
     }
 
-    public Object wrapInvoke() {
-	Object invokeWrapper = timeInvocation.getInvoke();
+    public void wrapInvoke() {
+	invokeWrapper = timeInvocation.getInvoke();
 
 	if (invokeWrapper != null) {
 	    if (invokeWrapper instanceof ResultSet) {
@@ -167,8 +165,6 @@ public class StatementOperation implements ProxyOperation {
 		invokeWrapper = Log4JdbcProxy.proxyResultSet(resultSet, connectionContext, queryCurrent);
 	    }
 	}
-
-	return invokeWrapper;
     }
 
     public Object getInvoke() {

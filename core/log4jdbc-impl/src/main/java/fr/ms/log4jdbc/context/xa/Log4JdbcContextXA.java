@@ -14,7 +14,8 @@ public class Log4JdbcContextXA implements Log4JdbcContext {
     public ConnectionContextXA newConnectionContext(final Connection connection, final Class clazz) {
 	connectionContext = new ConnectionContextXA(clazz);
 
-	connectionContext.setTransactionContext(transactionContext);
+	connectionContext.setTransactionContextXA(transactionContext);
+	connectionContext.setTransactionEnabled(transactionContext != null);
 
 	return connectionContext;
     }
@@ -22,7 +23,8 @@ public class Log4JdbcContextXA implements Log4JdbcContext {
     public ConnectionContextXA newConnectionContext(final Connection connection, final Driver driver, final String url) {
 	connectionContext = new ConnectionContextXA(driver, url);
 
-	connectionContext.setTransactionContext(transactionContext);
+	connectionContext.setTransactionContextXA(transactionContext);
+	connectionContext.setTransactionEnabled(transactionContext != null);
 
 	return connectionContext;
     }

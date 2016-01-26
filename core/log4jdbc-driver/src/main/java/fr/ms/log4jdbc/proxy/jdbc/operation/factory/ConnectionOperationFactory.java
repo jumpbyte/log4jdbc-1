@@ -2,7 +2,6 @@ package fr.ms.log4jdbc.proxy.jdbc.operation.factory;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.sql.SQLException;
 
 import fr.ms.lang.reflect.ProxyOperation;
 import fr.ms.lang.reflect.ProxyOperationFactory;
@@ -19,12 +18,12 @@ public class ConnectionOperationFactory implements ProxyOperationFactory {
     public ConnectionOperationFactory(final ConnectionContextJDBC connectionContext, final Connection connection) {
 	this.connectionContext = connectionContext;
 
-	try {
-	    autoCommit = connection.getAutoCommit();
-	    connectionContext.setTransactionEnabled(!autoCommit);
-	} catch (final SQLException e) {
-
-	}
+	// try {
+	// autoCommit = connection.getAutoCommit();
+	// connectionContext.setTransactionEnabled(!autoCommit);
+	// } catch (final SQLException e) {
+	//
+	// }
     }
 
     public ProxyOperation newOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {

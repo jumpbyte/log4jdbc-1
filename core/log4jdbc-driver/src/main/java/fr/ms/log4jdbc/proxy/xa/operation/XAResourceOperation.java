@@ -6,7 +6,6 @@ import java.util.WeakHashMap;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
-import fr.ms.lang.reflect.ProxyOperation;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationContext;
@@ -14,21 +13,20 @@ import fr.ms.log4jdbc.SqlOperationDefault;
 import fr.ms.log4jdbc.context.xa.ConnectionContextXA;
 import fr.ms.log4jdbc.context.xa.Log4JdbcContextXA;
 import fr.ms.log4jdbc.context.xa.TransactionContextXA;
+import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 
-public class XAResourceOperation implements ProxyOperation {
+public class XAResourceOperation implements Log4JdbcOperation {
 
     public final static WeakHashMap<Xid, TransactionContextXA> transactions = new WeakHashMap<Xid, TransactionContextXA>();
 
-    Log4JdbcContextXA log4JdbcContext;
+    private final Log4JdbcContextXA log4JdbcContext;
     private final ConnectionContextXA connectionContext;
 
     private final TimeInvocation timeInvocation;
-    private final Object proxy;
     private final Method method;
     private final Object[] args;
 
-    private SqlOperationDefault sqlOperationWithOutConnectionContext;
-    private SqlOperationContext sqlOperationWithConnectionContext;
+    private boolean resetTransaction;
 
     public XAResourceOperation(final Log4JdbcContextXA log4JdbcContext, final TimeInvocation timeInvocation, final Object proxy, final Method method,
 	    final Object[] args) {
@@ -36,15 +34,8 @@ public class XAResourceOperation implements ProxyOperation {
 	connectionContext = log4JdbcContext.getConnectionContext();
 
 	this.timeInvocation = timeInvocation;
-	this.proxy = proxy;
 	this.method = method;
 	this.args = args;
-
-	if (connectionContext == null) {
-	    this.sqlOperationWithOutConnectionContext = new SqlOperationDefault(timeInvocation);
-	} else {
-	    this.sqlOperationWithConnectionContext = new SqlOperationContext(timeInvocation, connectionContext);
-	}
     }
 
     public SqlOperation getOperation() {
@@ -67,9 +58,16 @@ public class XAResourceOperation implements ProxyOperation {
 	}
 
 	if (connectionContext == null) {
-	    return sqlOperationWithOutConnectionContext;
+	    return new SqlOperationDefault(timeInvocation);
 	} else {
-	    return sqlOperationWithConnectionContext.valid();
+	    return new SqlOperationContext(timeInvocation, connectionContext);
+	}
+    }
+
+    public void postOperation() {
+	if (resetTransaction) {
+	    connectionContext.resetTransaction();
+	    resetTransaction = false;
 	}
     }
 
@@ -85,8 +83,8 @@ public class XAResourceOperation implements ProxyOperation {
 	}
 
 	transactionContextXA.setFlags(flags);
+	connectionContext.setTransactionContextXA(transactionContextXA);
 	log4JdbcContext.setTransactionContext(transactionContextXA);
-	connectionContext.setTransactionContext(transactionContextXA);
     }
 
     public void end(final Object[] args) {
@@ -96,8 +94,8 @@ public class XAResourceOperation implements ProxyOperation {
 	final TransactionContextXA transactionContextXA = transactions.get(xid);
 
 	transactionContextXA.setFlags(flags);
+	connectionContext.setTransactionContextXA(transactionContextXA);
 	log4JdbcContext.setTransactionContext(transactionContextXA);
-	connectionContext.setTransactionContext(transactionContextXA);
     }
 
     public void prepare(final Object[] args, final Object invoke) {
@@ -107,9 +105,8 @@ public class XAResourceOperation implements ProxyOperation {
 	final TransactionContextXA transactionContextXA = transactions.get(xid);
 
 	transactionContextXA.setFlags(flags);
+	connectionContext.setTransactionContextXA(transactionContextXA);
 	log4JdbcContext.setTransactionContext(transactionContextXA);
-	connectionContext.setTransactionContext(transactionContextXA);
-
     }
 
     public void rollback(final Object[] args) {
@@ -118,12 +115,13 @@ public class XAResourceOperation implements ProxyOperation {
 	final TransactionContextXA transactionContextXA = transactions.get(xid);
 
 	transactionContextXA.setFlags(XAResource.TMFAIL);
+	connectionContext.setTransactionContextXA(transactionContextXA);
 	log4JdbcContext.setTransactionContext(transactionContextXA);
-	connectionContext.setTransactionContext(transactionContextXA);
 
 	transactions.remove(xid);
 
 	connectionContext.rollback(null);
+	resetTransaction = true;
     }
 
     public void commit(final Object[] args) {
@@ -132,12 +130,13 @@ public class XAResourceOperation implements ProxyOperation {
 
 	final TransactionContextXA transactionContextXA = transactions.get(xid);
 
+	connectionContext.setTransactionContextXA(transactionContextXA);
 	log4JdbcContext.setTransactionContext(transactionContextXA);
-	connectionContext.setTransactionContext(transactionContextXA);
 
 	transactions.remove(xid);
 
 	connectionContext.commit();
+	resetTransaction = true;
     }
 
     public Object getInvoke() {

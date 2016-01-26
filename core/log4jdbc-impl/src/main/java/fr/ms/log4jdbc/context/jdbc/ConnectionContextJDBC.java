@@ -37,7 +37,7 @@ public class ConnectionContextJDBC extends ConnectionContextDefault {
 
     protected boolean transactionEnabled;
 
-    private TransactionContextJDBC transactionContext;
+    private TransactionContextJDBC transactionContextJDBC;
 
     public ConnectionContextJDBC(final Class clazz) {
 	super(clazz);
@@ -53,7 +53,7 @@ public class ConnectionContextJDBC extends ConnectionContextDefault {
 
     public void setTransactionEnabled(final boolean transactionEnabled) {
 	if (!transactionEnabled) {
-	    transactionContext = null;
+	    transactionContextJDBC = null;
 	}
 
 	this.transactionEnabled = transactionEnabled;
@@ -61,34 +61,35 @@ public class ConnectionContextJDBC extends ConnectionContextDefault {
 
     public QueryImpl addQuery(final QueryImpl query) {
 	if (transactionEnabled) {
-	    if (transactionContext == null) {
-		transactionContext = new TransactionContextJDBC();
+	    if (transactionContextJDBC == null) {
+		transactionContextJDBC = new TransactionContextJDBC();
 	    }
-	    transactionContext.addQuery(query);
+	    transactionContextJDBC.addQuery(query);
 	}
 
 	return query;
     }
 
     public TransactionContextJDBC getTransactionContext() {
-	return transactionContext;
+	return transactionContextJDBC;
     }
 
     public void commit() {
-	if (transactionContext != null) {
-	    transactionContext.commit();
-	    transactionContext.close();
-	    transactionContext = null;
+	if (transactionContextJDBC != null) {
+	    transactionContextJDBC.commit();
 	}
     }
 
     public void rollback(final Object savePoint) {
-	if (transactionContext != null) {
-	    transactionContext.rollback(savePoint);
-	    if (savePoint == null) {
-		transactionContext.close();
-		transactionContext = null;
-	    }
+	if (transactionContextJDBC != null) {
+	    transactionContextJDBC.rollback(savePoint);
+	}
+    }
+
+    public void resetTransaction() {
+	if (transactionContextJDBC != null) {
+	    transactionContextJDBC.close();
+	    transactionContextJDBC = null;
 	}
     }
 
@@ -96,7 +97,7 @@ public class ConnectionContextJDBC extends ConnectionContextDefault {
 	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 	final StringMaker buffer = stringFactory.newString();
 
-	buffer.append("ConnectionContext [driver=");
+	buffer.append("ConnectionContextJDBC [driver=");
 	buffer.append(driver);
 	buffer.append(", url=");
 	buffer.append(url);
@@ -105,7 +106,7 @@ public class ConnectionContextJDBC extends ConnectionContextDefault {
 	buffer.append(", rdbmsSpecifics=");
 	buffer.append(rdbmsSpecifics);
 	buffer.append(", transactionContext=");
-	buffer.append(transactionContext);
+	buffer.append(transactionContextJDBC);
 	buffer.append("]");
 
 	return buffer.toString();
