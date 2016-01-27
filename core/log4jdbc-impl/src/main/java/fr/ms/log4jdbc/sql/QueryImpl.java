@@ -57,7 +57,7 @@ public class QueryImpl implements Query, Cloneable {
 
     private ResultSetCollectorImpl resultSetCollector;
 
-    private String state = Query.STATE_NOT_EXECUTE;
+    private String state;
 
     private Transaction transaction;
 
@@ -65,9 +65,6 @@ public class QueryImpl implements Query, Cloneable {
 
     public QueryImpl(final QuerySQL query) {
 	this.query = query;
-	if (query != null) {
-	    this.queryNumber = nbQueryTotal.incrementAndGet();
-	}
     }
 
     public Date getDate() {
@@ -170,6 +167,9 @@ public class QueryImpl implements Query, Cloneable {
     public void setState(final String state) {
 	if (state == null) {
 	    throw new NullPointerException();
+	}
+	if (query != null && this.state == null) {
+	    this.queryNumber = nbQueryTotal.incrementAndGet();
 	}
 	this.state = state;
     }

@@ -111,11 +111,6 @@ public class BatchTest {
 	    final SqlOperation sqlOperation14 = sqlMessages.get(14).getSqlOperation();
 	    final SqlOperation sqlOperation15 = sqlMessages.get(15).getSqlOperation();
 	    final SqlOperation sqlOperation16 = sqlMessages.get(16).getSqlOperation();
-	    final SqlOperation sqlOperation17 = sqlMessages.get(17).getSqlOperation();
-	    final SqlOperation sqlOperation18 = sqlMessages.get(18).getSqlOperation();
-	    final SqlOperation sqlOperation19 = sqlMessages.get(19).getSqlOperation();
-	    final SqlOperation sqlOperation20 = sqlMessages.get(20).getSqlOperation();
-	    final SqlOperation sqlOperation21 = sqlMessages.get(21).getSqlOperation();
 
 	    final ResultSet resultSet = statement.executeQuery("SELECT * FROM PERSONNE;");
 

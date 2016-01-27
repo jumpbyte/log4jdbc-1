@@ -126,7 +126,7 @@ public class XAResourceOperation implements Log4JdbcOperation {
 
     public void commit(final Object[] args) {
 	final Xid xid = ((Xid) args[0]);
-	// final boolean onePhase = ((Boolean) args[1]).booleanValue();
+	final boolean onePhase = ((Boolean) args[1]).booleanValue();
 
 	final TransactionContextXA transactionContextXA = transactions.get(xid);
 

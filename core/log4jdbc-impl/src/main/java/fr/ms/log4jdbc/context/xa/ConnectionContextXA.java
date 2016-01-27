@@ -36,18 +36,16 @@ public class ConnectionContextXA extends ConnectionContextJDBC {
 	}
 
 	if (transactionEnabled) {
-	    if (!transactionActive) {
-		transactionActive = true;
-	    }
+	    transactionActive = true;
 	    transactionContextXA.addQuery(query);
 	}
 
 	return query;
-
     }
 
     public void setTransactionContextXA(final TransactionContextXA transactionContextXA) {
 	this.transactionContextXA = transactionContextXA;
+	setTransactionEnabled(this.transactionContextXA != null);
     }
 
     @Override
