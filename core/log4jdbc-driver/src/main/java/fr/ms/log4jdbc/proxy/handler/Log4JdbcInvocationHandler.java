@@ -22,7 +22,14 @@ public class Log4JdbcInvocationHandler extends ProxyOperationInvocationHandler {
     }
 
     public boolean preProcess() {
-	final boolean buildOperation = (logs != null && logs.length != 0);
+	boolean buildOperation = (logs != null && logs.length != 0);
+	if (buildOperation) {
+	    buildOperation = false;
+	    for (int i = 0; i < logs.length; i++) {
+		final SqlOperationLogger log = logs[i];
+		buildOperation = buildOperation | log.isEnabled();
+	    }
+	}
 	return buildOperation;
     }
 
