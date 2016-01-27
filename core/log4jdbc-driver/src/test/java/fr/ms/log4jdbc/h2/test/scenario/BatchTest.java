@@ -1,4 +1,4 @@
-package fr.ms.log4jdbc.h2.connection;
+package fr.ms.log4jdbc.h2.test.scenario;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -7,12 +7,15 @@ import java.sql.Statement;
 import java.util.List;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 
 import fr.ms.log4jdbc.SqlOperation;
+import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.h2.DatabaseUtil;
-import fr.ms.log4jdbc.test.sqloperation.SqlMessage;
-import fr.ms.log4jdbc.test.sqloperation.SqlOperationMessage;
+import fr.ms.log4jdbc.sql.Query;
+import fr.ms.log4jdbc.sqloperation.SqlMessage;
+import fr.ms.log4jdbc.sqloperation.SqlOperationMessage;
 
 public class BatchTest {
 
@@ -31,11 +34,13 @@ public class BatchTest {
 	    connection = DatabaseUtil.createConnection(true);
 	    DatabaseUtil.createDatabase(connection);
 
+	    clear();
 	    connection.setAutoCommit(false);
 
 	    statement = connection.createStatement();
 
-	    statement.addBatch("INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('RollBack1', 'SQL', '1970-01-01');");
+	    final String query1 = "INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('RollBack1', 'SQL', '1970-01-01');";
+	    statement.addBatch(query1);
 
 	    statement.addBatch("INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('RollBack2', 'SQL', '1970-01-01');");
 
@@ -63,9 +68,10 @@ public class BatchTest {
 
 	    final int[] count = statement.executeBatch();
 
-	    System.out.println(count.length);
+	    Assert.assertEquals(11, count.length);
+
 	    for (final int i : count) {
-		System.out.println(i);
+		Assert.assertEquals(1, i);
 	    }
 
 	    connection.commit();
@@ -73,8 +79,24 @@ public class BatchTest {
 	    final List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
 
 	    final SqlOperation sqlOperation0 = sqlMessages.get(0).getSqlOperation();
+	    Assert.assertNull(sqlOperation0.getQuery());
+	    Assert.assertNull(sqlOperation0.getTransaction());
+
 	    final SqlOperation sqlOperation1 = sqlMessages.get(1).getSqlOperation();
+	    Assert.assertNull(sqlOperation1.getQuery());
+	    Assert.assertNull(sqlOperation1.getTransaction());
+
 	    final SqlOperation sqlOperation2 = sqlMessages.get(2).getSqlOperation();
+	    Assert.assertNotNull(sqlOperation2.getQuery());
+	    Assert.assertEquals(Query.METHOD_BATCH, sqlOperation2.getQuery().getMethodQuery());
+	    Assert.assertEquals(Query.STATE_NOT_EXECUTE, sqlOperation2.getQuery().getState());
+	    Assert.assertEquals(query1, sqlOperation2.getQuery().getJDBCQuery());
+	    Assert.assertEquals(query1, sqlOperation2.getQuery().getSQLQuery());
+	    Assert.assertNotNull(sqlOperation2.getTransaction());
+	    Assert.assertEquals("JDBC", sqlOperation2.getTransaction().getTransactionType());
+	    Assert.assertEquals(Transaction.STATE_NOT_EXECUTE, sqlOperation2.getTransaction().getTransactionState());
+	    Assert.assertEquals(1, sqlOperation2.getTransaction().getOpenTransaction());
+
 	    final SqlOperation sqlOperation3 = sqlMessages.get(3).getSqlOperation();
 	    final SqlOperation sqlOperation4 = sqlMessages.get(4).getSqlOperation();
 	    final SqlOperation sqlOperation5 = sqlMessages.get(5).getSqlOperation();

@@ -1,4 +1,4 @@
-package fr.ms.log4jdbc.h2.connection;
+package fr.ms.log4jdbc.h2.test.scenario;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,8 +16,8 @@ import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.h2.DatabaseUtil;
 import fr.ms.log4jdbc.rdbms.GenericRdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Query;
-import fr.ms.log4jdbc.test.sqloperation.SqlMessage;
-import fr.ms.log4jdbc.test.sqloperation.SqlOperationMessage;
+import fr.ms.log4jdbc.sqloperation.SqlMessage;
+import fr.ms.log4jdbc.sqloperation.SqlOperationMessage;
 
 public class TransactionTest {
 

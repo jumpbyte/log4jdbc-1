@@ -1,13 +1,13 @@
-package fr.ms.log4jdbc.test.sqloperation;
+package fr.ms.log4jdbc.sqloperation;
 
 import java.lang.reflect.Method;
 
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationLogger;
 
-public class XAResourceSqlOperationLogger implements SqlOperationLogger {
+public class CallableStatementSqlOperationLogger implements SqlOperationLogger {
 
-    private final static String TYPE_LOGGER = SqlOperationLogger.XA_RESOURCE;
+    private final static String TYPE_LOGGER = SqlOperationLogger.CALLABLE_STATEMENT;
 
     public boolean isEnabled() {
 	return true;

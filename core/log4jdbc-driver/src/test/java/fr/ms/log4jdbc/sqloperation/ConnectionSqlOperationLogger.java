@@ -1,13 +1,13 @@
-package fr.ms.log4jdbc.test.sqloperation;
+package fr.ms.log4jdbc.sqloperation;
 
 import java.lang.reflect.Method;
 
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationLogger;
 
-public class StatementSqlOperationLogger implements SqlOperationLogger {
+public class ConnectionSqlOperationLogger implements SqlOperationLogger {
 
-    private final static String TYPE_LOGGER = SqlOperationLogger.STATEMENT;
+    private final static String TYPE_LOGGER = SqlOperationLogger.CONNECTION;
 
     public boolean isEnabled() {
 	return true;

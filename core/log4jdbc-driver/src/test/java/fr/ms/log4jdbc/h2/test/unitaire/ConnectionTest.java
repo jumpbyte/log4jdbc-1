@@ -1,4 +1,4 @@
-package fr.ms.log4jdbc.h2.connection;
+package fr.ms.log4jdbc.h2.test.unitaire;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -13,8 +13,8 @@ import org.junit.Test;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationLogger;
 import fr.ms.log4jdbc.h2.DatabaseUtil;
-import fr.ms.log4jdbc.test.sqloperation.SqlMessage;
-import fr.ms.log4jdbc.test.sqloperation.SqlOperationMessage;
+import fr.ms.log4jdbc.sqloperation.SqlMessage;
+import fr.ms.log4jdbc.sqloperation.SqlOperationMessage;
 
 public class ConnectionTest {
 

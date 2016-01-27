@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.h2.driver;
+package fr.ms.log4jdbc.h2.test.unitaire;
 
 import java.sql.Driver;
 import java.sql.DriverPropertyInfo;

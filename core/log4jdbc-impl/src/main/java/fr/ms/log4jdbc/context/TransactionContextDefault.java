@@ -10,23 +10,25 @@ public class TransactionContextDefault {
 
     private final static SyncLong totalTransactionNumber = syncLongFactory.newLong();
 
-    private final static SyncLong openTransaction = syncLongFactory.newLong();
+    private final static SyncLong openTransactionCurrent = syncLongFactory.newLong();
 
     private long transactionNumber;
+
+    private long openTransaction;
 
     protected String state = Transaction.STATE_NOT_EXECUTE;
 
     {
 	transactionNumber = totalTransactionNumber.incrementAndGet();
-	openTransaction.incrementAndGet();
+	openTransaction = openTransactionCurrent.incrementAndGet();
     }
 
     public void close() {
-	openTransaction.decrementAndGet();
+	openTransactionCurrent.decrementAndGet();
     }
 
     public long getOpenTransaction() {
-	return openTransaction.get();
+	return openTransaction;
     }
 
     public long getTransactionNumber() {

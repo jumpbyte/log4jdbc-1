@@ -1,4 +1,4 @@
-package fr.ms.log4jdbc.test.sqloperation;
+package fr.ms.log4jdbc.sqloperation;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;

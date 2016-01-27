@@ -10,7 +10,7 @@ import java.sql.Statement;
 
 public class DatabaseUtil {
 
-    public final static String URL_H2 = "jdbc:h2:mem:test;TRACE_LEVEL_SYSTEM_OUT=3";
+    public final static String URL_H2 = "jdbc:h2:mem:test";// ;TRACE_LEVEL_SYSTEM_OUT=3";
 
     public final static String URL_H2_PROXY = "jdbc:log4" + URL_H2;
 
