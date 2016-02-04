@@ -43,16 +43,13 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
     private Object savePoint = null;
 
     private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean Queries Transaction";
-    private ReferenceObject refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
 
-    public void addQuery(final QueryImpl query) {
+    private ReferenceObject refQueries = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
+
+    public QueryImpl addQuery(final QueryImpl query) {
+	final QueryImpl queryReturn = query;
 	if (savePoint != null) {
 	    query.setSavePoint(savePoint);
-	}
-
-	final List queriesTransaction = (List) refQueriesTransaction.get();
-	if (queriesTransaction != null) {
-	    queriesTransaction.add(query);
 	}
 
 	if (Query.METHOD_BATCH.equals(query.getMethodQuery()) && !Transaction.STATE_EXECUTE.equals(state)) {
@@ -61,15 +58,18 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
 	    state = Transaction.STATE_EXECUTE;
 	}
 
-	try {
-	    query.setTransaction((Transaction) this.clone());
-	} catch (final CloneNotSupportedException e) {
-	    e.printStackTrace();
+	query.setTransaction(this);
+
+	final List queries = (List) refQueries.get();
+	if (queries != null) {
+	    queries.add(query);
 	}
+
+	return queryReturn;
     }
 
     public void rollback(final Object savePoint) {
-	final List queriesTransaction = (List) refQueriesTransaction.get();
+	final List queriesTransaction = (List) refQueries.get();
 	if (queriesTransaction == null) {
 	    return;
 	}
@@ -101,7 +101,7 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
     }
 
     public void executeBatch(final int[] updateCounts) {
-	final List queriesTransaction = (List) refQueriesTransaction.get();
+	final List queriesTransaction = (List) refQueries.get();
 	if (queriesTransaction == null) {
 	    return;
 	}
@@ -134,7 +134,7 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
     }
 
     public void commit() {
-	final List queriesTransaction = (List) refQueriesTransaction.get();
+	final List queriesTransaction = (List) refQueries.get();
 	if (queriesTransaction == null) {
 	    return;
 	}
@@ -159,7 +159,7 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
     }
 
     public Query[] getQueriesTransaction() {
-	final List queriesTransaction = (List) refQueriesTransaction.get();
+	final List queriesTransaction = (List) refQueries.get();
 	if (queriesTransaction == null) {
 	    return null;
 	}
@@ -210,20 +210,26 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
     }
 
     public Object clone() throws CloneNotSupportedException {
-	final TransactionContextJDBC t = (TransactionContextJDBC) super.clone();
-	final List queriesTransaction = (List) refQueriesTransaction.get();
+
+	final TransactionContextJDBC clone = (TransactionContextJDBC) super.clone();
+
+	final List queriesTransaction = (List) clone.refQueries.get();
+
 	if (queriesTransaction == null) {
-	    t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
+	    clone.refQueries = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
 	} else {
 	    final List copies = new ArrayList(queriesTransaction.size());
 	    for (int i = 0; i < queriesTransaction.size(); i++) {
-		final QueryImpl query = (QueryImpl) queriesTransaction.get(i);
-		copies.add(query.clone());
+		QueryImpl query = (QueryImpl) queriesTransaction.get(i);
+		query = (QueryImpl) query.clone();
+		query.setTransaction(clone);
+		copies.add(query);
 	    }
 
-	    t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, copies);
+	    clone.refQueries = ReferenceFactory.newReference(REF_MESSAGE_FULL, copies);
 	}
-	return t;
+
+	return clone;
     }
 
     public String toString() {

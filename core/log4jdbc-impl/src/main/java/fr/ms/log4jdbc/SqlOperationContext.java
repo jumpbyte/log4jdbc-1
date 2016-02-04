@@ -54,25 +54,28 @@ public class SqlOperationContext extends SqlOperationDefault implements SqlOpera
 	this.connectionContext = connectionContext;
 	this.openConnection = connectionContext.getOpenConnection().get();
 
-	try {
+	this.transaction = connectionContext.getTransactionContext();
 
-	    if (connectionContext.getTransactionContext() != null) {
-		transaction = (TransactionContextJDBC) connectionContext.getTransactionContext().clone();
+	if (this.transaction != null) {
+	    try {
+		this.transaction = (TransactionContextJDBC) this.transaction.clone();
+	    } catch (final CloneNotSupportedException e) {
+		e.printStackTrace();
 	    }
-	} catch (final CloneNotSupportedException e) {
-	    e.printStackTrace();
 	}
     }
 
     public SqlOperationContext(final TimeInvocation timeInvocation, final ConnectionContextJDBC connectionContext, final QueryImpl query) {
 	this(timeInvocation, connectionContext);
 
-	try {
-	    if (query != null) {
+	if (query != null) {
+	    try {
 		this.query = (QueryImpl) query.clone();
+
+		this.query.setTransaction(transaction);
+	    } catch (final CloneNotSupportedException e) {
+		e.printStackTrace();
 	    }
-	} catch (final CloneNotSupportedException e) {
-	    e.printStackTrace();
 	}
     }
 

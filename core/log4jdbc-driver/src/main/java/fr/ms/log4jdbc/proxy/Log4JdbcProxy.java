@@ -26,9 +26,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import fr.ms.lang.SystemPropertyUtils;
+import fr.ms.lang.reflect.MeasureTimeInvocationHandler;
 import fr.ms.lang.reflect.ProxyOperationFactory;
 import fr.ms.lang.reflect.ProxyUtils;
-import fr.ms.lang.reflect.TraceTimeInvocationHandler;
 import fr.ms.log4jdbc.SqlOperationLogger;
 import fr.ms.log4jdbc.context.Log4JdbcContext;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
@@ -54,7 +54,7 @@ import fr.ms.log4jdbc.utils.ServicesJDBC;
  */
 public final class Log4JdbcProxy {
 
-    private final static boolean devMode = SystemPropertyUtils.getProperty("log4jdbc.devMode", false);
+    private final static boolean devMode = SystemPropertyUtils.getProperty("log4jdbc.devMode", true);
 
     public static Connection proxyConnection(final Connection connection, final Log4JdbcContext log4JdbcContext, final Driver driver, final String url) {
 	final ConnectionContextJDBC connectionContext = log4JdbcContext.newConnectionContext(connection, driver, url);
@@ -137,7 +137,7 @@ public final class Log4JdbcProxy {
 	if (devMode) {
 	    factory = new TraceTimeInvocationOperationFactory(factory);
 	    final InvocationHandler handler = new Log4JdbcInvocationHandler(implementation, logs, factory);
-	    final InvocationHandler decorator = new TraceTimeInvocationHandler(handler);
+	    final InvocationHandler decorator = new MeasureTimeInvocationHandler(handler);
 	    return decorator;
 	} else {
 	    final InvocationHandler handler = new Log4JdbcInvocationHandler(implementation, logs, factory);

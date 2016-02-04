@@ -187,7 +187,8 @@ public class QueryImpl implements Query, Cloneable {
     }
 
     public Object clone() throws CloneNotSupportedException {
-	return super.clone();
+	final QueryImpl clone = (QueryImpl) super.clone();
+	return clone;
     }
 
     public int hashCode() {
