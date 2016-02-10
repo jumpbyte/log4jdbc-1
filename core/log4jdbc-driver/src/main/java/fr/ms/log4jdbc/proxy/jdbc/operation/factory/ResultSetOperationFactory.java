@@ -30,9 +30,9 @@ public class ResultSetOperationFactory implements ProxyOperationFactory {
 	this.rs = rs;
 	this.query = query;
 
-	position = 0;
+	position = new Integer(0);
 	try {
-	    position = rs.getRow();
+	    position = new Integer(rs.getRow());
 	} catch (final Throwable e) {
 	}
     }
@@ -69,7 +69,7 @@ public class ResultSetOperationFactory implements ProxyOperationFactory {
 
     public QueryImpl first(final boolean valid) {
 	if (valid) {
-	    position = 1;
+	    position = new Integer(1);
 	    return getQuery();
 	} else {
 	    position = null;
@@ -100,7 +100,7 @@ public class ResultSetOperationFactory implements ProxyOperationFactory {
     }
 
     public void getMetaData(final Object invoke) {
-	final ResultSetCollectorImpl resultSetCollector = query.getResultSetCollector();
+	final ResultSetCollectorImpl resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();
 
 	if (resultSetCollector.getColumns().length == 0) {
 	    final ResultSetMetaData resultSetMetaData = (ResultSetMetaData) invoke;
@@ -109,7 +109,7 @@ public class ResultSetOperationFactory implements ProxyOperationFactory {
     }
 
     public void addValueColumn(final Class clazz, final Object[] args, final Object invoke) {
-	final ResultSetCollectorImpl resultSetCollector = query.getResultSetCollector();
+	final ResultSetCollectorImpl resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();
 	if (Integer.class.equals(clazz) || Integer.TYPE.equals(clazz)) {
 	    final Integer arg = (Integer) args[0];
 	    lastCell = resultSetCollector.addValueColumn(getPosition(), invoke, arg.intValue());
@@ -120,7 +120,7 @@ public class ResultSetOperationFactory implements ProxyOperationFactory {
     }
 
     public QueryImpl close() {
-	final ResultSetCollectorImpl resultSetCollector = query.getResultSetCollector();
+	final ResultSetCollectorImpl resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();
 
 	if (!resultSetCollector.isClosed()) {
 	    resultSetCollector.close();
@@ -132,36 +132,36 @@ public class ResultSetOperationFactory implements ProxyOperationFactory {
     }
 
     private void getMaxValue() {
-	position = Integer.MAX_VALUE;
+	position = new Integer(Integer.MAX_VALUE);
 	try {
-	    position = rs.getRow();
+	    position = new Integer(rs.getRow());
 	} catch (final Throwable e) {
 	}
     }
 
     private int getPosition() {
 	if (position == null) {
-	    position = 1;
+	    position = new Integer(1);
 	    try {
-		position = rs.getRow();
+		position = new Integer(rs.getRow());
 	    } catch (final Throwable e) {
 	    }
 	}
 
-	return position;
+	return position.intValue();
     }
 
     private void addPosition(final int addValue) {
 	if (position == null) {
 	    getPosition();
 	} else {
-	    position = position + addValue;
+	    position = new Integer(position.intValue() + addValue);
 	}
     }
 
     private QueryImpl getQuery() {
-	final ResultSetCollectorImpl resultSetCollector = query.getResultSetCollector();
-	resultSetCollector.getRow(position);
+	final ResultSetCollectorImpl resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();
+	resultSetCollector.getRow(position.intValue());
 
 	if (!resultSetCollector.isClosed()) {
 	    return query;

@@ -18,7 +18,6 @@ public class TransactionContextXA extends TransactionContextJDBC {
 	this.flags = flags;
     }
 
-    @Override
     public String getTransactionState() {
 	return super.getTransactionState() + " - Flags : " + flags;
     }

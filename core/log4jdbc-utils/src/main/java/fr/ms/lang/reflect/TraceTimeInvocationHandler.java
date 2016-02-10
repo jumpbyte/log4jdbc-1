@@ -26,6 +26,8 @@ import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
+import fr.ms.util.logging.Logger;
+import fr.ms.util.logging.LoggerManager;
 
 /**
  *
@@ -36,6 +38,8 @@ import fr.ms.lang.sync.impl.SyncLong;
  *
  */
 public class TraceTimeInvocationHandler implements InvocationHandler {
+
+    public final static Logger LOG = LoggerManager.getLogger("tracetime");
 
     private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
@@ -84,7 +88,7 @@ public class TraceTimeInvocationHandler implements InvocationHandler {
 	sb.append(" ms - Max Method Name : ");
 	sb.append(maxMethodName);
 
-	System.out.println(sb.toString());
+	LOG.debug(sb.toString());
 
 	return invokeTime.getInvoke();
     }

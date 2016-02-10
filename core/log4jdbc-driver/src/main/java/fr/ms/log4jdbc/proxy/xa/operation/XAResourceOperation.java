@@ -17,7 +17,7 @@ import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 
 public class XAResourceOperation implements Log4JdbcOperation {
 
-    public final static WeakHashMap<Xid, TransactionContextXA> transactions = new WeakHashMap<Xid, TransactionContextXA>();
+    public final static WeakHashMap transactions = new WeakHashMap();
 
     private final Log4JdbcContextXA log4JdbcContext;
     private final ConnectionContextXA connectionContext;
@@ -75,7 +75,7 @@ public class XAResourceOperation implements Log4JdbcOperation {
 	final Xid xid = ((Xid) args[0]);
 	final int flags = ((Integer) args[1]).intValue();
 
-	TransactionContextXA transactionContextXA = transactions.get(xid);
+	TransactionContextXA transactionContextXA = (TransactionContextXA) transactions.get(xid);
 
 	if (transactionContextXA == null) {
 	    transactionContextXA = new TransactionContextXA();
@@ -91,7 +91,7 @@ public class XAResourceOperation implements Log4JdbcOperation {
 	final Xid xid = ((Xid) args[0]);
 	final int flags = ((Integer) args[1]).intValue();
 
-	final TransactionContextXA transactionContextXA = transactions.get(xid);
+	final TransactionContextXA transactionContextXA = (TransactionContextXA) transactions.get(xid);
 
 	transactionContextXA.setFlags(flags);
 	connectionContext.setTransactionContextXA(transactionContextXA);
@@ -102,7 +102,7 @@ public class XAResourceOperation implements Log4JdbcOperation {
 	final Xid xid = ((Xid) args[0]);
 	final int flags = ((Integer) invoke).intValue();
 
-	final TransactionContextXA transactionContextXA = transactions.get(xid);
+	final TransactionContextXA transactionContextXA = (TransactionContextXA) transactions.get(xid);
 
 	transactionContextXA.setFlags(flags);
 	connectionContext.setTransactionContextXA(transactionContextXA);
@@ -112,7 +112,7 @@ public class XAResourceOperation implements Log4JdbcOperation {
     public void rollback(final Object[] args) {
 	final Xid xid = ((Xid) args[0]);
 
-	final TransactionContextXA transactionContextXA = transactions.get(xid);
+	final TransactionContextXA transactionContextXA = (TransactionContextXA) transactions.get(xid);
 
 	transactionContextXA.setFlags(XAResource.TMFAIL);
 	connectionContext.setTransactionContextXA(transactionContextXA);
@@ -128,7 +128,7 @@ public class XAResourceOperation implements Log4JdbcOperation {
 	final Xid xid = ((Xid) args[0]);
 	final boolean onePhase = ((Boolean) args[1]).booleanValue();
 
-	final TransactionContextXA transactionContextXA = transactions.get(xid);
+	final TransactionContextXA transactionContextXA = (TransactionContextXA) transactions.get(xid);
 
 	connectionContext.setTransactionContextXA(transactionContextXA);
 	log4JdbcContext.setTransactionContext(transactionContextXA);

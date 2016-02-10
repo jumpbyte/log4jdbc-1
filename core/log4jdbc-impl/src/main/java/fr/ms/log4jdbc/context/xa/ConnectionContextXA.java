@@ -20,7 +20,6 @@ public class ConnectionContextXA extends ConnectionContextJDBC {
 	super(driver, url);
     }
 
-    @Override
     public void setTransactionEnabled(final boolean transactionEnabled) {
 	if (!transactionEnabled) {
 	    transactionContextXA = null;
@@ -29,7 +28,6 @@ public class ConnectionContextXA extends ConnectionContextJDBC {
 	super.setTransactionEnabled(transactionEnabled);
     }
 
-    @Override
     public QueryImpl addQuery(final QueryImpl query) {
 	if (transactionContextXA == null) {
 	    return super.addQuery(query);
@@ -48,7 +46,6 @@ public class ConnectionContextXA extends ConnectionContextJDBC {
 	setTransactionEnabled(this.transactionContextXA != null);
     }
 
-    @Override
     public TransactionContextJDBC getTransactionContext() {
 	if (transactionContextXA == null) {
 	    return super.getTransactionContext();
@@ -60,7 +57,6 @@ public class ConnectionContextXA extends ConnectionContextJDBC {
 	return null;
     }
 
-    @Override
     public void commit() {
 	if (transactionContextXA == null) {
 	    super.commit();
@@ -70,7 +66,6 @@ public class ConnectionContextXA extends ConnectionContextJDBC {
 
     }
 
-    @Override
     public void rollback(final Object savePoint) {
 	if (transactionContextXA == null) {
 	    super.rollback(savePoint);
@@ -79,7 +74,6 @@ public class ConnectionContextXA extends ConnectionContextJDBC {
 	}
     }
 
-    @Override
     public void resetTransaction() {
 	transactionContextXA.close();
 	setTransactionEnabled(false);

@@ -29,6 +29,7 @@ import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
+import fr.ms.log4jdbc.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
 import fr.ms.log4jdbc.sql.internal.QuerySQL;
 
@@ -128,7 +129,7 @@ public class QueryImpl implements Query, Cloneable {
 	return resultSetCollector;
     }
 
-    public ResultSetCollectorImpl getResultSetCollector() {
+    public ResultSetCollector getResultSetCollector() {
 	if (resultSetCollector == null || resultSetCollector.isMetaDataError()) {
 	    return null;
 	}
@@ -223,6 +224,14 @@ public class QueryImpl implements Query, Cloneable {
 		return false;
 	    }
 	} else if (!state.equals(other.state)) {
+	    return false;
+	}
+
+	if (transaction == null) {
+	    if (other.transaction != null) {
+		return false;
+	    }
+	} else if (!transaction.equals(other.transaction)) {
 	    return false;
 	}
 	return true;

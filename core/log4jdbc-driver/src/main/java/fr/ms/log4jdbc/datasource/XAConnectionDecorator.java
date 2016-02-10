@@ -22,7 +22,6 @@ public class XAConnectionDecorator extends ConnectionDecorator {
 	return proxyConnection(ip, impl, sourceImpl);
     }
 
-    @Override
     public Object createProxy(final ImplementationDecorator origine, Object invoke) {
 	invoke = super.createProxy(origine, invoke);
 	if (invoke instanceof XAResource) {

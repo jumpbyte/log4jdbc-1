@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Driver;
 
 import fr.ms.log4jdbc.context.Log4JdbcContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 
 public class Log4JdbcContextXA implements Log4JdbcContext {
 
@@ -11,7 +12,7 @@ public class Log4JdbcContextXA implements Log4JdbcContext {
 
     private TransactionContextXA transactionContext;
 
-    public ConnectionContextXA newConnectionContext(final Connection connection, final Class clazz) {
+    public ConnectionContextJDBC newConnectionContext(final Connection connection, final Class clazz) {
 	connectionContext = new ConnectionContextXA(clazz);
 
 	connectionContext.setTransactionContextXA(transactionContext);
@@ -20,7 +21,7 @@ public class Log4JdbcContextXA implements Log4JdbcContext {
 	return connectionContext;
     }
 
-    public ConnectionContextXA newConnectionContext(final Connection connection, final Driver driver, final String url) {
+    public ConnectionContextJDBC newConnectionContext(final Connection connection, final Driver driver, final String url) {
 	connectionContext = new ConnectionContextXA(driver, url);
 
 	connectionContext.setTransactionContextXA(transactionContext);

@@ -71,8 +71,6 @@ public class SqlOperationContext extends SqlOperationDefault implements SqlOpera
 	if (query != null) {
 	    try {
 		this.query = (QueryImpl) query.clone();
-
-		this.query.setTransaction(transaction);
 	    } catch (final CloneNotSupportedException e) {
 		e.printStackTrace();
 	    }

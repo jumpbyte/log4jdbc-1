@@ -227,10 +227,10 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
 	    } else {
 		final List copies = new ArrayList(queriesTransaction.size());
 		for (int i = 0; i < queriesTransaction.size(); i++) {
-		    QueryImpl query = (QueryImpl) queriesTransaction.get(i);
-		    query = (QueryImpl) query.clone();
-		    query.setTransaction(clone);
-		    copies.add(query);
+		    final QueryImpl query = (QueryImpl) queriesTransaction.get(i);
+		    final QueryImpl queryclone = (QueryImpl) query.clone();
+		    queryclone.setTransaction(clone);
+		    copies.add(queryclone);
 		}
 
 		clone.refQueries = ReferenceFactory.newReference(REF_MESSAGE_FULL, copies);
