@@ -21,7 +21,7 @@ public class PreparedStatementOperationFactory extends StatementOperationFactory
     }
 
     public ProxyOperation newOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
-	final ProxyOperation operation = new PreparedStatementOperation(queryFactory, this, statement, query, connectionContext, timeInvocation, method, args);
+	final ProxyOperation operation = new PreparedStatementOperation(queryFactory, this, statement, connectionContext, timeInvocation, method, args);
 
 	return operation;
     }

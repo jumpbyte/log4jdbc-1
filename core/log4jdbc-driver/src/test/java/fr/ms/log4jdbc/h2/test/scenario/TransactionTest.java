@@ -150,6 +150,11 @@ public class TransactionTest {
 
 	    Assert.assertEquals(transactionQuery3, query3);
 
+	    // Bidon
+	    final int maxRows = statement.getMaxRows();
+
+	    final List<SqlOperationMessage> sqlMessagesBidon = messages.getSqlMessages();
+
 	    // Commit - Fin de la Transaction
 	    connection.commit();
 

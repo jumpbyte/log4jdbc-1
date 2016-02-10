@@ -189,13 +189,18 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
 	    return false;
 	}
 	final TransactionContextJDBC other = (TransactionContextJDBC) obj;
-	if (getQueriesTransaction() == null) {
-	    if (other.getQueriesTransaction() != null) {
+
+	final List queriesTransaction = (List) refQueries.get();
+	final List queriesTransactionObject = (List) other.refQueries.get();
+
+	if (queriesTransaction == null) {
+	    if (queriesTransactionObject != null) {
 		return false;
 	    }
-	} else if (getQueriesTransaction().length != other.getQueriesTransaction().length) {
+	} else if (queriesTransaction.size() != queriesTransactionObject.size()) {
 	    return false;
 	}
+
 	if (getTransactionState() == null) {
 	    if (other.getTransactionState() != null) {
 		return false;
@@ -209,24 +214,27 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
 	return true;
     }
 
+    private TransactionContextJDBC clone;
+
     public Object clone() throws CloneNotSupportedException {
+	if (!this.equals(clone)) {
+	    clone = (TransactionContextJDBC) super.clone();
 
-	final TransactionContextJDBC clone = (TransactionContextJDBC) super.clone();
+	    final List queriesTransaction = (List) clone.refQueries.get();
 
-	final List queriesTransaction = (List) clone.refQueries.get();
+	    if (queriesTransaction == null) {
+		clone.refQueries = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
+	    } else {
+		final List copies = new ArrayList(queriesTransaction.size());
+		for (int i = 0; i < queriesTransaction.size(); i++) {
+		    QueryImpl query = (QueryImpl) queriesTransaction.get(i);
+		    query = (QueryImpl) query.clone();
+		    query.setTransaction(clone);
+		    copies.add(query);
+		}
 
-	if (queriesTransaction == null) {
-	    clone.refQueries = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
-	} else {
-	    final List copies = new ArrayList(queriesTransaction.size());
-	    for (int i = 0; i < queriesTransaction.size(); i++) {
-		QueryImpl query = (QueryImpl) queriesTransaction.get(i);
-		query = (QueryImpl) query.clone();
-		query.setTransaction(clone);
-		copies.add(query);
+		clone.refQueries = ReferenceFactory.newReference(REF_MESSAGE_FULL, copies);
 	    }
-
-	    clone.refQueries = ReferenceFactory.newReference(REF_MESSAGE_FULL, copies);
 	}
 
 	return clone;

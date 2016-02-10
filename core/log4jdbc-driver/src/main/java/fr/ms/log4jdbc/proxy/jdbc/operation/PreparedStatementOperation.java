@@ -16,10 +16,9 @@ public class PreparedStatementOperation extends StatementOperation {
     private final PreparedStatementOperationFactory context;
 
     public PreparedStatementOperation(final QueryFactory queryFactory, final PreparedStatementOperationFactory context, final Statement statement,
-	    final QueryImpl query, final ConnectionContextJDBC connectionContext, final TimeInvocation timeInvocation, final Method method, final Object[] args) {
+	    final ConnectionContextJDBC connectionContext, final TimeInvocation timeInvocation, final Method method, final Object[] args) {
 	super(queryFactory, context, statement, connectionContext, timeInvocation, method, args);
 	this.context = context;
-	this.query = query;
     }
 
     public SqlOperation getOperation() {
@@ -39,6 +38,7 @@ public class PreparedStatementOperation extends StatementOperation {
     }
 
     private void addBatch() {
+	query = context.getQuery();
 	query.setTimeInvocation(timeInvocation);
 	query.setMethodQuery(Query.METHOD_BATCH);
 	query.setState(Query.STATE_NOT_EXECUTE);
@@ -49,17 +49,21 @@ public class PreparedStatementOperation extends StatementOperation {
     }
 
     private void setNull(final Object[] args) {
+	final QueryImpl queryContext = context.getQuery();
 	final Object param = args[0];
-	query.putParams(param, null);
+	queryContext.putParams(param, null);
     }
 
     private void set(final Object[] args) {
+	final QueryImpl queryContext = context.getQuery();
 	final Object param = args[0];
 	final Object value = args[1];
-	query.putParams(param, value);
+	queryContext.putParams(param, value);
     }
 
     private void execute() {
+	query = context.getQuery();
+
 	query.setTimeInvocation(timeInvocation);
 	query.setMethodQuery(Query.METHOD_EXECUTE);
 	if (connectionContext.isTransactionEnabled()) {
