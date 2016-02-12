@@ -17,13 +17,6 @@ public class ConnectionOperationFactory implements ProxyOperationFactory {
 
     public ConnectionOperationFactory(final ConnectionContextJDBC connectionContext, final Connection connection) {
 	this.connectionContext = connectionContext;
-
-	// try {
-	// autoCommit = connection.getAutoCommit();
-	// connectionContext.setTransactionEnabled(!autoCommit);
-	// } catch (final SQLException e) {
-	//
-	// }
     }
 
     public ProxyOperation newOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {

@@ -29,6 +29,7 @@ import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.context.TransactionContextDefault;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
+import fr.ms.util.CollectionsUtil;
 
 /**
  *
@@ -44,7 +45,7 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
 
     private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean Queries Transaction";
 
-    private ReferenceObject refQueries = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
+    private ReferenceObject refQueries = ReferenceFactory.newReference(REF_MESSAGE_FULL, CollectionsUtil.synchronizedList(new ArrayList()));
 
     public QueryImpl addQuery(final QueryImpl query) {
 	final QueryImpl queryReturn = query;

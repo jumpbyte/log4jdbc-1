@@ -18,8 +18,10 @@
 package fr.ms.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -46,5 +48,13 @@ public final class CollectionsUtil {
 	}
 
 	return list;
+    }
+
+    public final static List synchronizedList(final List list) {
+	return Collections.synchronizedList(list);
+    }
+
+    public final static Map synchronizedMap(final Map map) {
+	return Collections.synchronizedMap(map);
     }
 }

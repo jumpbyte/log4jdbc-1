@@ -1,6 +1,7 @@
 package fr.ms.log4jdbc.proxy.xa.operation;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.WeakHashMap;
 
 import javax.transaction.xa.XAResource;
@@ -14,10 +15,11 @@ import fr.ms.log4jdbc.context.xa.ConnectionContextXA;
 import fr.ms.log4jdbc.context.xa.Log4JdbcContextXA;
 import fr.ms.log4jdbc.context.xa.TransactionContextXA;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
+import fr.ms.util.CollectionsUtil;
 
 public class XAResourceOperation implements Log4JdbcOperation {
 
-    public final static WeakHashMap transactions = new WeakHashMap();
+    public final static Map transactions = CollectionsUtil.synchronizedMap(new WeakHashMap());
 
     private final Log4JdbcContextXA log4JdbcContext;
     private final ConnectionContextXA connectionContext;

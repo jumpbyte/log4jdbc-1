@@ -25,6 +25,7 @@ import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.rdbms.DataRdbms;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
+import fr.ms.util.CollectionsUtil;
 
 /**
  *
@@ -42,7 +43,7 @@ public class QuerySQL {
 
     private final String jdbcQuery;
 
-    private final Map params = new HashMap();
+    private final Map params = CollectionsUtil.synchronizedMap(new HashMap());
 
     private boolean sqlUpdate;
 

@@ -30,6 +30,7 @@ import java.util.Map;
 import fr.ms.lang.ref.ReferenceFactory;
 import fr.ms.lang.ref.ReferenceObject;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
+import fr.ms.util.CollectionsUtil;
 
 /**
  *
@@ -51,8 +52,8 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
     // Columns
     private boolean columnsUpdate;
 
-    private final Map columnsDetailPerIndex = new HashMap();
-    private final Map columnsDetailPerLabel = new HashMap();
+    private final Map columnsDetailPerIndex = CollectionsUtil.synchronizedMap(new HashMap());
+    private final Map columnsDetailPerLabel = CollectionsUtil.synchronizedMap(new HashMap());
 
     private Column[] columns;
 
@@ -60,7 +61,7 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
     private boolean rowsUpdate;
 
     private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean ResultSet Rows";
-    private final ReferenceObject refRows = ReferenceFactory.newReference(REF_MESSAGE_FULL, new HashMap());
+    private final ReferenceObject refRows = ReferenceFactory.newReference(REF_MESSAGE_FULL, CollectionsUtil.synchronizedMap(new HashMap()));
 
     private RowImpl currentRow;
 
