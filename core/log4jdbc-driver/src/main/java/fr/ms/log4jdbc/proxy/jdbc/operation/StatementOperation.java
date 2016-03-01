@@ -33,8 +33,6 @@ public class StatementOperation implements Log4JdbcOperation {
 
     protected QueryImpl query;
 
-    private Object invokeWrapper;
-
     public StatementOperation(final QueryFactory queryFactory, final StatementOperationFactory context, final Statement statement,
 	    final ConnectionContextJDBC connectionContext, final TimeInvocation timeInvocation, final Method method, final Object[] args) {
 	this.connectionContext = connectionContext;
@@ -49,19 +47,31 @@ public class StatementOperation implements Log4JdbcOperation {
 
     public SqlOperation getOperation() {
 	final String nameMethod = method.getName();
+	final Object invoke = timeInvocation.getInvoke();
 
 	if (nameMethod.equals("addBatch") && args != null && args.length >= 1) {
 	    final String sql = (String) args[0];
 	    addBatch(sql);
 	} else if (nameMethod.equals("executeBatch") && args == null) {
-	    executeBatch(timeInvocation.getInvoke());
+	    executeBatch(invoke);
 	} else if (nameMethod.startsWith("execute") && args != null && args.length >= 1) {
 	    final String sql = (String) args[0];
 	    execute(sql);
 	}
 
 	// Create ResultSetCollector and Proxy ResultSet
-	wrapInvoke();
+	if (invoke instanceof ResultSet) {
+
+	    final ResultSet resultSet = (ResultSet) invoke;
+
+	    if (query == null) {
+		query = context.getQuery();
+	    }
+
+	    final ResultSetCollectorImpl resultSetCollector = query.createResultSetCollector(connectionContext);
+
+	    resultSetCollector.setRs(resultSet);
+	}
 
 	final SqlOperationContext sqlOperationContext = new SqlOperationContext(timeInvocation, connectionContext, query);
 	return sqlOperationContext;
@@ -142,32 +152,20 @@ public class StatementOperation implements Log4JdbcOperation {
 	return updateCount;
     }
 
-    public void wrapInvoke() {
-	invokeWrapper = timeInvocation.getInvoke();
+    public Object getInvoke() {
+	Object invoke = timeInvocation.getInvoke();
+	if (invoke != null) {
+	    if (invoke instanceof ResultSet) {
 
-	if (invokeWrapper != null) {
-	    if (invokeWrapper instanceof ResultSet) {
+		final ResultSet resultSet = (ResultSet) invoke;
 
-		final ResultSet resultSet = (ResultSet) invokeWrapper;
-
-		QueryImpl queryCurrent = query;
-		if (queryCurrent == null) {
-		    queryCurrent = context.getQuery();
-		}
-		if (queryCurrent == null) {
-		    queryCurrent = queryFactory.newQuery(connectionContext, null);
+		if (query == null) {
+		    query = queryFactory.newQuery(connectionContext, null);
 		}
 
-		final ResultSetCollectorImpl resultSetCollector = queryCurrent.createResultSetCollector(connectionContext);
-
-		resultSetCollector.setRs(resultSet);
-
-		invokeWrapper = Log4JdbcProxy.proxyResultSet(resultSet, connectionContext, queryCurrent);
+		invoke = Log4JdbcProxy.proxyResultSet(resultSet, connectionContext, query);
 	    }
 	}
-    }
-
-    public Object getInvoke() {
-	return invokeWrapper;
+	return invoke;
     }
 }

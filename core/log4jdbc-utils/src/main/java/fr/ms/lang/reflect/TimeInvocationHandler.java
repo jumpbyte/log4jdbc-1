@@ -77,4 +77,8 @@ public class TimeInvocationHandler implements InvocationHandler {
 
 	return timeInvoke;
     }
+
+    public String toString() {
+	return "TimeInvocationHandler [implementation=" + implementation + "]";
+    }
 }

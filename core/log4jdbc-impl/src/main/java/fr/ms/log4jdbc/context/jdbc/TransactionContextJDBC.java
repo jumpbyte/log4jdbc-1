@@ -48,7 +48,6 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
     private ReferenceObject refQueries = ReferenceFactory.newReference(REF_MESSAGE_FULL, CollectionsUtil.synchronizedList(new ArrayList()));
 
     public QueryImpl addQuery(final QueryImpl query) {
-	final QueryImpl queryReturn = query;
 	if (savePoint != null) {
 	    query.setSavePoint(savePoint);
 	}
@@ -66,7 +65,7 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
 	    queries.add(query);
 	}
 
-	return queryReturn;
+	return query;
     }
 
     public void rollback(final Object savePoint) {

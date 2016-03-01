@@ -19,7 +19,7 @@ import fr.ms.util.CollectionsUtil;
 
 public class XAResourceOperation implements Log4JdbcOperation {
 
-    public final static Map transactions = CollectionsUtil.synchronizedMap(new WeakHashMap());
+    private final static Map transactions = CollectionsUtil.synchronizedMap(new WeakHashMap());
 
     private final Log4JdbcContextXA log4JdbcContext;
     private final ConnectionContextXA connectionContext;
