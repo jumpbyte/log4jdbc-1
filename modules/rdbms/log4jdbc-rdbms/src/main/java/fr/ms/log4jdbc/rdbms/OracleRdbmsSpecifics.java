@@ -22,6 +22,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import fr.ms.lang.StringUtils;
+
 /**
  *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
@@ -63,7 +65,7 @@ public class OracleRdbmsSpecifics implements RdbmsSpecifics {
     }
 
     public String removeComment(final String sql) {
-	return genericRdbms.removeComment(sql);
+	return StringUtils.removePart(sql, "/*", "*/", "/*+");
     }
 
     public boolean isCaseSensitive() {

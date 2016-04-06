@@ -64,22 +64,40 @@ public final class StringUtils {
     }
 
     public static String removePart(final String str, final String start, final String end) {
+	return removePart(str, start, end, null, 0);
+    }
+
+    public static String removePart(final String str, final String start, final String end, final String exception) {
+
+	return removePart(str, start, end, exception, 0);
+    }
+
+    private static String removePart(final String str, final String start, final String end, final String exception, final Integer first) {
 	if (str == null || str.isEmpty()) {
 	    return null;
 	}
-	final int startComment = str.indexOf(start);
-	final int endComment = str.indexOf(end);
+	final int startComment = str.indexOf(start, first);
+	final int endComment = str.indexOf(end, first);
 
 	if (startComment == -1 || endComment == -1 || startComment >= endComment) {
 	    return str;
 	}
 
+	if (exception != null) {
+	    final int startException = str.indexOf(exception);
+	    if (startComment == startException) {
+		final String formatSql = removePart(str, start, end, exception, endComment + end.length());
+
+		return formatSql;
+	    }
+	}
+
 	final String e1 = str.substring(0, startComment);
-	final String e2 = str.substring(endComment + 2, str.length());
+	final String e2 = str.substring(endComment + end.length(), str.length());
 
 	final String replace = e1 + e2;
 
-	final String formatSql = removePart(replace, start, end);
+	final String formatSql = removePart(replace, start, end, exception, first);
 
 	return formatSql;
     }

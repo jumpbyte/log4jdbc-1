@@ -165,5 +165,13 @@ public class OracleRdbmsSpecificsTest {
 	sql = "/* super requete */ select Price from products; /* genial */";
 	removeComment = instance.removeComment(sql);
 	Assert.assertEquals(removeComment, " select Price from products; ");
+
+	sql = "/* super requete */ select Price /* genial */from products; /* fin */";
+	removeComment = instance.removeComment(sql);
+	Assert.assertEquals(removeComment, " select Price from products; ");
+
+	sql = "/* super requete */ /*+ hint */ select Price /* genial */from products; /* fin */";
+	removeComment = instance.removeComment(sql);
+	Assert.assertEquals(removeComment, " /*+ hint */ select Price from products; ");
     }
 }
