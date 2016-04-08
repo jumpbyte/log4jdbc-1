@@ -236,6 +236,15 @@ public abstract class AbstractRewriteDataSource extends AbstractDataSource {
 	return value.booleanValue();
     }
 
+    public void setDefaultIsolationLevel(final int level) {
+	invokeMethod("setDefaultIsolationLevel", Integer.valueOf(level), Integer.TYPE);
+    }
+
+    public int getDefaultIsolationLevel() {
+	final Integer value = (Integer) invokeMethod("getDefaultIsolationLevel", null, Integer.TYPE);
+	return value.intValue();
+    }
+
     private void writeObject(final ObjectOutputStream oos) throws IOException {
 	invokeMethod("writeObject", oos);
     }
