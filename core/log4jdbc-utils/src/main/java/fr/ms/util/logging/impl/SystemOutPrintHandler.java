@@ -15,11 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.util.logging;
-
-import java.util.Iterator;
-
-import fr.ms.util.Service;
+package fr.ms.util.logging.impl;
 
 /**
  *
@@ -29,26 +25,21 @@ import fr.ms.util.Service;
  * @author Marco Semiao
  *
  */
-public final class LoggerManager {
+public class SystemOutPrintHandler implements PrintHandler {
 
-    private final static LoggerFactory factory = loadLoggerFactory();
-
-    public static Logger getLogger(final Class clazz) {
-	return getLogger(clazz.getName());
+    public void error(final String message) {
+	write(message);
     }
 
-    public static Logger getLogger(final String name) {
-	final Logger logger = factory.getLogger(name);
-	return logger;
+    public void info(final String message) {
+	write(message);
     }
 
-    private final static LoggerFactory loadLoggerFactory() {
-	final Iterator providers = Service.providers(LoggerFactory.class);
+    public void debug(final String message) {
+	write(message);
+    }
 
-	if (providers.hasNext()) {
-	    return (LoggerFactory) providers.next();
-	} else {
-	    return new DefaultLoggerFactory();
-	}
+    private void write(final String message) {
+	System.out.println(message);
     }
 }

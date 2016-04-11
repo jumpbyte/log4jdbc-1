@@ -39,7 +39,7 @@ import fr.ms.util.logging.LoggerManager;
  */
 public class TraceTimeInvocationHandler implements InvocationHandler {
 
-    public final static Logger LOG = LoggerManager.getLogger("tracetime");
+    public final static Logger LOG = LoggerManager.getLogger(TraceTimeInvocationHandler.class);
 
     private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 

@@ -22,6 +22,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import fr.ms.util.logging.Logger;
+import fr.ms.util.logging.LoggerManager;
+
 /**
  *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
@@ -31,6 +34,8 @@ import java.lang.reflect.Proxy;
  *
  */
 public class TimeInvocationHandler implements InvocationHandler {
+
+    private final static Logger LOG = LoggerManager.getLogger(TimeInvocationHandler.class);
 
     private static final Method OBJECT_EQUALS;
 
@@ -58,6 +63,10 @@ public class TimeInvocationHandler implements InvocationHandler {
 		if (isEquals) {
 		    invoke = Boolean.valueOf(isEquals);
 		}
+	    }
+
+	    if (LOG.isDebugEnabled()) {
+		LOG.debug("Method : " + method + " - args : " + args);
 	    }
 
 	    if (invoke == null) {

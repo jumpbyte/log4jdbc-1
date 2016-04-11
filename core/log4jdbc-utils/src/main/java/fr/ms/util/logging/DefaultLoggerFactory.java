@@ -17,12 +17,19 @@
  */
 package fr.ms.util.logging;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+
+import fr.ms.util.logging.impl.DefaultLogger;
+import fr.ms.util.logging.impl.FilePrintHandler;
+import fr.ms.util.logging.impl.PrintHandler;
+import fr.ms.util.logging.impl.SystemOutPrintHandler;
 
 /**
  *
@@ -32,19 +39,39 @@ import java.util.Properties;
  * @author Marco Semiao
  *
  */
-public class SystemOutLogger implements Logger {
+public class DefaultLoggerFactory implements LoggerFactory {
 
-    private final static String PREFIX = "log4jdbc.log.";
+    private final static String PROPERTY_FILE = "log4jdbc.log.file";
+
+    private final static String PREFIX = "log4jdbc.log.level.";
 
     private final static Map LOG_LEVEL = new HashMap();
 
-    private boolean debug;
+    private PrintHandler printHandler = new SystemOutPrintHandler();
 
-    private boolean info;
+    public DefaultLoggerFactory() {
+	initPrintHandler();
+	initLevel();
+    }
 
-    private boolean error;
+    private void initPrintHandler() {
+	final String property = System.getProperty(PROPERTY_FILE);
+	if (property != null) {
+	    final File file = new File(property);
+	    final boolean fileExists = file.exists();
 
-    static {
+	    if (!fileExists) {
+		try {
+		    file.createNewFile();
+		} catch (final IOException e) {
+		}
+	    }
+
+	    printHandler = new FilePrintHandler(file);
+	}
+    }
+
+    private void initLevel() {
 	final Properties properties = System.getProperties();
 
 	final Enumeration en = properties.propertyNames();
@@ -60,8 +87,7 @@ public class SystemOutLogger implements Logger {
 	}
     }
 
-    public SystemOutLogger(final String name) {
-
+    private String getLevel(final String name) {
 	String nameLogger = null;
 	String levelLogger = null;
 
@@ -74,50 +100,19 @@ public class SystemOutLogger implements Logger {
 
 		levelLogger = (String) element.getValue();
 	    }
-
 	}
 
 	if (levelLogger != null) {
-	    if (levelLogger.equals("debug")) {
-		debug = true;
-		info = true;
-		error = true;
-	    } else if (levelLogger.equals("info")) {
-		info = true;
-		error = true;
-	    } else if (levelLogger.equals("error")) {
-		error = true;
-	    }
+	    return levelLogger.toLowerCase();
 	}
+
+	return levelLogger;
+
     }
 
-    public boolean isDebugEnabled() {
-	return debug;
-    }
-
-    public boolean isInfoEnabled() {
-	return info;
-    }
-
-    public boolean isErrorEnabled() {
-	return error;
-    }
-
-    public void info(final String message) {
-	if (isInfoEnabled()) {
-	    System.out.println(message);
-	}
-    }
-
-    public void debug(final String message) {
-	if (isDebugEnabled()) {
-	    System.out.println(message);
-	}
-    }
-
-    public void error(final String message) {
-	if (isErrorEnabled()) {
-	    System.out.println(message);
-	}
+    public Logger getLogger(final String name) {
+	final String level = getLevel(name);
+	final DefaultLogger logger = new DefaultLogger(printHandler, level, name);
+	return logger;
     }
 }

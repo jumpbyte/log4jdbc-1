@@ -15,7 +15,11 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.util.logging;
+package fr.ms.util.logging.impl;
+
+import java.io.File;
+
+import fr.ms.java.io.FilePrint;
 
 /**
  *
@@ -25,9 +29,27 @@ package fr.ms.util.logging;
  * @author Marco Semiao
  *
  */
-public class SystemOutLoggerFactory implements LoggerFactory {
+public class FilePrintHandler implements PrintHandler {
 
-    public Logger getLogger(final String name) {
-	return new SystemOutLogger(name);
+    private final FilePrint filePrint;
+
+    public FilePrintHandler(final File file) {
+	filePrint = new FilePrint(file);
+    }
+
+    public void error(final String message) {
+	write(message);
+    }
+
+    public void info(final String message) {
+	write(message);
+    }
+
+    public void debug(final String message) {
+	write(message);
+    }
+
+    private void write(final String message) {
+	filePrint.println(message);
     }
 }
