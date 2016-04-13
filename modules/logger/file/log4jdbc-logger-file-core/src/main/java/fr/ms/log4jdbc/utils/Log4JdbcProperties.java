@@ -242,7 +242,7 @@ public class Log4JdbcProperties implements Runnable {
 	    final long lastModified = f.lastModified();
 	    if (lastModified > this.lastModified) {
 		this.lastModified = lastModified;
-		System.out.println("Rechargement du fichier de configuration : " + f);
+		System.out.println("Reloading configuration file : " + f);
 	    } else {
 		return null;
 	    }
