@@ -37,6 +37,8 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  */
 public class ResultSetOperation implements Log4JdbcOperation {
 
+    private final static String ERROR = "LOG4JDBC-ERROR";
+    
     private final TimeInvocation timeInvocation;
     private final Method method;
     private final Object[] args;
@@ -85,8 +87,8 @@ public class ResultSetOperation implements Log4JdbcOperation {
 	    context.getMetaData(invoke);
 	} else if (nameMethod.startsWith("close")) {
 	    close();
-	} else if (nameMethod.startsWith("get") && valid && args != null && args.length > 0) {
-	    get(invoke);
+	} else if (nameMethod.startsWith("get") && args != null && args.length > 0) {
+	    get(valid,invoke);
 	}
 
 	final SqlOperationContext sqlOperationContext = new SqlOperationContext(timeInvocation, connectionContext, query);
@@ -117,9 +119,13 @@ public class ResultSetOperation implements Log4JdbcOperation {
 	query = context.close();
     }
 
-    private void get(final Object invoke) {
+    private void get(final boolean valid, Object invoke) {
 	final Class clazz = method.getParameterTypes()[0];
 
+	if (!valid)
+	{
+	    invoke = ERROR;
+	}
 	context.addValueColumn(clazz, args, invoke);
     }
 

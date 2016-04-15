@@ -65,19 +65,22 @@ public class TimeInvocationHandler implements InvocationHandler {
 		}
 	    }
 
-	    if (LOG.isDebugEnabled()) {
-		LOG.debug("Method : " + method + " - args : " + args);
-	    }
-
 	    if (invoke == null) {
 		invoke = method.invoke(implementation, args);
 	    }
 
+	    if (LOG.isDebugEnabled()) {
+		LOG.debug("Method : " + method + " - args : " + args + " - invoke : " + invoke);
+	    }
+	    
 	    timeInvoke.setInvoke(invoke);
 	} catch (final InvocationTargetException s) {
 	    final Throwable targetException = s.getTargetException();
 	    if (targetException == null) {
 		throw s;
+	    }
+	    if (LOG.isErrorEnabled()) {
+		LOG.error("Method : " + method + " - args : " + args + " - targetException : " + targetException);
 	    }
 	    timeInvoke.setTargetException(targetException);
 	} finally {

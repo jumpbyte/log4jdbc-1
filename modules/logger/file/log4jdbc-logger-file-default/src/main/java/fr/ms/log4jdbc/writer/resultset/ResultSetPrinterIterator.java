@@ -258,7 +258,7 @@ public class ResultSetPrinterIterator implements Iterator {
 
     private final static class CellDecorator implements Cell {
 
-	private final static String UNREAD = "UNREAD";
+	private final static String UNREAD = "LOG4JDBC-UNREAD";
 
 	private final Cell cell;
 
