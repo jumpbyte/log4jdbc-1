@@ -67,16 +67,16 @@ public class ResultSetOperation implements Log4JdbcOperation {
 
 	if (nameMethod.equals("next") && invoke != null) {
 	    valid = valid && ((Boolean) invoke).booleanValue();
-	    next(valid);
+	    query = context.next(valid);
 	} else if (nameMethod.equals("previous") && invoke != null) {
 	    valid = valid && ((Boolean) invoke).booleanValue();
-	    previous(valid);
+	    query = context.previous(valid);
 	} else if (nameMethod.equals("first") && invoke != null) {
 	    valid = valid && ((Boolean) invoke).booleanValue();
-	    first(valid);
+	    query = context.first(valid);
 	} else if (nameMethod.equals("last") && invoke != null) {
 	    valid = valid && ((Boolean) invoke).booleanValue();
-	    last(valid);
+	    query = context.last(valid);
 	} else if (nameMethod.equals("beforeFirst")) {
 	    context.beforeFirst();
 	} else if (nameMethod.equals("afterLast")) {
@@ -86,7 +86,7 @@ public class ResultSetOperation implements Log4JdbcOperation {
 	} else if (nameMethod.startsWith("getMetaData") && invoke != null) {
 	    context.getMetaData(invoke);
 	} else if (nameMethod.startsWith("close")) {
-	    close();
+	    query = context.close();
 	} else if (nameMethod.startsWith("get") && args != null && args.length > 0) {
 	    get(valid,invoke);
 	}
@@ -97,26 +97,6 @@ public class ResultSetOperation implements Log4JdbcOperation {
 
     public void postOperation() {
 	// NO-OP
-    }
-
-    private void next(final boolean valid) {
-	query = context.next(valid);
-    }
-
-    private void previous(final boolean valid) {
-	query = context.previous(valid);
-    }
-
-    private void first(final boolean valid) {
-	query = context.first(valid);
-    }
-
-    private void last(final boolean valid) {
-	query = context.last(valid);
-    }
-
-    private void close() {
-	query = context.close();
     }
 
     private void get(final boolean valid, Object invoke) {
