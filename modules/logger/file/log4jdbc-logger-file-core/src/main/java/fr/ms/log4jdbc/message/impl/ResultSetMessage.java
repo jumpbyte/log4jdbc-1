@@ -78,6 +78,16 @@ public class ResultSetMessage extends AbstractMessage {
     }
 
     public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method, final Object[] args, final Throwable exception) {
+	final boolean resultset = props.logRequeteSelectSQL() && props.logRequeteSelectResultSetSQL() && message != null && message.getQuery() != null
+		&& message.getQuery().getResultSetCollector() != null && message.getQuery().getResultSetCollector().isClosed();
+
+	if (resultset) {
+	    final Query query = message.getQuery();
+
+	    if (query.getResultSetCollector() != null && query.getResultSetCollector().isClosed()) {
+		messageWriter.setResultSetCollector(query.getResultSetCollector());
+	    }
+	}
 	generic.buildLog(messageWriter, message, method, args, exception);
     }
 }
