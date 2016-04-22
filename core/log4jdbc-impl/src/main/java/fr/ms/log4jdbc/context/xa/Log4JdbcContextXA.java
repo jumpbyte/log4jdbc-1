@@ -19,6 +19,7 @@ package fr.ms.log4jdbc.context.xa;
 
 import java.sql.Connection;
 import java.sql.Driver;
+import java.sql.SQLException;
 
 import fr.ms.log4jdbc.context.Log4JdbcContext;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
@@ -38,7 +39,13 @@ public class Log4JdbcContextXA implements Log4JdbcContext {
     private TransactionContextXA transactionContext;
 
     public ConnectionContextJDBC newConnectionContext(final Connection connection, final Class clazz) {
-	connectionContext = new ConnectionContextXA(clazz);
+	String url = null;
+	try {
+	    url = connection.getMetaData().getURL();
+	} catch (SQLException e) {
+	}
+
+	connectionContext = new ConnectionContextXA(clazz, url);
 
 	connectionContext.setTransactionContextXA(transactionContext);
 	connectionContext.setTransactionEnabled(transactionContext != null);

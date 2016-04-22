@@ -104,10 +104,18 @@ public class MessageWriterImpl implements MessageWriter {
 	sb.append(dateQuery);
 	sb.append(" - ");
 	sb.append(threadName);
+
 	sb.append(nl);
+
 	sb.append(message.getConnectionNumber());
 	sb.append(". Total ");
 	sb.append(message.getOpenConnection());
+	final String url = message.getUrl();
+	if (url != null) {
+	    sb.append(" - ");
+	    sb.append(url);
+	}
+
 	sb.append(nl);
 
 	return sb.toString();

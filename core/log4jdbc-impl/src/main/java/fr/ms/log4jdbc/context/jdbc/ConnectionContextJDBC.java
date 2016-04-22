@@ -39,8 +39,8 @@ public class ConnectionContextJDBC extends ConnectionContextDefault {
 
     private TransactionContextJDBC transactionContextJDBC;
 
-    public ConnectionContextJDBC(final Class clazz) {
-	super(clazz);
+    public ConnectionContextJDBC(final Class clazz, final String url) {
+	super(clazz, url);
     }
 
     public ConnectionContextJDBC(final Driver driver, final String url) {

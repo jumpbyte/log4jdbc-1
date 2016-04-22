@@ -37,8 +37,8 @@ public class ConnectionContextXA extends ConnectionContextJDBC {
 
     private TransactionContextXA transactionContextXA;
 
-    public ConnectionContextXA(final Class clazz) {
-	super(clazz);
+    public ConnectionContextXA(final Class clazz, final String url) {
+	super(clazz, url);
     }
 
     public ConnectionContextXA(final Driver driver, final String url) {

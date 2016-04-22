@@ -44,9 +44,9 @@ public interface SqlOperation {
 
     Driver getDriver();
 
-    RdbmsSpecifics getRdbms();
-
     String getUrl();
+
+    RdbmsSpecifics getRdbms();
 
     Query getQuery();
 

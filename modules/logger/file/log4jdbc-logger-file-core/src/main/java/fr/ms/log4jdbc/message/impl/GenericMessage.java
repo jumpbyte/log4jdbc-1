@@ -18,6 +18,7 @@
 package fr.ms.log4jdbc.message.impl;
 
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.StringMakerFactory;
@@ -66,9 +67,29 @@ public class GenericMessage extends AbstractMessage {
 	    }
 	}
 	genericMessage = genericMessage + getMethodCall(declaringClass + "." + name, args);
-	genericMessage = genericMessage + " - Exception : " + exception;
+
+	if (exception instanceof SQLException) {
+	    final SQLException sqlException = (SQLException) exception;
+	    final StringMaker newString = stringFactory.newString();
+	    nextSQLException(newString, sqlException);
+	    genericMessage = genericMessage + nl + newString.toString();
+	} else {
+	    genericMessage = genericMessage + nl + " - Exception : " + exception;
+	}
 
 	messageWriter.traceMessage(genericMessage);
+    }
+
+    private void nextSQLException(final StringMaker newString, final SQLException sqlException) {
+
+	final SQLException nextException = sqlException.getNextException();
+	if (nextException != null) {
+	    newString.append("Exception :");
+	    newString.append(nl);
+	    newString.append(nextException);
+	    nextSQLException(newString, nextException);
+
+	}
     }
 
     public static String getMethodCall(final String methodName, final Object[] args) {

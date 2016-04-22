@@ -58,8 +58,9 @@ public class ConnectionContextDefault {
 	openConnection.incrementAndGet();
     }
 
-    public ConnectionContextDefault(final Class clazz) {
+    public ConnectionContextDefault(final Class clazz, final String url) {
 	this.rdbmsSpecifics = getRdbms(clazz);
+	this.url = url;
     }
 
     public ConnectionContextDefault(final Driver driver, final String url) {

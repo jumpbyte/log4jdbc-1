@@ -19,6 +19,7 @@ package fr.ms.log4jdbc.context.jdbc;
 
 import java.sql.Connection;
 import java.sql.Driver;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -41,7 +42,12 @@ public class Log4JdbcContextJDBC implements Log4JdbcContext {
 	ConnectionContextJDBC connectionContextJDBC = (ConnectionContextJDBC) context.get(connection);
 
 	if (connectionContextJDBC == null) {
-	    connectionContextJDBC = new ConnectionContextJDBC(clazz);
+	    String url = null;
+	    try {
+		url = connection.getMetaData().getURL();
+	    } catch (final SQLException e) {
+	    }
+	    connectionContextJDBC = new ConnectionContextJDBC(clazz, url);
 	    context.put(connection, connectionContextJDBC);
 	}
 
