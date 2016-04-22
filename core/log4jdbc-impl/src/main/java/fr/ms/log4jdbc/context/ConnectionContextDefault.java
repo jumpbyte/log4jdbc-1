@@ -17,8 +17,6 @@
  */
 package fr.ms.log4jdbc.context;
 
-import java.sql.Driver;
-
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.DefaultSyncLongFactory;
 import fr.ms.lang.delegate.StringMakerFactory;
@@ -47,7 +45,7 @@ public class ConnectionContextDefault {
 
     protected long connectionNumber;
 
-    protected Driver driver;
+    protected String driverName;
 
     protected String url;
 
@@ -59,14 +57,9 @@ public class ConnectionContextDefault {
     }
 
     public ConnectionContextDefault(final Class clazz, final String url) {
-	this.rdbmsSpecifics = getRdbms(clazz);
+	driverName = clazz.getName();
+	this.rdbmsSpecifics = getRdbms(driverName);
 	this.url = url;
-    }
-
-    public ConnectionContextDefault(final Driver driver, final String url) {
-	this.driver = driver;
-	this.url = url;
-	this.rdbmsSpecifics = getRdbms(driver.getClass());
     }
 
     public void close() {
@@ -85,8 +78,8 @@ public class ConnectionContextDefault {
 	return openConnection;
     }
 
-    public Driver getDriver() {
-	return driver;
+    public String getDriverName() {
+	return driverName;
     }
 
     public String getUrl() {
@@ -101,8 +94,8 @@ public class ConnectionContextDefault {
 	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 	final StringMaker buffer = stringFactory.newString();
 
-	buffer.append("ConnectionContextDefault [driver=");
-	buffer.append(driver);
+	buffer.append("ConnectionContextDefault [driverName=");
+	buffer.append(driverName);
 	buffer.append(", url=");
 	buffer.append(url);
 	buffer.append(", connectionNumber=");
@@ -114,9 +107,8 @@ public class ConnectionContextDefault {
 	return buffer.toString();
     }
 
-    private final static RdbmsSpecifics getRdbms(final Class driverClass) {
-	final String classType = driverClass.getName();
-	RdbmsSpecifics rdbmsSpecifics = ServicesJDBC.getRdbmsSpecifics(classType);
+    private final static RdbmsSpecifics getRdbms(final String driverClass) {
+	RdbmsSpecifics rdbmsSpecifics = ServicesJDBC.getRdbmsSpecifics(driverClass);
 	if (rdbmsSpecifics == null) {
 	    rdbmsSpecifics = GenericRdbmsSpecifics.getInstance();
 	}

@@ -17,8 +17,6 @@
  */
 package fr.ms.log4jdbc.context.jdbc;
 
-import java.sql.Driver;
-
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.stringmaker.impl.StringMaker;
@@ -41,10 +39,6 @@ public class ConnectionContextJDBC extends ConnectionContextDefault {
 
     public ConnectionContextJDBC(final Class clazz, final String url) {
 	super(clazz, url);
-    }
-
-    public ConnectionContextJDBC(final Driver driver, final String url) {
-	super(driver, url);
     }
 
     public boolean isTransactionEnabled() {
@@ -97,8 +91,8 @@ public class ConnectionContextJDBC extends ConnectionContextDefault {
 	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 	final StringMaker buffer = stringFactory.newString();
 
-	buffer.append("ConnectionContextJDBC [driver=");
-	buffer.append(driver);
+	buffer.append("ConnectionContextJDBC [driverName=");
+	buffer.append(driverName);
 	buffer.append(", url=");
 	buffer.append(url);
 	buffer.append(", connectionNumber=");

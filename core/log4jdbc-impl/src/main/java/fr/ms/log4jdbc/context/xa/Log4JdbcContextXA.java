@@ -42,7 +42,7 @@ public class Log4JdbcContextXA implements Log4JdbcContext {
 	String url = null;
 	try {
 	    url = connection.getMetaData().getURL();
-	} catch (SQLException e) {
+	} catch (final SQLException e) {
 	}
 
 	connectionContext = new ConnectionContextXA(clazz, url);
@@ -54,7 +54,8 @@ public class Log4JdbcContextXA implements Log4JdbcContext {
     }
 
     public ConnectionContextJDBC newConnectionContext(final Connection connection, final Driver driver, final String url) {
-	connectionContext = new ConnectionContextXA(driver, url);
+	final Class clazz = driver.getClass();
+	connectionContext = new ConnectionContextXA(clazz, url);
 
 	connectionContext.setTransactionContextXA(transactionContext);
 	connectionContext.setTransactionEnabled(transactionContext != null);

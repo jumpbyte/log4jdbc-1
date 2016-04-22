@@ -17,7 +17,6 @@
  */
 package fr.ms.log4jdbc;
 
-import java.sql.Driver;
 import java.util.Date;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
@@ -84,8 +83,8 @@ public class SqlOperationDecorator implements SqlOperation {
 	return sqlOperation.getOpenConnection();
     }
 
-    public Driver getDriver() {
-	return sqlOperation.getDriver();
+    public String getDriverName() {
+	return sqlOperation.getDriverName();
     }
 
     public RdbmsSpecifics getRdbms() {
@@ -117,7 +116,7 @@ public class SqlOperationDecorator implements SqlOperation {
 	sb.append(nl);
 	sb.append(getConnectionNumber() + ". " + getOpenConnection() + " - executed : " + getExecTime() + " ms");
 	sb.append(nl);
-	sb.append("Driver : " + getDriver() + " - url : " + getUrl());
+	sb.append("DriverName : " + getDriverName() + " - url : " + getUrl());
 	sb.append(nl);
 	if (getQuery() != null) {
 	    sb.append("*******************************************");

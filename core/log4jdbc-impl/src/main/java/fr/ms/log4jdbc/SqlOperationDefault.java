@@ -17,7 +17,6 @@
  */
 package fr.ms.log4jdbc;
 
-import java.sql.Driver;
 import java.util.Date;
 
 import fr.ms.lang.reflect.TimeInvocation;
@@ -57,7 +56,7 @@ public class SqlOperationDefault implements SqlOperation {
 	return -1;
     }
 
-    public Driver getDriver() {
+    public String getDriverName() {
 	return null;
     }
 

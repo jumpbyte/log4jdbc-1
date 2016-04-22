@@ -17,8 +17,6 @@
  */
 package fr.ms.log4jdbc.context.xa;
 
-import java.sql.Driver;
-
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.context.jdbc.TransactionContextJDBC;
 import fr.ms.log4jdbc.sql.QueryImpl;
@@ -39,10 +37,6 @@ public class ConnectionContextXA extends ConnectionContextJDBC {
 
     public ConnectionContextXA(final Class clazz, final String url) {
 	super(clazz, url);
-    }
-
-    public ConnectionContextXA(final Driver driver, final String url) {
-	super(driver, url);
     }
 
     public void setTransactionEnabled(final boolean transactionEnabled) {

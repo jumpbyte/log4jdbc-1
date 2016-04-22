@@ -115,6 +115,11 @@ public class MessageWriterImpl implements MessageWriter {
 	    sb.append(" - ");
 	    sb.append(url);
 	}
+	final String driverName = message.getDriverName();
+	if (driverName != null) {
+	    sb.append(" - ");
+	    sb.append(driverName);
+	}
 
 	sb.append(nl);
 

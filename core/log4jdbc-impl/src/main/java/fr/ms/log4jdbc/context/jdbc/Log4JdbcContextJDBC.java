@@ -58,7 +58,8 @@ public class Log4JdbcContextJDBC implements Log4JdbcContext {
 	ConnectionContextJDBC connectionContextJDBC = (ConnectionContextJDBC) context.get(connection);
 
 	if (connectionContextJDBC == null) {
-	    connectionContextJDBC = new ConnectionContextJDBC(driver, url);
+	    final Class clazz = driver.getClass();
+	    connectionContextJDBC = new ConnectionContextJDBC(clazz, url);
 	    context.put(connection, connectionContextJDBC);
 	}
 

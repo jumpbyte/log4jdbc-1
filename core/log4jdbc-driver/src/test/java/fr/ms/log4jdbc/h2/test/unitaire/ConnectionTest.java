@@ -43,7 +43,7 @@ public class ConnectionTest {
 
 		Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 
-		Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+		Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 		Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 		final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -70,7 +70,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -101,7 +101,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -132,7 +132,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -149,7 +149,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -182,7 +182,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -214,7 +214,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -232,7 +232,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -266,7 +266,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -300,7 +300,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    final SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -332,7 +332,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -350,7 +350,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -382,7 +382,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -400,7 +400,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -432,7 +432,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -450,7 +450,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -469,7 +469,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -501,7 +501,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    SqlOperation sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -519,7 +519,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();
@@ -538,7 +538,7 @@ public class ConnectionTest {
 
 	    Assert.assertEquals(SqlOperationLogger.CONNECTION, sqlOperationMessage.getTypeLogger());
 	    Assert.assertEquals(1, sqlOperationMessage.getSqlOperation().getOpenConnection());
-	    Assert.assertEquals(Driver.class, sqlOperationMessage.getSqlOperation().getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperationMessage.getSqlOperation().getDriverName());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperationMessage.getSqlOperation().getUrl());
 
 	    sqlOperation = sqlOperationMessage.getSqlOperation();

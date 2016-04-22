@@ -59,7 +59,7 @@ public class TransactionTest {
 	    Assert.assertEquals(1, sqlOperation1.getOpenConnection());
 	    Assert.assertNotNull(sqlOperation1.getDate());
 	    Assert.assertNotNull(sqlOperation1.getExecTime());
-	    Assert.assertEquals(Driver.class, sqlOperation1.getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperation1.getDriverName());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation1.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation1.getUrl());
 
@@ -92,7 +92,7 @@ public class TransactionTest {
 	    Assert.assertEquals(1, sqlOperation2.getOpenConnection());
 	    Assert.assertNotNull(sqlOperation2.getDate());
 	    Assert.assertNotNull(sqlOperation2.getExecTime());
-	    Assert.assertEquals(Driver.class, sqlOperation2.getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperation2.getDriverName());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation2.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation2.getUrl());
 
@@ -125,7 +125,7 @@ public class TransactionTest {
 	    Assert.assertEquals(1, sqlOperation3.getOpenConnection());
 	    Assert.assertNotNull(sqlOperation3.getDate());
 	    Assert.assertNotNull(sqlOperation3.getExecTime());
-	    Assert.assertEquals(Driver.class, sqlOperation3.getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperation3.getDriverName());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation3.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation3.getUrl());
 
@@ -177,7 +177,7 @@ public class TransactionTest {
 	    Assert.assertEquals(1, sqlOperation4.getOpenConnection());
 	    Assert.assertNotNull(sqlOperation4.getDate());
 	    Assert.assertNotNull(sqlOperation4.getExecTime());
-	    Assert.assertEquals(Driver.class, sqlOperation4.getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperation4.getDriverName());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation4.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation4.getUrl());
 
@@ -238,7 +238,7 @@ public class TransactionTest {
 	    Assert.assertEquals(1, sqlOperation.getOpenConnection());
 	    Assert.assertNotNull(sqlOperation.getDate());
 	    Assert.assertNotNull(sqlOperation.getExecTime());
-	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperation.getDriverName());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation.getUrl());
 
@@ -268,7 +268,7 @@ public class TransactionTest {
 	    Assert.assertEquals(1, sqlOperation.getOpenConnection());
 	    Assert.assertNotNull(sqlOperation.getDate());
 	    Assert.assertNotNull(sqlOperation.getExecTime());
-	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperation.getDriverName());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation.getUrl());
 
@@ -298,7 +298,7 @@ public class TransactionTest {
 	    Assert.assertEquals(1, sqlOperation.getOpenConnection());
 	    Assert.assertNotNull(sqlOperation.getDate());
 	    Assert.assertNotNull(sqlOperation.getExecTime());
-	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperation.getDriverName());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation.getUrl());
 
@@ -344,7 +344,7 @@ public class TransactionTest {
 	    Assert.assertEquals(1, sqlOperation.getOpenConnection());
 	    Assert.assertNotNull(sqlOperation.getDate());
 	    Assert.assertNotNull(sqlOperation.getExecTime());
-	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperation.getDriverName());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation.getUrl());
 
@@ -389,7 +389,7 @@ public class TransactionTest {
 	    Assert.assertEquals(1, sqlOperation.getOpenConnection());
 	    Assert.assertNotNull(sqlOperation.getDate());
 	    Assert.assertNotNull(sqlOperation.getExecTime());
-	    Assert.assertEquals(Driver.class, sqlOperation.getDriver().getClass());
+	    Assert.assertEquals(Driver.class.getName(), sqlOperation.getDriverName());
 	    Assert.assertEquals(GenericRdbmsSpecifics.class, sqlOperation.getRdbms().getClass());
 	    Assert.assertEquals(DatabaseUtil.getURL(false), sqlOperation.getUrl());
 

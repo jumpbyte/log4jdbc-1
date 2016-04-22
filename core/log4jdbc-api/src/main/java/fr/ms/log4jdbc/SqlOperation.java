@@ -17,7 +17,6 @@
  */
 package fr.ms.log4jdbc;
 
-import java.sql.Driver;
 import java.util.Date;
 
 import fr.ms.log4jdbc.context.Transaction;
@@ -42,7 +41,7 @@ public interface SqlOperation {
 
     long getOpenConnection();
 
-    Driver getDriver();
+    String getDriverName();
 
     String getUrl();
 
