@@ -66,7 +66,7 @@ Cannot create JDBC driver of class 'fr.ms.log4jdbc.Driver' for connect URL 'jdbc
 ```
 
 Cela signifie juste que votre driver jdbc n'est pas enregistré automatiquement dans le DriverManager.
-Il est donc nécessaire de spécifier à log4jdbc, le driver jdbc que vous utilisez, pour cela il est necessaire de rajouter une propriété système avec les noms de drivers séparés par une virgule:
+Il est donc nécessaire de spécifier à log4jdbc, le driver jdbc que vous utilisez, pour cela il est nécessaire de rajouter une propriété système avec les noms de drivers séparés par une virgule:
 
 **-Dlog4jdbc.drivers=NOM DES DRIVERS**
 
