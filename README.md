@@ -6,7 +6,10 @@ Cet outil est un proxy JDBC qui permet d'intercepter les appels au driver jdbc.
 - Divisé en 2 parties, la partie interception et la partie traitement des informations, cela permet à quiconque d'implémenter son propre traitement.
 - Facile d'utilisation, il suffit juste de changer le driver jdbc par : "**fr.ms.log4jdbc.Driver**" et de rajouter au début de l'url de connexion "**jdbc:log4**"
 - Possibilité de l'utiliser en tant que **DataSource**, **XADataSource** ou **ConnectionPoolDataSource**.
-- Permet de récupérer les requêtes sql, leur résultat, le temps d'exécution de chaque opération jdbc, l'exécution de la requête, des transactions, des batchs...
+- Permet de récupérer les requêtes sql, leur résultat, le temps d'exécution de chaque opération jdbc.
+- Permet de visualiser l'intégralité des requêtes pour chaque transaction JDBC et XA.
+- Permet de visualiser dans une transation JDBC, la position de chaque **savepoint** et l'état de toutes les requêtes.
+- Permet de visualiser la requête même lors d'une levée d'exception sur cette requête.
 - Disponible sur le repository central de Maven.
 - Et beaucoup d'autres fonctionnalités...
 
@@ -246,9 +249,9 @@ par :
 
 ```
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
-1. Total 6
+1. Total 6 - jdbc:db2://DB201DEV:50024/BAS_GDC - com.mysql.jdbc.Driver
 
-Query Number : 20 - State : STATE_EXECUTE - Result Count : 4
+Query Number : 20 - State : STATE_EXECUTE - Result Count : 4 - ResultSet Exec Time : 15 ms
 Transaction Number : 16 - State : STATE_EXECUTE
 
 SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
@@ -264,15 +267,17 @@ SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE
 |57a40fe0c0a8280e16dfcca330316476 |FOR                  |cirque         |
 |57a40fe0c0a8280e16dfcca3b4e16de6 |FOR                  |arts           |
 |---------------------------------|---------------------|---------------|
+
+{executed in 3 ms} 
 ```
 
 **Avec la version Java 5 :**
 
 ```
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
-1. Total 6
+1. Total 6 - jdbc:db2://DB201DEV:50024/BAS_GDC - com.mysql.jdbc.Driver
 
-Query Number : 20 - State : STATE_EXECUTE - Result Count : 4
+Query Number : 20 - State : STATE_EXECUTE - Result Count : 4 - ResultSet Exec Time : 15 ms
 Transaction Number : 16 - State : STATE_EXECUTE
 
 SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
@@ -293,15 +298,17 @@ fr.app.ti.common.dao.AbstractappJdbcDaoSupport.query(AbstractappJdbcDaoSupport.j
 fr.app.ti.reference.dao.impl.MotCleDAO.getListMotCle(MotCleDAO.java:223)
 fr.app.ti.reference.process.GestionMotCleProcess.getMotClesFromIdRattachement(GestionMotCleProcess.java:233)
 fr.app.ti.forfait.business.ForfaitBSBean.getMotsCles(ForfaitBSBean.java:241)
+
+{executed in 3 ms} 
 ```
 
 **Avec la version JBoss 5 :**
 
 ```
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
-1. Total 6
+1. Total 6 - jdbc:db2://DB201DEV:50024/BAS_GDC - com.mysql.jdbc.Driver
 
-Query Number : 20 - State : STATE_EXECUTE - Result Count : 4
+Query Number : 20 - State : STATE_EXECUTE - Result Count : 4 - ResultSet Exec Time : 15 ms
 Transaction Number : 16 - State : STATE_EXECUTE
 
 SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
@@ -330,4 +337,6 @@ fr.app.ti.common.dao.AbstractappJdbcDaoSupport.query(AbstractappJdbcDaoSupport.j
 fr.app.ti.reference.dao.impl.MotCleDAO.getListMotCle(MotCleDAO.java:223)
 fr.app.ti.reference.process.GestionMotCleProcess.getMotClesFromIdRattachement(GestionMotCleProcess.java:233)
 fr.app.ti.forfait.business.ForfaitBSBean.getMotsCles(ForfaitBSBean.java:241)
+
+{executed in 3 ms} 
 ```
