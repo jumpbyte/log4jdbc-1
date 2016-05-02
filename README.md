@@ -9,6 +9,7 @@ Cet outil est un proxy JDBC qui permet d'intercepter les appels au driver jdbc.
 - Permet de récupérer les requêtes sql, leur résultat, le temps d'exécution de chaque opération jdbc.
 - Permet de visualiser l'intégralité des requêtes pour chaque transaction JDBC et XA.
 - Permet de visualiser dans une transation JDBC, la position de chaque **savepoint** et l'état de toutes les requêtes.
+- Permet de visualiser la requête même lors d'une levée d'exception sur cette requête.
 - Disponible sur le repository central de Maven.
 - Et beaucoup d'autres fonctionnalités...
 
