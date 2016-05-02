@@ -72,9 +72,9 @@ public class GenericMessage extends AbstractMessage {
 	    final SQLException sqlException = (SQLException) exception;
 	    final StringMaker newString = stringFactory.newString();
 	    nextSQLException(newString, sqlException);
-	    genericMessage = genericMessage + nl + newString.toString();
+	    genericMessage = genericMessage + nl + newString.toString() + nl;
 	} else {
-	    genericMessage = genericMessage + nl + " - Exception : " + exception;
+	    genericMessage = genericMessage + nl + " - Exception : " + exception + nl;
 	}
 
 	messageWriter.traceMessage(genericMessage);
@@ -88,7 +88,10 @@ public class GenericMessage extends AbstractMessage {
 	    newString.append(nl);
 	    newString.append(nextException);
 	    nextSQLException(newString, nextException);
-
+	} else {
+	    newString.append("Exception :");
+	    newString.append(nl);
+	    newString.append(sqlException);
 	}
     }
 
