@@ -266,6 +266,7 @@ SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE
 |57a40fe0c0a8280e16dfcca330316476 |FOR                  |cirque         |
 |57a40fe0c0a8280e16dfcca3b4e16de6 |FOR                  |arts           |
 |---------------------------------|---------------------|---------------|
+
 {executed in 3 ms} 
 ```
 
@@ -296,6 +297,7 @@ fr.app.ti.common.dao.AbstractappJdbcDaoSupport.query(AbstractappJdbcDaoSupport.j
 fr.app.ti.reference.dao.impl.MotCleDAO.getListMotCle(MotCleDAO.java:223)
 fr.app.ti.reference.process.GestionMotCleProcess.getMotClesFromIdRattachement(GestionMotCleProcess.java:233)
 fr.app.ti.forfait.business.ForfaitBSBean.getMotsCles(ForfaitBSBean.java:241)
+
 {executed in 3 ms} 
 ```
 
@@ -334,5 +336,6 @@ fr.app.ti.common.dao.AbstractappJdbcDaoSupport.query(AbstractappJdbcDaoSupport.j
 fr.app.ti.reference.dao.impl.MotCleDAO.getListMotCle(MotCleDAO.java:223)
 fr.app.ti.reference.process.GestionMotCleProcess.getMotClesFromIdRattachement(GestionMotCleProcess.java:233)
 fr.app.ti.forfait.business.ForfaitBSBean.getMotsCles(ForfaitBSBean.java:241)
+
 {executed in 3 ms} 
 ```
