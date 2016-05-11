@@ -38,6 +38,8 @@ public class PreparedStatementOperationFactory extends StatementOperationFactory
 
     private final String sql;
 
+    private boolean newQuery;
+
     public PreparedStatementOperationFactory(final ConnectionContextJDBC connectionContext, final PreparedStatement statement, final QueryFactory queryFactory,
 	    final String sql) {
 	super(connectionContext, statement, queryFactory);
@@ -51,7 +53,13 @@ public class PreparedStatementOperationFactory extends StatementOperationFactory
 	return operation;
     }
 
+    public void createNewQuery() {
+	this.newQuery = true;
+    }
+
     public void newQuery() {
-	query = queryFactory.newQuery(connectionContext, sql, query.getJDBCParameters());
+	if (newQuery) {
+	    query = queryFactory.newQuery(connectionContext, sql, query.getJDBCParameters());
+	}
     }
 }

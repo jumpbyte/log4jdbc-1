@@ -70,16 +70,18 @@ public class PreparedStatementOperation extends StatementOperation {
 
 	connectionContext.addQuery(query);
 
-	context.newQuery();
+	context.createNewQuery();
     }
 
     private void setNull(final Object[] args) {
+	context.newQuery();
 	final QueryImpl queryContext = context.getQuery();
 	final Object param = args[0];
 	queryContext.putParams(param, null);
     }
 
     private void set(final Object[] args) {
+	context.newQuery();
 	final QueryImpl queryContext = context.getQuery();
 	final Object param = args[0];
 	final Object value = args[1];
@@ -102,6 +104,6 @@ public class PreparedStatementOperation extends StatementOperation {
 
 	connectionContext.addQuery(query);
 
-	context.newQuery();
+	context.createNewQuery();
     }
 }

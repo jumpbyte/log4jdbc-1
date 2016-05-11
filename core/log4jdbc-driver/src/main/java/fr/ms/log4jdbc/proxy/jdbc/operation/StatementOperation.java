@@ -84,6 +84,17 @@ public class StatementOperation implements Log4JdbcOperation {
 	    execute(sql);
 	}
 
+	if (nameMethod.startsWith("execute")) {
+	    // execute retourne true boolean - GetResultSet
+	    final Class returnType = method.getReturnType();
+	    if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
+		final Boolean invokeBoolean = (Boolean) timeInvocation.getInvoke();
+		if (invokeBoolean.booleanValue()) {
+		    query.createResultSetCollector(connectionContext);
+		}
+	    }
+	}
+
 	// Create ResultSetCollector and Proxy ResultSet
 	if (invoke instanceof ResultSet) {
 
@@ -143,15 +154,6 @@ public class StatementOperation implements Log4JdbcOperation {
 
 	final Integer updateCount = getUpdateCount(method);
 	query.setUpdateCount(updateCount);
-
-	// execute retourne true boolean - GetResultSet
-	final Class returnType = method.getReturnType();
-	if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
-	    final Boolean invokeBoolean = (Boolean) timeInvocation.getInvoke();
-	    if (invokeBoolean.booleanValue()) {
-		query.createResultSetCollector(connectionContext);
-	    }
-	}
 
 	connectionContext.addQuery(query);
 
