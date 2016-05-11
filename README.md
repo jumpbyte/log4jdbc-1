@@ -249,7 +249,7 @@ par :
 
 ```
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
-1. Total 6 - jdbc:db2://DB201DEV:50024/BAS_GDC - com.mysql.jdbc.Driver
+1. Total 6 - jdbc:db2://DBDEV:50022/BAS_BTP - com.mysql.jdbc.Driver
 
 Query Number : 20 - State : STATE_EXECUTE - Result Count : 4 - ResultSet Exec Time : 15 ms
 Transaction Number : 16 - State : STATE_EXECUTE
@@ -275,7 +275,7 @@ SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE
 
 ```
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
-1. Total 6 - jdbc:db2://DB201DEV:50024/BAS_GDC - com.mysql.jdbc.Driver
+1. Total 6 - jdbc:db2://DBDEV:50022/BAS_BTP - com.mysql.jdbc.Driver
 
 Query Number : 20 - State : STATE_EXECUTE - Result Count : 4 - ResultSet Exec Time : 15 ms
 Transaction Number : 16 - State : STATE_EXECUTE
@@ -306,7 +306,7 @@ fr.app.ti.forfait.business.ForfaitBSBean.getMotsCles(ForfaitBSBean.java:241)
 
 ```
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
-1. Total 6 - jdbc:db2://DB201DEV:50024/BAS_GDC - com.mysql.jdbc.Driver
+1. Total 6 - jdbc:db2://DBDEV:50022/BAS_BTP - com.mysql.jdbc.Driver
 
 Query Number : 20 - State : STATE_EXECUTE - Result Count : 4 - ResultSet Exec Time : 15 ms
 Transaction Number : 16 - State : STATE_EXECUTE
@@ -339,4 +339,49 @@ fr.app.ti.reference.process.GestionMotCleProcess.getMotClesFromIdRattachement(Ge
 fr.app.ti.forfait.business.ForfaitBSBean.getMotsCles(ForfaitBSBean.java:241)
 
 {executed in 3 ms} 
+```
+
+**Avec une procédure stockée :**
+
+```
+11-05-2016 09:26:50.124 - WebContainer : 0
+3. Total 5 - jdbc:db2://DBDEV:50022/BAS_BTP - com.ibm.db2.jcc.DB2ConnectionPoolDataSource
+
+Query Number : 42 - State : QUERY_STATE_COMMIT - Result Count : 15 - ResultSet Exec Time : 94 ms
+Transaction Number : 4 - Type : JDBC - State : TRANSACTION_STATE_COMMIT
+
+CALL DBM01.PBP2M_BTP_HISTORIQUE_RA ('M09566',1,2784578)
+
+
+|--------|-------------------------|
+|NUM     |ZI                       |
+|--------|-------------------------|
+|1114578 |STE DISTRIB              |
+|111076  |LA CABANE DE PARIS       |
+|1115465 |KIKOOP                   |
+|1113819 |ROBERT MATERIELS         |
+|11103   |B. DUPOND ET FILS        |
+|1119304 |TEST MS                  |
+|1115774 |G Z S                    |
+|111820  |TEAM                     |
+|111210  |LE GALL METHOD           |
+|1117974 |TOTO INDUSTRIE           |
+|111697  |IKEA                     |
+|11157   |LEVERGER ETS             |
+|111037  |PORTAIL                  |
+|1114998 | MARCEL				   |
+|1115036 |COUCOUM                  |
+|--------|-------------------------|
+
+example.service.ServiceHistorique.gestionHisto(ServiceHistorique.java:103)
+example.service.ServiceHistorique.refreshHistorique(ServiceHistorique.java:162)
+example.core.util.UserHelper.refreshHistorique(UserHelper.java:217)
+example.ui.web.action.DefautcpAction.getHabilitation(DefautcpAction.java:344)
+example.ui.web.action.DefautcpAction.initialisation(DefautcpAction.java:107)
+example.ui.web.action.DefautcpHistoriqueAction.execute(DefautcpHistoriqueAction.java:26)
+example.ui.web.handler.ErrorManagementFilter.doFilter(ErrorManagementFilter.java:53)
+example.framework.filter.HibernateFilter.doFilter(HibernateFilter.java:104)
+
+{executed in 31 ms} 
+****************************************************************
 ```
