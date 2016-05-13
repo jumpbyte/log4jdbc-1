@@ -33,12 +33,17 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  */
 public class ConnectionContextJDBC extends ConnectionContextDefault {
 
+    private boolean cleanTransaction;
+
     protected boolean transactionEnabled;
 
-    private TransactionContextJDBC transactionContextJDBC;
+    private final TransactionContextFactory transactionContextFactory;
 
-    public ConnectionContextJDBC(final Class clazz, final String url) {
+    protected TransactionContextJDBC transactionContext;
+
+    public ConnectionContextJDBC(final TransactionContextFactory transactionContextFactory, final Class clazz, final String url) {
 	super(clazz, url);
+	this.transactionContextFactory = transactionContextFactory;
     }
 
     public boolean isTransactionEnabled() {
@@ -47,7 +52,7 @@ public class ConnectionContextJDBC extends ConnectionContextDefault {
 
     public void setTransactionEnabled(final boolean transactionEnabled) {
 	if (!transactionEnabled) {
-	    transactionContextJDBC = null;
+	    transactionContext = null;
 	}
 
 	this.transactionEnabled = transactionEnabled;
@@ -55,36 +60,49 @@ public class ConnectionContextJDBC extends ConnectionContextDefault {
 
     public QueryImpl addQuery(final QueryImpl query) {
 	if (transactionEnabled) {
-	    if (transactionContextJDBC == null) {
-		transactionContextJDBC = new TransactionContextJDBC();
+	    if (transactionContext == null) {
+		transactionContext = transactionContextFactory.newTransactionContext();
 	    }
-	    transactionContextJDBC.addQuery(query);
+	    transactionContext.addQuery(query);
 	}
 
 	return query;
     }
 
+    public void close() {
+	cleanTransaction = true;
+	super.close();
+    }
+
+    public void cleanContext() {
+	if (cleanTransaction) {
+	    if (transactionContext != null) {
+		transactionContext.close();
+	    }
+	    cleanTransaction = false;
+	}
+    }
+
     public TransactionContextJDBC getTransactionContext() {
-	return transactionContextJDBC;
+	return transactionContext;
     }
 
     public void commit() {
-	if (transactionContextJDBC != null) {
-	    transactionContextJDBC.commit();
+	if (transactionContext != null) {
+	    transactionContext.commit();
 	}
+	cleanTransaction = true;
     }
 
     public void rollback(final Object savePoint) {
-	if (transactionContextJDBC != null) {
-	    transactionContextJDBC.rollback(savePoint);
+	if (transactionContext != null) {
+	    transactionContext.rollback(savePoint);
 	}
+	cleanTransaction = savePoint == null;
     }
 
     public void resetTransaction() {
-	if (transactionContextJDBC != null) {
-	    transactionContextJDBC.close();
-	    transactionContextJDBC = null;
-	}
+	cleanTransaction = true;
     }
 
     public String toString() {
@@ -100,7 +118,7 @@ public class ConnectionContextJDBC extends ConnectionContextDefault {
 	buffer.append(", rdbmsSpecifics=");
 	buffer.append(rdbmsSpecifics);
 	buffer.append(", transactionContext=");
-	buffer.append(transactionContextJDBC);
+	buffer.append(transactionContext);
 	buffer.append("]");
 
 	return buffer.toString();

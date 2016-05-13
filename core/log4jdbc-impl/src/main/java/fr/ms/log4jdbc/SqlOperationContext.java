@@ -61,6 +61,8 @@ public class SqlOperationContext extends SqlOperationDefault implements SqlOpera
 		e.printStackTrace();
 	    }
 	}
+
+	connectionContext.cleanContext();
     }
 
     public SqlOperationContext(final TimeInvocation timeInvocation, final ConnectionContextJDBC connectionContext, final QueryImpl query) {

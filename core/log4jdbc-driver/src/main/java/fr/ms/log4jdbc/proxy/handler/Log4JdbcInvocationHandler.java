@@ -82,8 +82,6 @@ public class Log4JdbcInvocationHandler extends ProxyOperationInvocationHandler {
 		}
 	    }
 	}
-
-	log4JdbcOperation.postOperation();
     }
 
     public static SqlOperation getSqlOperation(final SqlOperation sqlOperation, final SqlOperationLogger log) {

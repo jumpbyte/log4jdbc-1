@@ -37,16 +37,6 @@ public class TimeInvocationHandler implements InvocationHandler {
 
     private final static Logger LOG = LoggerManager.getLogger(TimeInvocationHandler.class);
 
-    private static final Method OBJECT_EQUALS;
-
-    static {
-	try {
-	    OBJECT_EQUALS = Object.class.getMethod("equals", new Class[] { Object.class });
-	} catch (final NoSuchMethodException e) {
-	    throw new IllegalArgumentException(e);
-	}
-    }
-
     private final Object implementation;
 
     public TimeInvocationHandler(final Object implementation) {
@@ -58,21 +48,16 @@ public class TimeInvocationHandler implements InvocationHandler {
 	try {
 	    Object invoke = null;
 
-	    if (OBJECT_EQUALS.equals(method) && Proxy.isProxyClass(args[0].getClass())) {
-		final boolean isEquals = (proxy == args[0]);
-		if (isEquals) {
-		    invoke = Boolean.valueOf(isEquals);
-		}
-	    }
-
 	    if (invoke == null) {
-		invoke = method.invoke(implementation, args);
+		final Object[] argsUnProxy = unProxyLog4Jdbc(args);
+
+		invoke = method.invoke(implementation, argsUnProxy);
 	    }
 
 	    if (LOG.isDebugEnabled()) {
 		LOG.debug("Method : " + method + " - args : " + args + " - invoke : " + invoke);
 	    }
-	    
+
 	    timeInvoke.setInvoke(invoke);
 	} catch (final InvocationTargetException s) {
 	    final Throwable targetException = s.getTargetException();
@@ -88,6 +73,26 @@ public class TimeInvocationHandler implements InvocationHandler {
 	}
 
 	return timeInvoke;
+    }
+
+    private final Object[] unProxyLog4Jdbc(final Object[] args) {
+	Object[] dest = args;
+	if (dest != null && dest.length > 0) {
+	    dest = new Object[args.length];
+	    for (int i = 0; i < args.length; i++) {
+		Object obj = args[i];
+		if (Proxy.isProxyClass(args[i].getClass())) {
+		    final InvocationHandler invocationHandler = Proxy.getInvocationHandler(args[i]);
+		    if (invocationHandler instanceof ProxyOperationInvocationHandler) {
+			final ProxyOperationInvocationHandler handler = (ProxyOperationInvocationHandler) invocationHandler;
+			obj = handler.getImplementation();
+		    }
+		}
+		dest[i] = obj;
+	    }
+	}
+
+	return dest;
     }
 
     public String toString() {

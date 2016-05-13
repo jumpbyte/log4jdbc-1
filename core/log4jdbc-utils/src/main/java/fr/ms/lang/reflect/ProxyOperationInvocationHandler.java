@@ -30,12 +30,15 @@ import java.lang.reflect.Method;
  */
 public class ProxyOperationInvocationHandler implements InvocationHandler {
 
+    private final Object implementation;
+
     private final TimeInvocationHandler invocationHandler;
 
     private final ProxyOperationFactory factory;
 
     public ProxyOperationInvocationHandler(final Object implementation, final ProxyOperationFactory factory) {
-	this.invocationHandler = new TimeInvocationHandler(implementation);
+	this.implementation = implementation;
+	this.invocationHandler = new TimeInvocationHandler(this.implementation);
 	this.factory = factory;
     }
 
@@ -68,4 +71,9 @@ public class ProxyOperationInvocationHandler implements InvocationHandler {
 	    final Object[] args) {
 	// NOOP
     }
+
+    public Object getImplementation() {
+	return implementation;
+    }
+
 }

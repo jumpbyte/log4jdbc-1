@@ -36,6 +36,8 @@ import fr.ms.util.CollectionsUtil;
  */
 public class Log4JdbcContextJDBC implements Log4JdbcContext {
 
+    private final static TransactionContextFactory transactionContextFactory = new TransactionContextJDBCFactory();
+
     private final static Map context = CollectionsUtil.synchronizedMap(new WeakHashMap());
 
     public ConnectionContextJDBC newConnectionContext(final Connection connection, final Class clazz) {
@@ -47,7 +49,7 @@ public class Log4JdbcContextJDBC implements Log4JdbcContext {
 		url = connection.getMetaData().getURL();
 	    } catch (final SQLException e) {
 	    }
-	    connectionContextJDBC = new ConnectionContextJDBC(clazz, url);
+	    connectionContextJDBC = new ConnectionContextJDBC(transactionContextFactory, clazz, url);
 	    context.put(connection, connectionContextJDBC);
 	}
 
@@ -59,7 +61,7 @@ public class Log4JdbcContextJDBC implements Log4JdbcContext {
 
 	if (connectionContextJDBC == null) {
 	    final Class clazz = driver.getClass();
-	    connectionContextJDBC = new ConnectionContextJDBC(clazz, url);
+	    connectionContextJDBC = new ConnectionContextJDBC(transactionContextFactory, clazz, url);
 	    context.put(connection, connectionContextJDBC);
 	}
 

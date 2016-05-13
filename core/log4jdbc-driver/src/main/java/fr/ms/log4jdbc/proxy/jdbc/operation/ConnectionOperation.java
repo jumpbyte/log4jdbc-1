@@ -49,8 +49,6 @@ public class ConnectionOperation implements Log4JdbcOperation {
 
     private final ConnectionOperationFactory connectionOperationFactory;
 
-    private boolean resetTransaction;
-
     public ConnectionOperation(final ConnectionOperationFactory connectionOperationFactory, final ConnectionContextJDBC connectionContext,
 	    final TimeInvocation timeInvocation, final Method method, final Object[] args) {
 	this.connectionContext = connectionContext;
@@ -80,13 +78,6 @@ public class ConnectionOperation implements Log4JdbcOperation {
 	return sqlOperationContext;
     }
 
-    public void postOperation() {
-	if (resetTransaction) {
-	    connectionContext.resetTransaction();
-	    resetTransaction = false;
-	}
-    }
-
     private void setAutoCommit(final Object[] args) {
 	final boolean autoCommit = ((Boolean) args[0]).booleanValue();
 	final boolean commit = connectionOperationFactory.executeAutoCommit(autoCommit);
@@ -100,7 +91,6 @@ public class ConnectionOperation implements Log4JdbcOperation {
 
     private void commit() {
 	connectionContext.commit();
-	resetTransaction = true;
     }
 
     private void setSavepoint(final Object savePoint) {
@@ -120,7 +110,6 @@ public class ConnectionOperation implements Log4JdbcOperation {
 
     private void rollback(final Object savePoint) {
 	connectionContext.rollback(savePoint);
-	resetTransaction = savePoint == null;
     }
 
     private void close() {

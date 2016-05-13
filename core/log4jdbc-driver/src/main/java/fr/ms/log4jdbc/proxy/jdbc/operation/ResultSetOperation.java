@@ -95,10 +95,6 @@ public class ResultSetOperation implements Log4JdbcOperation {
 	return sqlOperationContext;
     }
 
-    public void postOperation() {
-	// NO-OP
-    }
-
     private void get(final boolean valid, Object invoke) {
 	final Class clazz = method.getParameterTypes()[0];
 

@@ -23,6 +23,7 @@ import java.sql.SQLException;
 
 import fr.ms.log4jdbc.context.Log4JdbcContext;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
+import fr.ms.log4jdbc.context.jdbc.TransactionContextFactory;
 
 /**
  *
@@ -33,6 +34,8 @@ import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
  *
  */
 public class Log4JdbcContextXA implements Log4JdbcContext {
+
+    private final static TransactionContextFactory transactionContextFactory = new TransactionContextXAFactory();
 
     private ConnectionContextXA connectionContext;
 
@@ -45,20 +48,18 @@ public class Log4JdbcContextXA implements Log4JdbcContext {
 	} catch (final SQLException e) {
 	}
 
-	connectionContext = new ConnectionContextXA(clazz, url);
+	connectionContext = new ConnectionContextXA(transactionContextFactory, clazz, url);
 
 	connectionContext.setTransactionContextXA(transactionContext);
-	connectionContext.setTransactionEnabled(transactionContext != null);
 
 	return connectionContext;
     }
 
     public ConnectionContextJDBC newConnectionContext(final Connection connection, final Driver driver, final String url) {
 	final Class clazz = driver.getClass();
-	connectionContext = new ConnectionContextXA(clazz, url);
+	connectionContext = new ConnectionContextXA(transactionContextFactory, clazz, url);
 
 	connectionContext.setTransactionContextXA(transactionContext);
-	connectionContext.setTransactionEnabled(transactionContext != null);
 
 	return connectionContext;
     }

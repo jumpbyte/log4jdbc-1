@@ -113,10 +113,6 @@ public class StatementOperation implements Log4JdbcOperation {
 	return sqlOperationContext;
     }
 
-    public void postOperation() {
-	// NO-OP
-    }
-
     private void addBatch(final String sql) {
 	query = queryFactory.newQuery(connectionContext, sql);
 	query.setTimeInvocation(timeInvocation);
