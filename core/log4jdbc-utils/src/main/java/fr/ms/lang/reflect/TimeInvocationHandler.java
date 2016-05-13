@@ -81,7 +81,7 @@ public class TimeInvocationHandler implements InvocationHandler {
 	    dest = new Object[args.length];
 	    for (int i = 0; i < args.length; i++) {
 		Object obj = args[i];
-		if (Proxy.isProxyClass(args[i].getClass())) {
+		if (args[i] != null && Proxy.isProxyClass(args[i].getClass())) {
 		    final InvocationHandler invocationHandler = Proxy.getInvocationHandler(args[i]);
 		    if (invocationHandler instanceof ProxyOperationInvocationHandler) {
 			final ProxyOperationInvocationHandler handler = (ProxyOperationInvocationHandler) invocationHandler;
