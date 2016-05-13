@@ -55,7 +55,7 @@ public class TimeInvocationHandler implements InvocationHandler {
 	    }
 
 	    if (LOG.isDebugEnabled()) {
-		LOG.debug("Method : " + method + " - args : " + args + " - invoke : " + invoke);
+		LOG.debug("Method : " + method + " - args Proxy : " + args + " - args  : " + args + " - invoke : " + invoke);
 	    }
 
 	    timeInvoke.setInvoke(invoke);
@@ -65,7 +65,7 @@ public class TimeInvocationHandler implements InvocationHandler {
 		throw s;
 	    }
 	    if (LOG.isErrorEnabled()) {
-		LOG.error("Method : " + method + " - args : " + args + " - targetException : " + targetException);
+		LOG.error("Method : " + method + " - args Proxy : " + args + " - targetException : " + targetException);
 	    }
 	    timeInvoke.setTargetException(targetException);
 	} finally {
