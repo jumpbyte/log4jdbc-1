@@ -77,7 +77,7 @@ public class StatementOperation implements Log4JdbcOperation {
 	if (nameMethod.equals("addBatch") && args != null && args.length >= 1) {
 	    final String sql = (String) args[0];
 	    addBatch(sql);
-	} else if (nameMethod.equals("executeBatch") && args == null) {
+	} else if (nameMethod.equals("executeBatch") && args == null && invoke != null) {
 	    executeBatch(invoke);
 	} else if (nameMethod.startsWith("execute") && args != null && args.length >= 1) {
 	    final String sql = (String) args[0];
@@ -89,14 +89,14 @@ public class StatementOperation implements Log4JdbcOperation {
 	    final Class returnType = method.getReturnType();
 	    if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
 		final Boolean invokeBoolean = (Boolean) timeInvocation.getInvoke();
-		if (invokeBoolean.booleanValue()) {
+		if (invokeBoolean != null && invokeBoolean.booleanValue()) {
 		    query.createResultSetCollector(connectionContext);
 		}
 	    }
 	}
 
 	// Create ResultSetCollector and Proxy ResultSet
-	if (invoke instanceof ResultSet) {
+	if (invoke != null && invoke instanceof ResultSet) {
 
 	    final ResultSet resultSet = (ResultSet) invoke;
 
@@ -159,6 +159,10 @@ public class StatementOperation implements Log4JdbcOperation {
     protected Integer getUpdateCount(final Method method) {
 	Integer updateCount = null;
 	final Object invoke = timeInvocation.getInvoke();
+	if (invoke == null) {
+	    return updateCount;
+	}
+
 	final Class returnType = method.getReturnType();
 	if (Integer.class.equals(returnType) || Integer.TYPE.equals(returnType)) {
 	    updateCount = (Integer) invoke;

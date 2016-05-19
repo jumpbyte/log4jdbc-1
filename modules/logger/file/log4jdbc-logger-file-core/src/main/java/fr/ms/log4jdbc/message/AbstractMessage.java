@@ -39,7 +39,7 @@ public abstract class AbstractMessage implements MessageProcess {
     private static WrapperMessageWriterFactory factory;
 
     static {
-	final Iterator providers = Service.providers(WrapperMessageWriterFactory.class);
+	final Iterator providers = Service.providers(WrapperMessageWriterFactory.class, AbstractMessage.class.getClassLoader());
 
 	while (providers.hasNext()) {
 	    try {
@@ -55,7 +55,8 @@ public abstract class AbstractMessage implements MessageProcess {
 	}
     }
 
-    public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
+    public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args, final Object invoke,
+	    final Throwable exception) {
 	final MessageWriterFactory messageWriterFactory = factory.getMessageWriterFactory();
 	return messageWriterFactory.newMessageWriter(message, method, args, invoke, exception);
     }

@@ -68,7 +68,7 @@ public final class ServicesJDBC {
 	private final static SqlOperationLogger[] getMessageLogger() {
 	    SqlOperationLogger[] messageLogger;
 
-	    final Iterator providers = Service.providers(SqlOperationLogger.class);
+	    final Iterator providers = Service.providers(SqlOperationLogger.class, RdbmsSpecificsHolder.class.getClassLoader());
 
 	    final List list = CollectionsUtil.convert(providers);
 
@@ -84,7 +84,7 @@ public final class ServicesJDBC {
 	private final static RdbmsSpecifics[] getRdbmsSpecifics() {
 	    RdbmsSpecifics[] rdbmsSpecifics;
 
-	    final Iterator providers = Service.providers(RdbmsSpecifics.class);
+	    final Iterator providers = Service.providers(RdbmsSpecifics.class, RdbmsSpecificsHolder.class.getClassLoader());
 
 	    final List list = CollectionsUtil.convert(providers);
 

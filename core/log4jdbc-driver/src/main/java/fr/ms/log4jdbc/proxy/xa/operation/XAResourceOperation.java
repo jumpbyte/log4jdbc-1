@@ -75,7 +75,7 @@ public class XAResourceOperation implements Log4JdbcOperation {
 		start(args);
 	    } else if (nameMethod.equals("end")) {
 		end(args);
-	    } else if (nameMethod.equals("prepare")) {
+	    } else if (nameMethod.equals("prepare") && invoke != null) {
 		prepare(args, invoke);
 	    } else if (nameMethod.equals("rollback")) {
 		rollback(args);
