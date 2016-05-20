@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import fr.ms.lang.SystemPropertyUtils;
+
 /**
  *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
@@ -31,18 +33,21 @@ import java.util.List;
  */
 public final class Log4JdbcStackTrace {
 
+    private final static boolean stacktrace_filter = SystemPropertyUtils.getProperty("log4jdbc.stacktrace.filter", true);
+
     private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
     private final static String nl = System.getProperty("line.separator");
 
     public static String getStackTraceFilter(final StackTraceElement[] stackTrace) {
+
 	final StringBuilder sb = new StringBuilder();
 	if (props.logStackTrace()) {
 
 	    final List<String> logStackTraceStartPackages = logStackTraceStartPackages();
 	    StackTraceElement[] stackTraceDump;
 	    if (logStackTraceStartPackages.isEmpty()) {
-		stackTraceDump = Log4JdbcStackTrace.getStackTrace(stackTrace, false);
+		stackTraceDump = Log4JdbcStackTrace.getStackTrace(stackTrace);
 	    } else {
 		stackTraceDump = Log4JdbcStackTrace.getStackTrace(stackTrace, logStackTraceStartPackages);
 	    }
@@ -65,7 +70,7 @@ public final class Log4JdbcStackTrace {
     }
 
     public static StackTraceElement[] getStackTrace(final List<String> packages) {
-	final StackTraceElement[] stackTraceDump = getStackTrace(false);
+	final StackTraceElement[] stackTraceDump = getStackTrace();
 
 	final List<StackTraceElement> stackTracePackage = new ArrayList<StackTraceElement>();
 
@@ -84,7 +89,7 @@ public final class Log4JdbcStackTrace {
     }
 
     public static StackTraceElement[] getStackTrace(final StackTraceElement[] stackTrace, final List<String> packages) {
-	final StackTraceElement[] stackTraceDump = getStackTrace(stackTrace, false);
+	final StackTraceElement[] stackTraceDump = getStackTrace(stackTrace);
 
 	final List<StackTraceElement> stackTracePackage = new ArrayList<StackTraceElement>();
 
@@ -107,19 +112,13 @@ public final class Log4JdbcStackTrace {
 	t.fillInStackTrace();
 
 	final StackTraceElement[] stackTrace = t.getStackTrace();
-	return stackTrace;
-    }
 
-    public static StackTraceElement[] getStackTrace(final boolean log4jdbcTrace) {
-	final StackTraceElement[] stackTrace = getStackTrace();
-
-	final StackTraceElement[] stackTraceDump = getStackTrace(stackTrace, log4jdbcTrace);
-
+	final StackTraceElement[] stackTraceDump = getStackTrace(stackTrace);
 	return stackTraceDump;
     }
 
-    public static StackTraceElement[] getStackTrace(final StackTraceElement[] stackTrace, final boolean log4jdbcTrace) {
-	if (stackTrace == null || log4jdbcTrace) {
+    public static StackTraceElement[] getStackTrace(final StackTraceElement[] stackTrace) {
+	if (stackTrace == null || !stacktrace_filter) {
 	    return stackTrace;
 	}
 	int position = 0;
