@@ -48,7 +48,8 @@ public class ConnectionMessage extends AbstractMessage {
 
     private final MessageProcess generic = new GenericMessage();
 
-    public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
+    public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args, final Object invoke,
+	    final Throwable exception) {
 
 	final boolean transactionEnabled = props.logTransaction();
 	final boolean batchEnabled = props.logBatch();
@@ -72,9 +73,8 @@ public class ConnectionMessage extends AbstractMessage {
 	if (transactionEnabled) {
 	    final Transaction transaction = sqlOperation.getTransaction();
 
-	    if (transaction != null
-		    && (transaction.getTransactionState().startsWith(Transaction.STATE_COMMIT) || transaction.getTransactionState().startsWith(
-			    Transaction.STATE_ROLLBACK))) {
+	    if (transaction != null && (transaction.getTransactionState().startsWith(Transaction.STATE_COMMIT)
+		    || transaction.getTransactionState().startsWith(Transaction.STATE_ROLLBACK))) {
 		final Query[] queriesTransaction = transaction.getQueriesTransaction();
 		int commit = 0;
 		int rollback = 0;
@@ -100,8 +100,8 @@ public class ConnectionMessage extends AbstractMessage {
 		message.append(nl);
 		message.append("Transaction " + transaction.getTransactionNumber());
 		message.append(". Total " + transaction.getOpenTransaction());
-		message.append(" - State : " + transaction.getTransactionState());
 		message.append(" - Type : " + transaction.getTransactionType());
+		message.append(" - State : " + transaction.getTransactionState());
 		message.append(nl);
 		message.append(nl);
 

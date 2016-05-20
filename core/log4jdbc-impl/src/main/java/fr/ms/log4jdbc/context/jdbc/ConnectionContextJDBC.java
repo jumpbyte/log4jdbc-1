@@ -78,6 +78,7 @@ public class ConnectionContextJDBC extends ConnectionContextDefault {
 	if (cleanTransaction) {
 	    if (transactionContext != null) {
 		transactionContext.close();
+		transactionContext = null;
 	    }
 	    cleanTransaction = false;
 	}

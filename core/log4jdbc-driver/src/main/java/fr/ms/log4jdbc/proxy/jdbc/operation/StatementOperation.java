@@ -100,11 +100,12 @@ public class StatementOperation implements Log4JdbcOperation {
 
 	    final ResultSet resultSet = (ResultSet) invoke;
 
-	    if (query == null) {
-		query = context.getQuery();
+	    QueryImpl queryRS = query;
+	    if (queryRS == null) {
+		queryRS = context.getQuery();
 	    }
 
-	    final ResultSetCollectorImpl resultSetCollector = query.createResultSetCollector(connectionContext);
+	    final ResultSetCollectorImpl resultSetCollector = queryRS.createResultSetCollector(connectionContext);
 
 	    resultSetCollector.setRs(resultSet);
 	}
@@ -186,11 +187,16 @@ public class StatementOperation implements Log4JdbcOperation {
 
 		final ResultSet resultSet = (ResultSet) invoke;
 
-		if (query == null) {
-		    query = queryFactory.newQuery(connectionContext, null);
+		QueryImpl queryRS = query;
+		if (queryRS == null) {
+		    queryRS = context.getQuery();
 		}
 
-		invoke = Log4JdbcProxy.proxyResultSet(resultSet, connectionContext, query);
+		if (queryRS == null) {
+		    queryRS = queryFactory.newQuery(connectionContext, null);
+		}
+
+		invoke = Log4JdbcProxy.proxyResultSet(resultSet, connectionContext, queryRS);
 	    }
 	}
 	return invoke;
