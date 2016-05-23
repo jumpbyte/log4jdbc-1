@@ -90,7 +90,19 @@ public class ConnectionMessage extends AbstractMessage {
 			commit = commit + 1;
 		    }
 
-		    queries.append(q.getQueryNumber() + ". " + q.getState() + " : " + q.getSQLQuery());
+		    queries.append(q.getQueryNumber());
+		    queries.append(". ");
+
+		    queries.append(q.getState());
+		    queries.append(" : ");
+
+		    queries.append(q.getSQLQuery());
+		    queries.append("  ");
+
+		    queries.append("{executed in ");
+		    queries.append(q.getExecTime());
+		    queries.append(" ms} ");
+
 		    queries.append(nl);
 		}
 
