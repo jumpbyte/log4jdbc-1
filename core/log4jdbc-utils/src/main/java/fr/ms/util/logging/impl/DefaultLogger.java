@@ -17,6 +17,8 @@
  */
 package fr.ms.util.logging.impl;
 
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.Date;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
@@ -122,5 +124,14 @@ public class DefaultLogger implements Logger {
 	newMessage.append(message);
 
 	return newMessage.toString();
+    }
+
+    public PrintWriter getPrintWriter() {
+	final Writer writerLogger = new WriterLogger(this);
+	return new PrintWriter(writerLogger);
+    }
+
+    public String toString() {
+	return "DefaultLogger [name=" + name + ", level=" + level + "]";
     }
 }

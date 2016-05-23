@@ -17,7 +17,6 @@
  */
 package fr.ms.log4jdbc;
 
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
@@ -56,7 +55,7 @@ public class Driver implements java.sql.Driver {
 
     static {
 	if (LOG.isInfoEnabled()) {
-	    driverManager.setLogWriter(new PrintWriter(System.out));
+	    driverManager.setLogWriter(LOG.getPrintWriter());
 	}
 	loadAdditionalDrivers();
 	loadDrivers();

@@ -17,6 +17,8 @@
  */
 package fr.ms.util.logging;
 
+import java.io.PrintWriter;
+
 /**
  *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
@@ -38,4 +40,6 @@ public interface Logger {
     void info(String message);
 
     void error(String message);
+
+    PrintWriter getPrintWriter();
 }
