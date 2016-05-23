@@ -54,9 +54,7 @@ public class Driver implements java.sql.Driver {
     private java.sql.Driver driver;
 
     static {
-	if (LOG.isInfoEnabled()) {
-	    driverManager.setLogWriter(LOG.getPrintWriter());
-	}
+	driverManager.setLogWriter(LOG.getPrintWriter());
 	loadAdditionalDrivers();
 	loadDrivers();
     }
