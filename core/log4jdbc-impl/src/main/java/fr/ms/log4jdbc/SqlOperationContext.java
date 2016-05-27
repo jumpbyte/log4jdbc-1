@@ -17,8 +17,11 @@
  */
 package fr.ms.log4jdbc;
 
+import java.util.List;
+
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.lang.ref.ReferenceObject;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.context.Transaction;
@@ -43,6 +46,8 @@ public class SqlOperationContext extends SqlOperationDefault implements SqlOpera
     private final long openConnection;
 
     private QueryImpl query;
+
+    private ReferenceObject refQueriesBatch;
 
     private TransactionContextJDBC transaction;
 
@@ -77,6 +82,13 @@ public class SqlOperationContext extends SqlOperationDefault implements SqlOpera
 	}
     }
 
+    public SqlOperationContext(final TimeInvocation timeInvocation, final ConnectionContextJDBC connectionContext, final QueryImpl query,
+	    final ReferenceObject refQueriesBatch) {
+	this(timeInvocation, connectionContext, query);
+
+	this.refQueriesBatch = refQueriesBatch;
+    }
+
     public long getConnectionNumber() {
 	return connectionContext.getConnectionNumber();
     }
@@ -99,6 +111,17 @@ public class SqlOperationContext extends SqlOperationDefault implements SqlOpera
 
     public Query getQuery() {
 	return query;
+    }
+
+    public Query[] getQueriesBatch() {
+	if (refQueriesBatch == null) {
+	    return null;
+	}
+	final List queriesBatch = (List) refQueriesBatch.get();
+	if (queriesBatch == null) {
+	    return null;
+	}
+	return (Query[]) queriesBatch.toArray(new Query[queriesBatch.size()]);
     }
 
     public void setQuery(final QueryImpl query) {

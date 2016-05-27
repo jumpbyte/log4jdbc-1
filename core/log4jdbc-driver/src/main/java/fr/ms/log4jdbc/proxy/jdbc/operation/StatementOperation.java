@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import fr.ms.lang.ref.ReferenceObject;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationContext;
@@ -58,6 +59,8 @@ public class StatementOperation implements Log4JdbcOperation {
 
     protected QueryImpl query;
 
+    private ReferenceObject refQueriesBatch;
+
     public StatementOperation(final QueryFactory queryFactory, final StatementOperationFactory context, final Statement statement,
 	    final ConnectionContextJDBC connectionContext, final TimeInvocation timeInvocation, final Method method, final Object[] args) {
 	this.connectionContext = connectionContext;
@@ -77,7 +80,7 @@ public class StatementOperation implements Log4JdbcOperation {
 	if (nameMethod.equals("addBatch") && args != null && args.length >= 1) {
 	    final String sql = (String) args[0];
 	    addBatch(sql);
-	} else if (nameMethod.equals("executeBatch") && args == null && invoke != null) {
+	} else if (nameMethod.startsWith("execute") && nameMethod.endsWith("Batch") && args == null && invoke != null) {
 	    executeBatch(invoke);
 	} else if (nameMethod.startsWith("execute") && args != null && args.length >= 1) {
 	    final String sql = (String) args[0];
@@ -110,7 +113,7 @@ public class StatementOperation implements Log4JdbcOperation {
 	    resultSetCollector.setRs(resultSet);
 	}
 
-	final SqlOperationContext sqlOperationContext = new SqlOperationContext(timeInvocation, connectionContext, query);
+	final SqlOperationContext sqlOperationContext = new SqlOperationContext(timeInvocation, connectionContext, query, refQueriesBatch);
 	return sqlOperationContext;
     }
 
@@ -136,6 +139,7 @@ public class StatementOperation implements Log4JdbcOperation {
 	final TransactionContextJDBC transactionContext = connectionContext.getTransactionContext();
 	if (transactionContext != null) {
 	    transactionContext.executeBatch(updateCounts);
+	    refQueriesBatch = transactionContext.getRefQueries();
 	}
     }
 

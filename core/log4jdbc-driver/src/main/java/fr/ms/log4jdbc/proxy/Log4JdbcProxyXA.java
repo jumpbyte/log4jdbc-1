@@ -36,7 +36,7 @@ import fr.ms.log4jdbc.utils.ServicesJDBC;
  * @author Marco Semiao
  *
  */
-public class Log4JdbcProxyXA {
+public final class Log4JdbcProxyXA {
     public static XAResource proxyXAResource(final XAResource xaResource, final Log4JdbcContextXA log4JdbcContext) {
 	final SqlOperationLogger[] logs = ServicesJDBC.getMessageLogger(SqlOperationLogger.XA_RESOURCE);
 

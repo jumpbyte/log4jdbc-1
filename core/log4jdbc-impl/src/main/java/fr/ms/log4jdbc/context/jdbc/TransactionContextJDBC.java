@@ -45,6 +45,8 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
 
     private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean Queries Transaction";
 
+    private TransactionContextJDBC clone;
+
     private ReferenceObject refQueries = ReferenceFactory.newReference(REF_MESSAGE_FULL, CollectionsUtil.synchronizedList(new ArrayList()));
 
     public QueryImpl addQuery(final QueryImpl query) {
@@ -166,6 +168,10 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
 	return (Query[]) queriesTransaction.toArray(new Query[queriesTransaction.size()]);
     }
 
+    public ReferenceObject getRefQueries() {
+	return refQueries;
+    }
+
     public String getTransactionType() {
 	return "JDBC";
     }
@@ -193,12 +199,17 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
 	final List queriesTransaction = (List) refQueries.get();
 	final List queriesTransactionObject = (List) other.refQueries.get();
 
-	if (queriesTransaction == null) {
-	    if (queriesTransactionObject != null) {
+	if (queriesTransaction == null && queriesTransactionObject != null) {
+	    return false;
+	}
+	if (queriesTransaction != null && queriesTransactionObject == null) {
+	    return false;
+	}
+
+	if (queriesTransaction != null && queriesTransactionObject != null) {
+	    if (queriesTransaction.size() != queriesTransactionObject.size()) {
 		return false;
 	    }
-	} else if (queriesTransaction.size() != queriesTransactionObject.size()) {
-	    return false;
 	}
 
 	if (getTransactionState() == null) {
@@ -213,8 +224,6 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
 	}
 	return true;
     }
-
-    private TransactionContextJDBC clone;
 
     public Object clone() throws CloneNotSupportedException {
 	if (!this.equals(clone)) {

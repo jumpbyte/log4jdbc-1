@@ -49,5 +49,7 @@ public interface SqlOperation {
 
     Query getQuery();
 
+    Query[] getQueriesBatch();
+
     Transaction getTransaction();
 }

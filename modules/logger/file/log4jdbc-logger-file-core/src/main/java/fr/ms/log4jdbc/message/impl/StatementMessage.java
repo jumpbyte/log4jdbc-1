@@ -41,7 +41,8 @@ public class StatementMessage extends AbstractMessage {
 
     private final MessageProcess generic = new GenericMessage();
 
-    public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
+    public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args, final Object invoke,
+	    final Throwable exception) {
 
 	boolean onlyRequest = false;
 	final boolean allMethod = props.logGenericMessage();
@@ -52,8 +53,8 @@ public class StatementMessage extends AbstractMessage {
 	    final Query query = message.getQuery();
 
 	    final String methodQuery = query.getMethodQuery();
-	    onlyRequest = (((Query.METHOD_EXECUTE.equals(methodQuery) && props.logRequeteExecuteSQL()) || (Query.METHOD_BATCH.equals(methodQuery) && props
-		    .logRequeteBatchSQL())) && logRequest(query));
+	    onlyRequest = (((Query.METHOD_EXECUTE.equals(methodQuery) && props.logRequeteExecuteSQL())
+		    || (Query.METHOD_BATCH.equals(methodQuery) && props.logRequeteBatchSQL())) && logRequest(query));
 	}
 	if (onlyRequest || allMethod || exceptionMethod) {
 	    final MessageWriter newMessageWriter = super.newMessageWriter(message, method, args, invoke, exception);

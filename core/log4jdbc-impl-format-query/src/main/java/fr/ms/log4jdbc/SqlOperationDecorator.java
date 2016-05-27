@@ -17,7 +17,9 @@
  */
 package fr.ms.log4jdbc;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.StringMakerFactory;
@@ -57,6 +59,24 @@ public class SqlOperationDecorator implements SqlOperation {
 	    return null;
 	}
 	return new QueryDecorator(query, sqlOperation.getRdbms(), formatQuery);
+    }
+
+    public Query[] getQueriesBatch() {
+	final Query[] queriesBatch = sqlOperation.getQueriesBatch();
+	if (queriesBatch == null) {
+	    return null;
+	}
+
+	final List queriesDecorator = new ArrayList(queriesBatch.length);
+
+	for (int i = 0; i < queriesBatch.length; i++) {
+	    final Query query = queriesBatch[i];
+	    final Query queryDecorator = new QueryDecorator(query, sqlOperation.getRdbms(), formatQuery);
+
+	    queriesDecorator.add(queryDecorator);
+	}
+
+	return (Query[]) queriesDecorator.toArray(new Query[queriesDecorator.size()]);
     }
 
     public Transaction getTransaction() {

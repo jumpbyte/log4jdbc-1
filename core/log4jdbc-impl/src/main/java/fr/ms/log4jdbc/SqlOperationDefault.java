@@ -72,6 +72,10 @@ public class SqlOperationDefault implements SqlOperation {
 	return null;
     }
 
+    public Query[] getQueriesBatch() {
+	return null;
+    }
+
     public Transaction getTransaction() {
 	return null;
     }
