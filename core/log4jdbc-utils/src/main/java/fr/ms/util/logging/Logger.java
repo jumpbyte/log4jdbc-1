@@ -33,11 +33,15 @@ public interface Logger {
 
     boolean isInfoEnabled();
 
+    boolean isWarnEnabled();
+
     boolean isErrorEnabled();
 
     void debug(String message);
 
     void info(String message);
+
+    void warn(String message);
 
     void error(String message);
 

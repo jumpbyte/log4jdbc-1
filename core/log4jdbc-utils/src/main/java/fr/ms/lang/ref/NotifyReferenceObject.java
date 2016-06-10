@@ -55,8 +55,8 @@ public class NotifyReferenceObject implements ReferenceObject {
     public Object get() {
 	final Object obj = reference.get();
 
-	if (obj == null && LOG.isInfoEnabled()) {
-	    LOG.info(message);
+	if (obj == null && LOG.isWarnEnabled()) {
+	    LOG.warn(message);
 	}
 	return obj;
     }

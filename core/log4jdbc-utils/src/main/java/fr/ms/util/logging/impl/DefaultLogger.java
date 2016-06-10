@@ -48,6 +48,8 @@ public class DefaultLogger implements Logger {
 
     private boolean info;
 
+    private boolean warn;
+
     private boolean error;
 
     public DefaultLogger(final PrintHandler printHandler, final String level, final String name) {
@@ -61,6 +63,9 @@ public class DefaultLogger implements Logger {
 		error = true;
 	    } else if (level.equals("info")) {
 		info = true;
+		error = true;
+	    } else if (level.equals("warn")) {
+		warn = true;
 		error = true;
 	    } else if (level.equals("error")) {
 		error = true;
@@ -80,6 +85,10 @@ public class DefaultLogger implements Logger {
 	return info;
     }
 
+    public boolean isWarnEnabled() {
+	return warn;
+    }
+
     public boolean isErrorEnabled() {
 	return error;
     }
@@ -95,6 +104,13 @@ public class DefaultLogger implements Logger {
 	if (isInfoEnabled()) {
 	    final String formatMessage = formatMessage(message);
 	    printHandler.info(formatMessage);
+	}
+    }
+
+    public void warn(final String message) {
+	if (isWarnEnabled()) {
+	    final String formatMessage = formatMessage(message);
+	    printHandler.warn(formatMessage);
 	}
     }
 
