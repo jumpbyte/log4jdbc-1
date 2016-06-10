@@ -45,7 +45,7 @@ public class ResultSetLogger extends AbstractLogger implements SqlOperationLogge
     }
 
     public boolean isEnabled() {
-	return props.logEnabled() && (props.logRequeteSelectSQL() || props.logGenericMessage());
+	return props.logEnabled() && (props.logRequeteSelectSQL() && props.logRequeteSelectResultSetSQL() || props.logGenericMessage());
     }
 
     public void buildLog(final SqlOperation message, final Method method, final Object[] args, final Object invoke) {
