@@ -68,6 +68,8 @@ public class PreparedStatementOperation extends StatementOperation {
 	query.setMethodQuery(Query.METHOD_BATCH);
 	query.setState(Query.STATE_NOT_EXECUTE);
 
+	context.addQueryBatch(query);
+
 	connectionContext.addQuery(query);
 
 	context.createNewQuery();
