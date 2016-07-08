@@ -45,8 +45,6 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
 
     private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean Queries Transaction";
 
-    private TransactionContextJDBC clone;
-
     private ReferenceObject refQueries = ReferenceFactory.newReference(REF_MESSAGE_FULL, CollectionsUtil.synchronizedList(new ArrayList()));
 
     public QueryImpl addQuery(final QueryImpl query) {
@@ -104,7 +102,7 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
 
     public void executeBatch(final int[] updateCounts) {
 	final List queriesTransaction = (List) refQueries.get();
-	if (queriesTransaction == null) {
+	if (queriesTransaction == null && updateCounts == null) {
 	    return;
 	}
 
@@ -116,6 +114,7 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
 	    compteur = 0;
 	}
 
+	final List queriesBatch = new ArrayList();
 	if (queriesTransaction.size() > 0) {
 	    for (int i = 0; i < queriesTransaction.size(); i++) {
 		final QueryImpl q = (QueryImpl) queriesTransaction.get(i);
@@ -124,8 +123,8 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
 		    q.setState(Query.STATE_EXECUTE);
 
 		    if (compteur <= updateCountsSize) {
-
 			q.setUpdateCount(Integer.valueOf(updateCounts[compteur]));
+			queriesBatch.add(q);
 			compteur++;
 		    }
 		}
@@ -225,8 +224,12 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
 	return true;
     }
 
+    private TransactionContextJDBC clone;
+
     public Object clone() throws CloneNotSupportedException {
 	if (!this.equals(clone)) {
+
+	    clone = null;
 	    clone = (TransactionContextJDBC) super.clone();
 
 	    final List queriesTransaction = (List) clone.refQueries.get();
