@@ -37,87 +37,83 @@ import fr.ms.util.CollectionsUtil;
  */
 public class QuerySQL {
 
-    private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
-    private final RdbmsSpecifics rdbms;
+	private final RdbmsSpecifics rdbms;
 
-    private final String jdbcQuery;
+	private final String jdbcQuery;
 
-    private final Map params = CollectionsUtil.synchronizedMap(new HashMap());
+	private final Map params = CollectionsUtil.synchronizedMap(new HashMap());
 
-    private boolean sqlUpdate;
+	private boolean sqlUpdate;
 
-    private String sql;
+	private String typeQuery;
 
-    private String typeQuery;
-
-    QuerySQL(final RdbmsSpecifics rdbms, final String jdbcQuery) {
-	this.rdbms = rdbms;
-	this.jdbcQuery = jdbcQuery;
-    }
-
-    public Object putParams(final Object key, final Object value) {
-	sqlUpdate = false;
-	return params.put(key, value);
-    }
-
-    public String getJDBCQuery() {
-	return jdbcQuery;
-    }
-
-    public Map getJDBCParameters() {
-	return params;
-    }
-
-    public String getTypeQuery() {
-	if (typeQuery == null) {
-	    typeQuery = rdbms.getTypeQuery(getSQLQuery());
-	}
-	return typeQuery;
-    }
-
-    public String getSQLQuery() {
-	if (!sqlUpdate) {
-	    sql = addQueryParameters(jdbcQuery);
-	    sqlUpdate = true;
+	QuerySQL(final RdbmsSpecifics rdbms, final String jdbcQuery) {
+		this.rdbms = rdbms;
+		this.jdbcQuery = jdbcQuery.intern();
 	}
 
-	return sql;
-    }
-
-    protected String addQueryParameters(String sql) {
-	sql = sql.trim();
-
-	if (params == null || params.isEmpty()) {
-	    return sql;
+	public Object putParams(final Object key, final Object value) {
+		sqlUpdate = false;
+		return params.put(key, value);
 	}
 
-	final StringMaker query = stringFactory.newString();
-	int index = 1;
-	int lastPos = 0;
-	int position = sql.indexOf('?', lastPos);
-
-	while (position != -1) {
-	    query.append(sql.substring(lastPos, position));
-	    final Integer indexCast = new Integer(index);
-	    final Object param = params.get(indexCast);
-	    final DataRdbms data = rdbms.getData(param);
-	    final String paramFormat = data.getParameter();
-	    query.append(paramFormat);
-
-	    lastPos = position + 1;
-	    position = sql.indexOf('?', lastPos);
-	    index++;
+	public String getJDBCQuery() {
+		return jdbcQuery;
 	}
 
-	if (lastPos < sql.length()) {
-	    query.append(sql.substring(lastPos, sql.length()));
+	public Map getJDBCParameters() {
+		return params;
 	}
 
-	return query.toString();
-    }
+	public String getTypeQuery() {
+		if (typeQuery == null) {
+			typeQuery = rdbms.getTypeQuery(getSQLQuery());
+			typeQuery = typeQuery.intern();
+		}
+		return typeQuery;
+	}
 
-    public String toString() {
-	return "QuerySQL [sql=" + getSQLQuery() + "]";
-    }
+	public String getSQLQuery() {
+		String sql = addQueryParameters(jdbcQuery);
+
+		return sql;
+	}
+
+	protected String addQueryParameters(String sql) {
+		sql = sql.trim();
+
+		if (params == null || params.isEmpty()) {
+			return sql;
+		}
+
+		final StringMaker query = stringFactory.newString();
+		int index = 1;
+		int lastPos = 0;
+		int position = sql.indexOf('?', lastPos);
+
+		while (position != -1) {
+			query.append(sql.substring(lastPos, position));
+			final Integer indexCast = new Integer(index);
+			final Object param = params.get(indexCast);
+			final DataRdbms data = rdbms.getData(param);
+			final String paramFormat = data.getParameter();
+			query.append(paramFormat);
+
+			lastPos = position + 1;
+			position = sql.indexOf('?', lastPos);
+			index++;
+		}
+
+		if (lastPos < sql.length()) {
+			query.append(sql.substring(lastPos, sql.length()));
+		}
+
+		return query.toString();
+	}
+
+	public String toString() {
+		return "QuerySQL [sql=" + getSQLQuery() + "]";
+	}
 }
