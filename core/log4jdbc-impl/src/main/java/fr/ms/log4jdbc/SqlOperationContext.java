@@ -21,7 +21,6 @@ import java.util.List;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.StringMakerFactory;
-import fr.ms.lang.ref.ReferenceObject;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.context.Transaction;
@@ -47,7 +46,7 @@ public class SqlOperationContext extends SqlOperationDefault implements SqlOpera
 
     private QueryImpl query;
 
-    private ReferenceObject refQueriesBatch;
+    private QueryImpl[] queriesBatch;
 
     private TransactionContextJDBC transaction;
 
@@ -83,10 +82,20 @@ public class SqlOperationContext extends SqlOperationDefault implements SqlOpera
     }
 
     public SqlOperationContext(final TimeInvocation timeInvocation, final ConnectionContextJDBC connectionContext, final QueryImpl query,
-	    final ReferenceObject refQueriesBatch) {
+	    final List queriesBatch) {
 	this(timeInvocation, connectionContext, query);
 
-	this.refQueriesBatch = refQueriesBatch;
+	if (queriesBatch != null && !queriesBatch.isEmpty()) {
+	    try {
+		this.queriesBatch = new QueryImpl[queriesBatch.size()];
+		for (int i = 0; i < queriesBatch.size(); i++) {
+		    this.queriesBatch[i] = (QueryImpl) ((QueryImpl) queriesBatch.get(i)).clone();
+		}
+	    } catch (final CloneNotSupportedException e) {
+		e.printStackTrace();
+	    }
+	}
+
     }
 
     public long getConnectionNumber() {
@@ -114,14 +123,7 @@ public class SqlOperationContext extends SqlOperationDefault implements SqlOpera
     }
 
     public Query[] getQueriesBatch() {
-	if (refQueriesBatch == null) {
-	    return null;
-	}
-	final List queriesBatch = (List) refQueriesBatch.get();
-	if (queriesBatch == null) {
-	    return null;
-	}
-	return (Query[]) queriesBatch.toArray(new Query[queriesBatch.size()]);
+	return queriesBatch;
     }
 
     public void setQuery(final QueryImpl query) {
