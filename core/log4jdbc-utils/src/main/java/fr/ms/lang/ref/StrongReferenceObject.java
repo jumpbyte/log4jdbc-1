@@ -25,12 +25,12 @@ package fr.ms.lang.ref;
  * @author Marco Semiao
  *
  */
-class StrongReferenceObject implements ReferenceObject {
+public class StrongReferenceObject implements ReferenceObject {
 
-    private final Object obj;
+    private final Object referent;
 
-    StrongReferenceObject(final Object obj) {
-	this.obj = obj;
+    public StrongReferenceObject(final Object referent) {
+	this.referent = referent;
     }
 
     public void clear() {
@@ -42,7 +42,7 @@ class StrongReferenceObject implements ReferenceObject {
     }
 
     public Object get() {
-	return obj;
+	return referent;
     }
 
     public boolean isEnqueued() {
@@ -50,6 +50,6 @@ class StrongReferenceObject implements ReferenceObject {
     }
 
     public String toString() {
-	return obj.toString();
+	return referent.toString();
     }
 }
