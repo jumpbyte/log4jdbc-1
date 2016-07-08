@@ -187,10 +187,11 @@ public class QueryImpl implements Query, Cloneable {
 	return savePoint;
     }
 
-    QueryImpl clone;
+    private QueryImpl clone;
 
     public Object clone() throws CloneNotSupportedException {
 	if (!this.equals(clone)) {
+	    clone = null;
 	    clone = (QueryImpl) super.clone();
 	}
 
