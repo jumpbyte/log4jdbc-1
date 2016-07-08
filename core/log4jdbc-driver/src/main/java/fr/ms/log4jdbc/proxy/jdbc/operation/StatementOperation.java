@@ -21,8 +21,8 @@ import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
-import fr.ms.lang.ref.ReferenceObject;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationContext;
@@ -59,8 +59,6 @@ public class StatementOperation implements Log4JdbcOperation {
 
     protected QueryImpl query;
 
-    private ReferenceObject refQueriesBatch;
-
     public StatementOperation(final QueryFactory queryFactory, final StatementOperationFactory context, final Statement statement,
 	    final ConnectionContextJDBC connectionContext, final TimeInvocation timeInvocation, final Method method, final Object[] args) {
 	this.connectionContext = connectionContext;
@@ -77,11 +75,12 @@ public class StatementOperation implements Log4JdbcOperation {
 	final String nameMethod = method.getName();
 	final Object invoke = timeInvocation.getInvoke();
 
+	List queriesBatch = null;
 	if (nameMethod.equals("addBatch") && args != null && args.length >= 1) {
 	    final String sql = (String) args[0];
 	    addBatch(sql);
-	} else if (nameMethod.startsWith("execute") && nameMethod.endsWith("Batch") && args == null && invoke != null) {
-	    executeBatch(invoke);
+	} else if (nameMethod.startsWith("execute") && nameMethod.endsWith("Batch") && args == null) {
+	    queriesBatch = executeBatch(invoke);
 	} else if (nameMethod.startsWith("execute") && args != null && args.length >= 1) {
 	    final String sql = (String) args[0];
 	    execute(sql);
@@ -113,7 +112,7 @@ public class StatementOperation implements Log4JdbcOperation {
 	    resultSetCollector.setRs(resultSet);
 	}
 
-	final SqlOperationContext sqlOperationContext = new SqlOperationContext(timeInvocation, connectionContext, query, refQueriesBatch);
+	final SqlOperationContext sqlOperationContext = new SqlOperationContext(timeInvocation, connectionContext, query, queriesBatch);
 	return sqlOperationContext;
     }
 
@@ -123,10 +122,11 @@ public class StatementOperation implements Log4JdbcOperation {
 	query.setMethodQuery(Query.METHOD_BATCH);
 	query.setState(Query.STATE_NOT_EXECUTE);
 
+	context.addQueryBatch(query);
 	connectionContext.addQuery(query);
     }
 
-    private void executeBatch(final Object invoke) {
+    private List executeBatch(final Object invoke) {
 	int[] updateCounts = null;
 
 	final Class returnType = method.getReturnType();
@@ -134,13 +134,15 @@ public class StatementOperation implements Log4JdbcOperation {
 	    if (int[].class.equals(returnType)) {
 		updateCounts = (int[]) invoke;
 	    }
+
+	    final TransactionContextJDBC transactionContext = connectionContext.getTransactionContext();
+	    if (transactionContext != null) {
+		transactionContext.executeBatch(updateCounts);
+	    }
 	}
 
-	final TransactionContextJDBC transactionContext = connectionContext.getTransactionContext();
-	if (transactionContext != null) {
-	    transactionContext.executeBatch(updateCounts);
-	    refQueriesBatch = transactionContext.getRefQueries();
-	}
+	final List queriesBatch = context.executeBatch();
+	return queriesBatch;
     }
 
     private void execute(final String sql) {
