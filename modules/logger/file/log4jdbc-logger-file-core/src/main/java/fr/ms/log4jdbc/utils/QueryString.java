@@ -35,58 +35,58 @@ import fr.ms.log4jdbc.sql.Query;
  */
 public final class QueryString {
 
-    private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
-    private final static String nl = System.getProperty("line.separator");
+	private final static String nl = System.getProperty("line.separator");
 
-    public final static String buildMessageQuery(final Query query) {
-	return buildMessageQuery(query, null);
-    }
-
-    public final static String buildMessageQuery(final Query query, final Long resultSetExecTime) {
-	final StringMaker sb = stringFactory.newString();
-
-	sb.append("Query Number : " + query.getQueryNumber() + " - State : " + query.getState());
-
-	final Integer updateCount = query.getUpdateCount();
-	if (updateCount != null) {
-	    sb.append(" - Update Count : " + updateCount);
+	public final static String buildMessageQuery(final Query query) {
+		return buildMessageQuery(query, null);
 	}
 
-	if (resultSetExecTime != null) {
-	    final ResultSetCollector resultSetCollector = query.getResultSetCollector();
-	    if (resultSetCollector != null && resultSetCollector.isClosed()) {
-		final Row[] rows = resultSetCollector.getRows();
-		if (rows != null) {
-		    sb.append(" - Result Count : ");
-		    sb.append(rows.length);
-		    sb.append(" - ResultSet Exec Time : ");
-		    sb.append(resultSetExecTime);
-		    sb.append(" ms");
+	public final static String buildMessageQuery(final Query query, final Long resultSetExecTime) {
+		final StringMaker sb = stringFactory.newString();
+
+		sb.append("Query Number : " + query.getQueryNumber() + " - State : " + query.getState());
+
+		final Integer updateCount = query.getUpdateCount();
+		if (updateCount != null) {
+			sb.append(" - Update Count : " + updateCount);
 		}
-	    }
+
+		if (resultSetExecTime != null) {
+			final ResultSetCollector resultSetCollector = query.getResultSetCollector();
+			if (resultSetCollector != null && resultSetCollector.isClosed()) {
+				final Row[] rows = resultSetCollector.getRows();
+				if (rows != null) {
+					sb.append(" - Result Count : ");
+					sb.append(rows.length);
+					sb.append(" - ResultSet Exec Time : ");
+					sb.append(resultSetExecTime);
+					sb.append(" ms");
+				}
+			}
+		}
+
+		sb.append(nl);
+
+		final Transaction transaction = query.getTransaction();
+		if (transaction != null) {
+			sb.append("Transaction Number : " + transaction.getTransactionNumber());
+			sb.append(" - Type : " + transaction.getTransactionType());
+			sb.append(" - State : " + transaction.getTransactionState());
+			sb.append(nl);
+		}
+
+		final String sql = query.getSQLQuery();
+
+		if (sql != null) {
+			sb.append(nl);
+
+			sb.append(sql);
+
+			sb.append(nl);
+		}
+
+		return sb.toString();
 	}
-
-	sb.append(nl);
-
-	final Transaction transaction = query.getTransaction();
-	if (transaction != null) {
-	    sb.append("Transaction Number : " + transaction.getTransactionNumber());
-	    sb.append(" - Type : " + transaction.getTransactionType());
-	    sb.append(" - State : " + transaction.getTransactionState());
-	    sb.append(nl);
-	}
-
-	final String sql = query.getSQLQuery();
-
-	if (sql != null) {
-	    sb.append(nl);
-
-	    sb.append(sql);
-
-	    sb.append(nl);
-	}
-
-	return sb.toString();
-    }
 }

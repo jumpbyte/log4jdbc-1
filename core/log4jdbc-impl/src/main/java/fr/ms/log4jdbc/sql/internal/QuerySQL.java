@@ -17,6 +17,8 @@
  */
 package fr.ms.log4jdbc.sql.internal;
 
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +47,7 @@ public class QuerySQL {
 
 	private final Map params = CollectionsUtil.synchronizedMap(new HashMap());
 
-	private boolean sqlUpdate;
+	private Reference sqlQuery;
 
 	private String typeQuery;
 
@@ -55,7 +57,7 @@ public class QuerySQL {
 	}
 
 	public Object putParams(final Object key, final Object value) {
-		sqlUpdate = false;
+		sqlQuery = null;
 		return params.put(key, value);
 	}
 
@@ -70,13 +72,22 @@ public class QuerySQL {
 	public String getTypeQuery() {
 		if (typeQuery == null) {
 			typeQuery = rdbms.getTypeQuery(getSQLQuery());
-			typeQuery = typeQuery.intern();
 		}
 		return typeQuery;
 	}
 
 	public String getSQLQuery() {
-		String sql = addQueryParameters(jdbcQuery);
+		String sql = null;
+
+		Reference ref = sqlQuery;
+		if (ref != null) {
+			sql = (String) ref.get();
+		}
+
+		if (sql == null) {
+			sql = addQueryParameters(jdbcQuery);
+			sqlQuery = new WeakReference(sql);
+		}
 
 		return sql;
 	}
@@ -91,10 +102,17 @@ public class QuerySQL {
 		final StringMaker query = stringFactory.newString();
 		int index = 1;
 		int lastPos = 0;
-		int position = sql.indexOf('?', lastPos);
+
+		int positionParam = rdbms.beginQuery(sql, lastPos);
+		if (positionParam == -1) {
+			positionParam = lastPos;
+		}
+		int position = sql.indexOf('?', positionParam);
 
 		while (position != -1) {
-			query.append(sql.substring(lastPos, position));
+			String partQuery = sql.substring(lastPos, position);
+			query.append(partQuery);
+
 			final Integer indexCast = new Integer(index);
 			final Object param = params.get(indexCast);
 			final DataRdbms data = rdbms.getData(param);
@@ -102,7 +120,12 @@ public class QuerySQL {
 			query.append(paramFormat);
 
 			lastPos = position + 1;
-			position = sql.indexOf('?', lastPos);
+			positionParam = rdbms.beginQuery(sql, lastPos);
+			if (positionParam == -1) {
+				positionParam = lastPos;
+			}
+			position = sql.indexOf('?', positionParam);
+
 			index++;
 		}
 

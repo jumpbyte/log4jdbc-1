@@ -34,41 +34,45 @@ import fr.ms.lang.StringUtils;
  */
 public class OracleRdbmsSpecifics implements RdbmsSpecifics {
 
-    private final RdbmsSpecifics genericRdbms = GenericRdbmsSpecifics.getInstance();
+	private final RdbmsSpecifics genericRdbms = GenericRdbmsSpecifics.getInstance();
 
-    private final static String TIMESTAMP_PATTERN = "MM/dd/yyyy HH:mm:ss.SSS";
+	private final static String TIMESTAMP_PATTERN = "MM/dd/yyyy HH:mm:ss.SSS";
 
-    private final static String DATE_PATTERN = "MM/dd/yyyy HH:mm:ss";
+	private final static String DATE_PATTERN = "MM/dd/yyyy HH:mm:ss";
 
-    public boolean isRdbms(final String classType) {
-	return classType.startsWith("oracle.jdbc");
-    }
-
-    public DataRdbms getData(final Object object) {
-	if (object instanceof Timestamp) {
-	    final DateFormat df = new SimpleDateFormat(TIMESTAMP_PATTERN);
-	    final String dateString = df.format(object);
-	    return new GenericDataRdbms("to_timestamp('", dateString, "', 'mm/dd/yyyy hh24:mi:ss.ff3')");
+	public boolean isRdbms(final String classType) {
+		return classType.startsWith("oracle.jdbc");
 	}
 
-	if (object instanceof Date) {
-	    final DateFormat df = new SimpleDateFormat(DATE_PATTERN);
-	    final String dateString = df.format(object);
-	    return new GenericDataRdbms("to_date('", dateString, "', 'mm/dd/yyyy hh24:mi:ss')");
+	public DataRdbms getData(final Object object) {
+		if (object instanceof Timestamp) {
+			final DateFormat df = new SimpleDateFormat(TIMESTAMP_PATTERN);
+			final String dateString = df.format(object);
+			return new GenericDataRdbms("to_timestamp('", dateString, "', 'mm/dd/yyyy hh24:mi:ss.ff3')");
+		}
+
+		if (object instanceof Date) {
+			final DateFormat df = new SimpleDateFormat(DATE_PATTERN);
+			final String dateString = df.format(object);
+			return new GenericDataRdbms("to_date('", dateString, "', 'mm/dd/yyyy hh24:mi:ss')");
+		}
+
+		return genericRdbms.getData(object);
 	}
 
-	return genericRdbms.getData(object);
-    }
+	public String getTypeQuery(final String sql) {
+		return genericRdbms.getTypeQuery(sql);
+	}
 
-    public String getTypeQuery(final String sql) {
-	return genericRdbms.getTypeQuery(sql);
-    }
+	public int beginQuery(String sql, int index) {
+		return genericRdbms.beginQuery(sql, index);
+	}
 
-    public String removeComment(final String sql) {
-	return StringUtils.removePart(sql, "/*", "*/", "/*+");
-    }
+	public String removeComment(final String sql) {
+		return StringUtils.removePart(sql, "/*", "*/", "/*+");
+	}
 
-    public boolean isCaseSensitive() {
-	return genericRdbms.isCaseSensitive();
-    }
+	public boolean isCaseSensitive() {
+		return genericRdbms.isCaseSensitive();
+	}
 }
