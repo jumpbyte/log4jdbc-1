@@ -33,23 +33,23 @@ import fr.ms.log4jdbc.sql.Query;
  */
 public interface SqlOperation {
 
-    Date getDate();
+	Date getDate();
 
-    long getExecTime();
+	long getExecTime();
 
-    long getConnectionNumber();
+	long getConnectionNumber();
 
-    long getOpenConnection();
+	long getOpenConnection();
 
-    String getDriverName();
+	String getDriverName();
 
-    String getUrl();
+	String getUrl();
 
-    RdbmsSpecifics getRdbms();
+	RdbmsSpecifics getRdbms();
 
-    Query getQuery();
+	Query getQuery();
 
-    Query[] getQueriesBatch();
+	Query[] getQueriesBatch();
 
-    Transaction getTransaction();
+	Transaction getTransaction();
 }
