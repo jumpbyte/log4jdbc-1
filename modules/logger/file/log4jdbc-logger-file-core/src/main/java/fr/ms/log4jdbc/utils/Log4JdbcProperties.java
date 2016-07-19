@@ -109,7 +109,7 @@ public class Log4JdbcProperties implements Runnable {
 	}
 
 	public boolean logRequeteCommentSQL() {
-		return getProperty("log4jdbc.request.sql.comment", true);
+		return getProperty("log4jdbc.request.sql.comment", false);
 	}
 
 	public boolean logRequeteSemiColonAddSQL() {
