@@ -129,7 +129,7 @@ public final class StringUtils {
 
 		final String replace = e1 + e2;
 
-		final String formatSql = removePart(replace, start, end, exception, first);
+		String formatSql = removePart(replace, start, end, exception, first);
 
 		return formatSql;
 	}
