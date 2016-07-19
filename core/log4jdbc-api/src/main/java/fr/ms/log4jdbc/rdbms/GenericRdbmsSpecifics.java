@@ -101,8 +101,14 @@ public class GenericRdbmsSpecifics implements RdbmsSpecifics {
 		return StringUtils.beginPart(sql, "/*", "*/", null, index);
 	}
 
-	public String removeComment(final String sql) {
-		return StringUtils.removePart(sql, "/*", "*/");
+	public String removeComment(String sql) {
+		sql = StringUtils.removePart(sql, "/*", "*/");
+
+		if (sql != null) {
+			sql = sql.trim();
+		}
+
+		return sql;
 	}
 
 	public boolean isCaseSensitive() {
