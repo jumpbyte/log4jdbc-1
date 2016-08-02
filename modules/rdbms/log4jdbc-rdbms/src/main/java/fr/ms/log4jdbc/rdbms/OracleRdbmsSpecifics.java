@@ -68,8 +68,14 @@ public class OracleRdbmsSpecifics implements RdbmsSpecifics {
 		return genericRdbms.beginQuery(sql, index);
 	}
 
-	public String removeComment(final String sql) {
-		return StringUtils.removePart(sql, "/*", "*/", "/*+");
+	public String removeComment(String sql) {
+		sql = StringUtils.removePart(sql, "/*", "*/", "/*+");
+
+		if (sql != null) {
+			sql = sql.trim();
+		}
+
+		return sql;
 	}
 
 	public boolean isCaseSensitive() {

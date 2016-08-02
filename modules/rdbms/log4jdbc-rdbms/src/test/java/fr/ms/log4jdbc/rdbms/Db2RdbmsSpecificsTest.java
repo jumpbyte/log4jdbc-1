@@ -33,140 +33,140 @@ import org.junit.Test;
  */
 public class Db2RdbmsSpecificsTest {
 
-    private final static RdbmsSpecifics instance = new Db2RdbmsSpecifics();
+	private final static RdbmsSpecifics instance = new Db2RdbmsSpecifics();
 
-    @Test
-    public void isRdbmsTest() {
-	boolean rdbms = instance.isRdbms(Object.class.getName());
-	Assert.assertFalse(rdbms);
+	@Test
+	public void isRdbmsTest() {
+		boolean rdbms = instance.isRdbms(Object.class.getName());
+		Assert.assertFalse(rdbms);
 
-	rdbms = instance.isRdbms("com.ibm.db2.Driver");
-	Assert.assertTrue(rdbms);
+		rdbms = instance.isRdbms("com.ibm.db2.Driver");
+		Assert.assertTrue(rdbms);
 
-	rdbms = instance.isRdbms("COM.ibm.db2.Driver");
-	Assert.assertTrue(rdbms);
-    }
+		rdbms = instance.isRdbms("COM.ibm.db2.Driver");
+		Assert.assertTrue(rdbms);
+	}
 
-    @Test
-    public void rdbmsNullObjectTest() {
-	final DataRdbms data = instance.getData(null);
+	@Test
+	public void rdbmsNullObjectTest() {
+		final DataRdbms data = instance.getData(null);
 
-	Assert.assertEquals(data.getValue(), "NULL");
-	Assert.assertEquals(data.getParameter(), "NULL");
-    }
+		Assert.assertEquals(data.getValue(), "NULL");
+		Assert.assertEquals(data.getParameter(), "NULL");
+	}
 
-    @Test
-    public void rdbmsStringTest() {
-	final DataRdbms data = instance.getData("valeur");
+	@Test
+	public void rdbmsStringTest() {
+		final DataRdbms data = instance.getData("valeur");
 
-	Assert.assertEquals(data.getValue(), "valeur");
-	Assert.assertEquals(data.getParameter(), "'valeur'");
-    }
+		Assert.assertEquals(data.getValue(), "valeur");
+		Assert.assertEquals(data.getParameter(), "'valeur'");
+	}
 
-    @Test
-    public void rdbmsStringAvecEspaceTest() {
-	final DataRdbms data = instance.getData("valeur espace");
+	@Test
+	public void rdbmsStringAvecEspaceTest() {
+		final DataRdbms data = instance.getData("valeur espace");
 
-	Assert.assertEquals(data.getValue(), "valeur espace");
-	Assert.assertEquals(data.getParameter(), "'valeur espace'");
-    }
+		Assert.assertEquals(data.getValue(), "valeur espace");
+		Assert.assertEquals(data.getParameter(), "'valeur espace'");
+	}
 
-    @Test
-    public void rdbmsStringAvecEspaceDebutTest() {
-	final DataRdbms data = instance.getData("  valeur espace   ");
+	@Test
+	public void rdbmsStringAvecEspaceDebutTest() {
+		final DataRdbms data = instance.getData("  valeur espace   ");
 
-	Assert.assertEquals(data.getValue(), "  valeur espace   ");
-	Assert.assertEquals(data.getParameter(), "'  valeur espace   '");
-    }
+		Assert.assertEquals(data.getValue(), "  valeur espace   ");
+		Assert.assertEquals(data.getParameter(), "'  valeur espace   '");
+	}
 
-    @Test
-    public void rdbmsTimeStampTest() {
-	final Timestamp timestamp = new Timestamp(1446040543364L);
+	@Test
+	public void rdbmsTimeStampTest() {
+		final Timestamp timestamp = new Timestamp(1446040543364L);
 
-	final DataRdbms data = instance.getData(timestamp);
+		final DataRdbms data = instance.getData(timestamp);
 
-	Assert.assertEquals(data.getValue(), "2015-10-28 14:55:43.364000000");
-	Assert.assertEquals(data.getParameter(), "'2015-10-28 14:55:43.364000000'");
-    }
+		Assert.assertEquals(data.getValue(), "2015-10-28 14:55:43.364000000");
+		Assert.assertEquals(data.getParameter(), "'2015-10-28 14:55:43.364000000'");
+	}
 
-    @Test
-    public void rdbmsDateTest() {
-	final Date date = new Date(1446040543364L);
+	@Test
+	public void rdbmsDateTest() {
+		final Date date = new Date(1446040543364L);
 
-	final DataRdbms data = instance.getData(date);
+		final DataRdbms data = instance.getData(date);
 
-	Assert.assertEquals(data.getValue(), "2015-10-28 14:55:43.364");
-	Assert.assertEquals(data.getParameter(), "'2015-10-28 14:55:43.364'");
-    }
+		Assert.assertEquals(data.getValue(), "2015-10-28 14:55:43.364");
+		Assert.assertEquals(data.getParameter(), "'2015-10-28 14:55:43.364'");
+	}
 
-    @Test
-    public void rdbmsBooleanTest() {
-	final Boolean trueValue = new Boolean(true);
+	@Test
+	public void rdbmsBooleanTest() {
+		final Boolean trueValue = new Boolean(true);
 
-	DataRdbms data = instance.getData(trueValue);
+		DataRdbms data = instance.getData(trueValue);
 
-	Assert.assertEquals(data.getValue(), "1");
-	Assert.assertEquals(data.getParameter(), "'1'");
+		Assert.assertEquals(data.getValue(), "1");
+		Assert.assertEquals(data.getParameter(), "'1'");
 
-	final Boolean falseValue = new Boolean(false);
+		final Boolean falseValue = new Boolean(false);
 
-	data = instance.getData(falseValue);
+		data = instance.getData(falseValue);
 
-	Assert.assertEquals(data.getValue(), "0");
-	Assert.assertEquals(data.getParameter(), "'0'");
-    }
+		Assert.assertEquals(data.getValue(), "0");
+		Assert.assertEquals(data.getParameter(), "'0'");
+	}
 
-    @Test
-    public void queryTypeTest() {
-	String sql = null;
-	String typeQuery = instance.getTypeQuery(sql);
-	Assert.assertNull(typeQuery);
+	@Test
+	public void queryTypeTest() {
+		String sql = null;
+		String typeQuery = instance.getTypeQuery(sql);
+		Assert.assertNull(typeQuery);
 
-	sql = "  ";
-	typeQuery = instance.getTypeQuery(sql);
-	Assert.assertNull(typeQuery);
+		sql = "  ";
+		typeQuery = instance.getTypeQuery(sql);
+		Assert.assertNull(typeQuery);
 
-	sql = "toto";
-	typeQuery = instance.getTypeQuery(sql);
-	Assert.assertNull(typeQuery);
+		sql = "toto";
+		typeQuery = instance.getTypeQuery(sql);
+		Assert.assertNull(typeQuery);
 
-	sql = "select Price from products;";
-	typeQuery = instance.getTypeQuery(sql);
-	Assert.assertEquals(typeQuery, "select");
+		sql = "select Price from products;";
+		typeQuery = instance.getTypeQuery(sql);
+		Assert.assertEquals(typeQuery, "select");
 
-	sql = "/* super requete */ select Price from products;";
-	typeQuery = instance.getTypeQuery(sql);
-	Assert.assertEquals(typeQuery, "select");
+		sql = "/* super requete */ select Price from products;";
+		typeQuery = instance.getTypeQuery(sql);
+		Assert.assertEquals(typeQuery, "select");
 
-	sql = "/* super requete */ select Price from products; /* genial */";
-	typeQuery = instance.getTypeQuery(sql);
-	Assert.assertEquals(typeQuery, "select");
-    }
+		sql = "/* super requete */ select Price from products; /* genial */";
+		typeQuery = instance.getTypeQuery(sql);
+		Assert.assertEquals(typeQuery, "select");
+	}
 
-    @Test
-    public void removeCommentTest() {
-	String sql = null;
-	String removeComment = instance.removeComment(sql);
-	Assert.assertNull(removeComment);
+	@Test
+	public void removeCommentTest() {
+		String sql = null;
+		String removeComment = instance.removeComment(sql);
+		Assert.assertNull(removeComment);
 
-	sql = "  ";
-	removeComment = instance.removeComment(sql);
-	Assert.assertEquals(removeComment, "  ");
+		sql = "  ";
+		removeComment = instance.removeComment(sql);
+		Assert.assertEquals(removeComment, "");
 
-	sql = "toto";
-	removeComment = instance.removeComment(sql);
-	Assert.assertEquals(removeComment, "toto");
+		sql = "toto";
+		removeComment = instance.removeComment(sql);
+		Assert.assertEquals(removeComment, "toto");
 
-	sql = "select Price from products;";
-	removeComment = instance.removeComment(sql);
-	Assert.assertEquals(removeComment, "select Price from products;");
+		sql = "select Price from products;";
+		removeComment = instance.removeComment(sql);
+		Assert.assertEquals(removeComment, "select Price from products;");
 
-	sql = "/* super requete */ select Price from products;";
-	removeComment = instance.removeComment(sql);
-	Assert.assertEquals(removeComment, " select Price from products;");
+		sql = "/* super requete */ select Price from products;";
+		removeComment = instance.removeComment(sql);
+		Assert.assertEquals(removeComment, "select Price from products;");
 
-	sql = "/* super requete */ select Price from products; /* genial */";
-	removeComment = instance.removeComment(sql);
-	Assert.assertEquals(removeComment, " select Price from products; ");
-    }
+		sql = "/* super requete */ select Price from products; /* genial */";
+		removeComment = instance.removeComment(sql);
+		Assert.assertEquals(removeComment, "select Price from products");
+	}
 }
