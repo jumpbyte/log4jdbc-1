@@ -167,6 +167,6 @@ public class Db2RdbmsSpecificsTest {
 
 		sql = "/* super requete */ select Price from products; /* genial */";
 		removeComment = instance.removeComment(sql);
-		Assert.assertEquals(removeComment, "select Price from products");
+		Assert.assertEquals(removeComment, "select Price from products;");
 	}
 }

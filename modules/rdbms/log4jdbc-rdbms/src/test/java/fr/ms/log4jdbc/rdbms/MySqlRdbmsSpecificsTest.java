@@ -168,7 +168,7 @@ public class MySqlRdbmsSpecificsTest {
 
 		sql = "  ";
 		removeComment = instance.removeComment(sql);
-		Assert.assertEquals(removeComment, " ");
+		Assert.assertEquals(removeComment, "");
 
 		sql = "toto";
 		removeComment = instance.removeComment(sql);

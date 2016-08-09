@@ -149,7 +149,7 @@ public class OracleRdbmsSpecificsTest {
 
 		sql = "  ";
 		removeComment = instance.removeComment(sql);
-		Assert.assertEquals(removeComment, " ");
+		Assert.assertEquals(removeComment, "");
 
 		sql = "toto";
 		removeComment = instance.removeComment(sql);
@@ -161,15 +161,15 @@ public class OracleRdbmsSpecificsTest {
 
 		sql = "/* super requete */ select Price from products;";
 		removeComment = instance.removeComment(sql);
-		Assert.assertEquals(removeComment, " select Price from products;");
+		Assert.assertEquals(removeComment, "select Price from products;");
 
 		sql = "/* super requete */ select Price from products; /* genial */";
 		removeComment = instance.removeComment(sql);
-		Assert.assertEquals(removeComment, "select Price from products; ");
+		Assert.assertEquals(removeComment, "select Price from products;");
 
 		sql = "/* super requete */ select Price /* genial */from products; /* fin */";
 		removeComment = instance.removeComment(sql);
-		Assert.assertEquals(removeComment, "select Price from products; ");
+		Assert.assertEquals(removeComment, "select Price from products;");
 
 		sql = "/* super requete */ /*+ hint */ select Price /* genial */from products; /* fin */";
 		removeComment = instance.removeComment(sql);
