@@ -41,78 +41,78 @@ import fr.ms.util.logging.impl.SystemOutPrintHandler;
  */
 public class DefaultLoggerFactory implements LoggerFactory {
 
-    private final static String PROPERTY_FILE = "log4jdbc.log.file";
+	private final static String PROPERTY_FILE = "log4jdbc.log.file";
 
-    private final static String PREFIX = "log4jdbc.log.level.";
+	private final static String PREFIX = "log4jdbc.log.level.";
 
-    private final static Map LOG_LEVEL = new HashMap();
+	private final static Map LOG_LEVEL = new HashMap();
 
-    private PrintHandler printHandler = new SystemOutPrintHandler();
+	private PrintHandler printHandler = new SystemOutPrintHandler();
 
-    public DefaultLoggerFactory() {
-	initPrintHandler();
-	initLevel();
-    }
+	public DefaultLoggerFactory() {
+		initPrintHandler();
+		initLevel();
+	}
 
-    private void initPrintHandler() {
-	final String property = System.getProperty(PROPERTY_FILE);
-	if (property != null) {
-	    final File file = new File(property);
-	    final boolean fileExists = file.exists();
+	private void initPrintHandler() {
+		final String property = System.getProperty(PROPERTY_FILE);
+		if (property != null) {
+			final File file = new File(property);
+			final boolean fileExists = file.exists();
 
-	    if (!fileExists) {
-		try {
-		    file.createNewFile();
-		} catch (final IOException e) {
+			if (!fileExists) {
+				try {
+					file.createNewFile();
+				} catch (final IOException e) {
+				}
+			}
+
+			printHandler = new FilePrintHandler(file);
 		}
-	    }
-
-	    printHandler = new FilePrintHandler(file);
-	}
-    }
-
-    private void initLevel() {
-	final Properties properties = System.getProperties();
-
-	final Enumeration en = properties.propertyNames();
-	while (en.hasMoreElements()) {
-	    String propName = (String) en.nextElement();
-
-	    if (propName.startsWith(PREFIX)) {
-		final String propValue = properties.getProperty(propName);
-		propName = propName.substring(PREFIX.length());
-
-		LOG_LEVEL.put(propName, propValue);
-	    }
-	}
-    }
-
-    private String getLevel(final String name) {
-	String nameLogger = null;
-	String levelLogger = null;
-
-	final Iterator entries = LOG_LEVEL.entrySet().iterator();
-	while (entries.hasNext()) {
-	    final Entry element = (Entry) entries.next();
-	    final String key = (String) element.getKey();
-	    if (name.startsWith(key) && (nameLogger == null || key.length() > nameLogger.length())) {
-		nameLogger = key;
-
-		levelLogger = (String) element.getValue();
-	    }
 	}
 
-	if (levelLogger != null) {
-	    return levelLogger.toLowerCase();
+	private void initLevel() {
+		final Properties properties = System.getProperties();
+
+		final Enumeration en = properties.propertyNames();
+		while (en.hasMoreElements()) {
+			String propName = (String) en.nextElement();
+
+			if (propName.startsWith(PREFIX)) {
+				final String propValue = properties.getProperty(propName);
+				propName = propName.substring(PREFIX.length());
+
+				LOG_LEVEL.put(propName, propValue);
+			}
+		}
 	}
 
-	return levelLogger;
+	private String getLevel(final String name) {
+		String nameLogger = null;
+		String levelLogger = null;
 
-    }
+		final Iterator entries = LOG_LEVEL.entrySet().iterator();
+		while (entries.hasNext()) {
+			final Entry element = (Entry) entries.next();
+			final String key = (String) element.getKey();
+			if (name.startsWith(key) && (nameLogger == null || key.length() > nameLogger.length())) {
+				nameLogger = key;
 
-    public Logger getLogger(final String name) {
-	final String level = getLevel(name);
-	final DefaultLogger logger = new DefaultLogger(printHandler, level, name);
-	return logger;
-    }
+				levelLogger = (String) element.getValue();
+			}
+		}
+
+		if (levelLogger != null) {
+			return levelLogger.toLowerCase();
+		}
+
+		return levelLogger;
+
+	}
+
+	public Logger getLogger(final String name) {
+		final String level = getLevel(name);
+		final DefaultLogger logger = new DefaultLogger(printHandler, level, name);
+		return logger;
+	}
 }

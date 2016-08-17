@@ -27,11 +27,11 @@ package fr.ms.lang.sync.impl;
  */
 public interface SyncLong {
 
-    long addAndGet(long delta);
+	long addAndGet(long delta);
 
-    long incrementAndGet();
+	long incrementAndGet();
 
-    long decrementAndGet();
+	long decrementAndGet();
 
-    long get();
+	long get();
 }

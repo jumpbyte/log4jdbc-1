@@ -32,30 +32,30 @@ import fr.ms.lang.sync.impl.SyncLongImpl;
  */
 public class DefaultSyncLongFactory implements SyncLongFactory {
 
-    private final static SyncLongFactory instance = new DefaultSyncLongFactory();
+	private final static SyncLongFactory instance = new DefaultSyncLongFactory();
 
-    private static SyncLongFactory delegate;
+	private static SyncLongFactory delegate;
 
-    static {
-	if (ClassUtils.classPresent("java.util.concurrent.atomic.AtomicLong")) {
-	    delegate = AtomicLongImpl.getSyncLongFactory();
-	} else {
-	    delegate = SyncLongImpl.getSyncLongFactory();
+	static {
+		if (ClassUtils.classPresent("java.util.concurrent.atomic.AtomicLong")) {
+			delegate = AtomicLongImpl.getSyncLongFactory();
+		} else {
+			delegate = SyncLongImpl.getSyncLongFactory();
+		}
 	}
-    }
 
-    private DefaultSyncLongFactory() {
-    }
+	private DefaultSyncLongFactory() {
+	}
 
-    public static SyncLongFactory getInstance() {
-	return instance;
-    }
+	public static SyncLongFactory getInstance() {
+		return instance;
+	}
 
-    public SyncLong newLong() {
-	return delegate.newLong();
-    }
+	public SyncLong newLong() {
+		return delegate.newLong();
+	}
 
-    public SyncLong newLong(final long initialValue) {
-	return delegate.newLong(initialValue);
-    }
+	public SyncLong newLong(final long initialValue) {
+		return delegate.newLong(initialValue);
+	}
 }

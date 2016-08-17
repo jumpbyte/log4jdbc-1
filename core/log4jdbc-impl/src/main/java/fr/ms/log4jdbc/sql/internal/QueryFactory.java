@@ -31,7 +31,7 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  *
  */
 public interface QueryFactory {
-    QueryImpl newQuery(ConnectionContextJDBC connectionContext, String jdbcQuery);
+	QueryImpl newQuery(ConnectionContextJDBC connectionContext, String jdbcQuery);
 
-    QueryImpl newQuery(ConnectionContextJDBC connectionContext, String jdbcQuery, Map jdbcParameters);
+	QueryImpl newQuery(ConnectionContextJDBC connectionContext, String jdbcQuery, Map jdbcParameters);
 }

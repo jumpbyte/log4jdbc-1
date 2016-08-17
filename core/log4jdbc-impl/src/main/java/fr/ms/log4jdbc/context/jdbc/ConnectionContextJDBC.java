@@ -33,95 +33,96 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  */
 public class ConnectionContextJDBC extends ConnectionContextDefault {
 
-    private boolean cleanTransaction;
+	private boolean cleanTransaction;
 
-    protected boolean transactionEnabled;
+	protected boolean transactionEnabled;
 
-    private final TransactionContextFactory transactionContextFactory;
+	private final TransactionContextFactory transactionContextFactory;
 
-    protected TransactionContextJDBC transactionContext;
+	protected TransactionContextJDBC transactionContext;
 
-    public ConnectionContextJDBC(final TransactionContextFactory transactionContextFactory, final Class clazz, final String url) {
-	super(clazz, url);
-	this.transactionContextFactory = transactionContextFactory;
-    }
-
-    public boolean isTransactionEnabled() {
-	return transactionEnabled;
-    }
-
-    public void setTransactionEnabled(final boolean transactionEnabled) {
-	if (!transactionEnabled) {
-	    transactionContext = null;
+	public ConnectionContextJDBC(final TransactionContextFactory transactionContextFactory, final Class clazz,
+			final String url) {
+		super(clazz, url);
+		this.transactionContextFactory = transactionContextFactory;
 	}
 
-	this.transactionEnabled = transactionEnabled;
-    }
-
-    public QueryImpl addQuery(final QueryImpl query) {
-	if (transactionEnabled) {
-	    if (transactionContext == null) {
-		transactionContext = transactionContextFactory.newTransactionContext();
-	    }
-	    transactionContext.addQuery(query);
+	public boolean isTransactionEnabled() {
+		return transactionEnabled;
 	}
 
-	return query;
-    }
+	public void setTransactionEnabled(final boolean transactionEnabled) {
+		if (!transactionEnabled) {
+			transactionContext = null;
+		}
 
-    public void close() {
-	cleanTransaction = true;
-	super.close();
-    }
-
-    public void cleanContext() {
-	if (cleanTransaction) {
-	    if (transactionContext != null) {
-		transactionContext.close();
-		transactionContext = null;
-	    }
-	    cleanTransaction = false;
+		this.transactionEnabled = transactionEnabled;
 	}
-    }
 
-    public TransactionContextJDBC getTransactionContext() {
-	return transactionContext;
-    }
+	public QueryImpl addQuery(final QueryImpl query) {
+		if (transactionEnabled) {
+			if (transactionContext == null) {
+				transactionContext = transactionContextFactory.newTransactionContext();
+			}
+			transactionContext.addQuery(query);
+		}
 
-    public void commit() {
-	if (transactionContext != null) {
-	    transactionContext.commit();
+		return query;
 	}
-	cleanTransaction = true;
-    }
 
-    public void rollback(final Object savePoint) {
-	if (transactionContext != null) {
-	    transactionContext.rollback(savePoint);
+	public void close() {
+		cleanTransaction = true;
+		super.close();
 	}
-	cleanTransaction = savePoint == null;
-    }
 
-    public void resetTransaction() {
-	cleanTransaction = true;
-    }
+	public void cleanContext() {
+		if (cleanTransaction) {
+			if (transactionContext != null) {
+				transactionContext.close();
+				transactionContext = null;
+			}
+			cleanTransaction = false;
+		}
+	}
 
-    public String toString() {
-	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
-	final StringMaker buffer = stringFactory.newString();
+	public TransactionContextJDBC getTransactionContext() {
+		return transactionContext;
+	}
 
-	buffer.append("ConnectionContextJDBC [driverName=");
-	buffer.append(driverName);
-	buffer.append(", url=");
-	buffer.append(url);
-	buffer.append(", connectionNumber=");
-	buffer.append(connectionNumber);
-	buffer.append(", rdbmsSpecifics=");
-	buffer.append(rdbmsSpecifics);
-	buffer.append(", transactionContext=");
-	buffer.append(transactionContext);
-	buffer.append("]");
+	public void commit() {
+		if (transactionContext != null) {
+			transactionContext.commit();
+		}
+		cleanTransaction = true;
+	}
 
-	return buffer.toString();
-    }
+	public void rollback(final Object savePoint) {
+		if (transactionContext != null) {
+			transactionContext.rollback(savePoint);
+		}
+		cleanTransaction = savePoint == null;
+	}
+
+	public void resetTransaction() {
+		cleanTransaction = true;
+	}
+
+	public String toString() {
+		final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+		final StringMaker buffer = stringFactory.newString();
+
+		buffer.append("ConnectionContextJDBC [driverName=");
+		buffer.append(driverName);
+		buffer.append(", url=");
+		buffer.append(url);
+		buffer.append(", connectionNumber=");
+		buffer.append(connectionNumber);
+		buffer.append(", rdbmsSpecifics=");
+		buffer.append(rdbmsSpecifics);
+		buffer.append(", transactionContext=");
+		buffer.append(transactionContext);
+		buffer.append("]");
+
+		return buffer.toString();
+	}
 }

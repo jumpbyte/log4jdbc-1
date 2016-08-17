@@ -27,23 +27,23 @@ package fr.ms.log4jdbc.thread;
  */
 public class LoopRunnable implements Runnable {
 
-    private final Runnable r;
+	private final Runnable r;
 
-    private final long sleppMillis;
+	private final long sleppMillis;
 
-    public LoopRunnable(final Runnable r, final long sleppMillis) {
-	this.r = r;
-	this.sleppMillis = sleppMillis;
-    }
-
-    public void run() {
-	while (true) {
-	    try {
-		r.run();
-		Thread.sleep(sleppMillis);
-	    } catch (final Throwable e) {
-		e.printStackTrace();
-	    }
+	public LoopRunnable(final Runnable r, final long sleppMillis) {
+		this.r = r;
+		this.sleppMillis = sleppMillis;
 	}
-    }
+
+	public void run() {
+		while (true) {
+			try {
+				r.run();
+				Thread.sleep(sleppMillis);
+			} catch (final Throwable e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

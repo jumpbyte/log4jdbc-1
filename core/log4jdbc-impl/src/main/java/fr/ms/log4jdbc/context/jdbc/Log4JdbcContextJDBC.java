@@ -36,35 +36,36 @@ import fr.ms.util.CollectionsUtil;
  */
 public class Log4JdbcContextJDBC implements Log4JdbcContext {
 
-    private final static TransactionContextFactory transactionContextFactory = new TransactionContextJDBCFactory();
+	private final static TransactionContextFactory transactionContextFactory = new TransactionContextJDBCFactory();
 
-    private final static Map context = CollectionsUtil.synchronizedMap(new WeakHashMap());
+	private final static Map context = CollectionsUtil.synchronizedMap(new WeakHashMap());
 
-    public ConnectionContextJDBC newConnectionContext(final Connection connection, final Class clazz) {
-	ConnectionContextJDBC connectionContextJDBC = (ConnectionContextJDBC) context.get(connection);
+	public ConnectionContextJDBC newConnectionContext(final Connection connection, final Class clazz) {
+		ConnectionContextJDBC connectionContextJDBC = (ConnectionContextJDBC) context.get(connection);
 
-	if (connectionContextJDBC == null) {
-	    String url = null;
-	    try {
-		url = connection.getMetaData().getURL();
-	    } catch (final SQLException e) {
-	    }
-	    connectionContextJDBC = new ConnectionContextJDBC(transactionContextFactory, clazz, url);
-	    context.put(connection, connectionContextJDBC);
+		if (connectionContextJDBC == null) {
+			String url = null;
+			try {
+				url = connection.getMetaData().getURL();
+			} catch (final SQLException e) {
+			}
+			connectionContextJDBC = new ConnectionContextJDBC(transactionContextFactory, clazz, url);
+			context.put(connection, connectionContextJDBC);
+		}
+
+		return connectionContextJDBC;
 	}
 
-	return connectionContextJDBC;
-    }
+	public ConnectionContextJDBC newConnectionContext(final Connection connection, final Driver driver,
+			final String url) {
+		ConnectionContextJDBC connectionContextJDBC = (ConnectionContextJDBC) context.get(connection);
 
-    public ConnectionContextJDBC newConnectionContext(final Connection connection, final Driver driver, final String url) {
-	ConnectionContextJDBC connectionContextJDBC = (ConnectionContextJDBC) context.get(connection);
+		if (connectionContextJDBC == null) {
+			final Class clazz = driver.getClass();
+			connectionContextJDBC = new ConnectionContextJDBC(transactionContextFactory, clazz, url);
+			context.put(connection, connectionContextJDBC);
+		}
 
-	if (connectionContextJDBC == null) {
-	    final Class clazz = driver.getClass();
-	    connectionContextJDBC = new ConnectionContextJDBC(transactionContextFactory, clazz, url);
-	    context.put(connection, connectionContextJDBC);
+		return connectionContextJDBC;
 	}
-
-	return connectionContextJDBC;
-    }
 }

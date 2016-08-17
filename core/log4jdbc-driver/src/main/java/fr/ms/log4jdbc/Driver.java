@@ -43,164 +43,164 @@ import fr.ms.util.logging.LoggerManager;
  */
 public class Driver implements java.sql.Driver {
 
-    private final static fr.ms.util.logging.Logger LOG = LoggerManager.getLogger(Driver.class);
+	private final static fr.ms.util.logging.Logger LOG = LoggerManager.getLogger(Driver.class);
 
-    private final static String LOG4JDBC_PREFIX = "jdbc:log4";
+	private final static String LOG4JDBC_PREFIX = "jdbc:log4";
 
-    private final static JdbcDriverManager driverManager = JdbcDriverManagerFactory.getInstance();
+	private final static JdbcDriverManager driverManager = JdbcDriverManagerFactory.getInstance();
 
-    private final Log4JdbcContext log4JdbcContext = new Log4JdbcContextJDBC();
+	private final Log4JdbcContext log4JdbcContext = new Log4JdbcContextJDBC();
 
-    private java.sql.Driver driver;
+	private java.sql.Driver driver;
 
-    static {
-	driverManager.setLogWriter(LOG.getPrintWriter());
-	loadAdditionalDrivers();
-	loadDrivers();
-    }
-
-    public Connection connect(String url, final Properties info) throws SQLException {
-	final java.sql.Driver d = getRealDriver(url);
-	if (d == null) {
-	    return null;
+	static {
+		driverManager.setLogWriter(LOG.getPrintWriter());
+		loadAdditionalDrivers();
+		loadDrivers();
 	}
 
-	url = getRealUrl(url);
-
-	final Connection c = d.connect(url, info);
-
-	if (c == null) {
-	    throw new SQLException("invalid or unknown driver url: " + url);
-	}
-
-	final Connection wrap = Log4JdbcProxy.proxyConnection(c, log4JdbcContext, d, url);
-
-	driver = d;
-	return wrap;
-    }
-
-    public boolean acceptsURL(final String url) throws SQLException {
-	final java.sql.Driver d = getRealDriver(url);
-	if (d != null) {
-	    driver = d;
-	    return true;
-	}
-	return false;
-    }
-
-    public DriverPropertyInfo[] getPropertyInfo(final String url, final Properties info) throws SQLException {
-	final java.sql.Driver d = getRealDriver(url);
-	if (d == null) {
-	    return new DriverPropertyInfo[0];
-	}
-
-	driver = d;
-	return d.getPropertyInfo(url, info);
-    }
-
-    public int getMajorVersion() {
-	if (driver == null) {
-	    return 1;
-	}
-	return driver.getMajorVersion();
-    }
-
-    public int getMinorVersion() {
-	if (driver == null) {
-	    return 0;
-	}
-	return driver.getMinorVersion();
-    }
-
-    public boolean jdbcCompliant() {
-	return driver != null && driver.jdbcCompliant();
-    }
-
-    public Logger getParentLogger() {
-	try {
-	    return driver.getParentLogger();
-	} catch (final Exception e) {
-	    throw new RuntimeException(e.getMessage());
-	}
-    }
-
-    private static java.sql.Driver getRealDriver(String url) throws SQLException {
-	if (url.startsWith(LOG4JDBC_PREFIX)) {
-	    url = getRealUrl(url);
-
-	    final Enumeration e = driverManager.getDrivers();
-
-	    java.sql.Driver d;
-	    while (e.hasMoreElements()) {
-		d = (java.sql.Driver) e.nextElement();
-
-		if (d.acceptsURL(url)) {
-		    return d;
+	public Connection connect(String url, final Properties info) throws SQLException {
+		final java.sql.Driver d = getRealDriver(url);
+		if (d == null) {
+			return null;
 		}
-	    }
-	}
-	return null;
-    }
 
-    private static String getRealUrl(final String url) {
-	return url.substring(LOG4JDBC_PREFIX.length());
-    }
+		url = getRealUrl(url);
 
-    private static void loadAdditionalDrivers() {
-	String drivers = System.getProperty("log4jdbc.drivers");
+		final Connection c = d.connect(url, info);
 
-	if (LOG.isInfoEnabled()) {
-	    LOG.info("Log4Jdbc DriverManager.Initialize: log4jdbc.drivers = " + drivers);
-	}
-
-	if (drivers != null) {
-	    while (drivers.length() != 0) {
-		final int x = drivers.indexOf(':');
-		String driver;
-		if (x < 0) {
-		    driver = drivers;
-		    drivers = "";
-		} else {
-		    driver = drivers.substring(0, x);
-		    drivers = drivers.substring(x + 1);
+		if (c == null) {
+			throw new SQLException("invalid or unknown driver url: " + url);
 		}
-		if (driver.length() == 0) {
-		    continue;
+
+		final Connection wrap = Log4JdbcProxy.proxyConnection(c, log4JdbcContext, d, url);
+
+		driver = d;
+		return wrap;
+	}
+
+	public boolean acceptsURL(final String url) throws SQLException {
+		final java.sql.Driver d = getRealDriver(url);
+		if (d != null) {
+			driver = d;
+			return true;
 		}
+		return false;
+	}
+
+	public DriverPropertyInfo[] getPropertyInfo(final String url, final Properties info) throws SQLException {
+		final java.sql.Driver d = getRealDriver(url);
+		if (d == null) {
+			return new DriverPropertyInfo[0];
+		}
+
+		driver = d;
+		return d.getPropertyInfo(url, info);
+	}
+
+	public int getMajorVersion() {
+		if (driver == null) {
+			return 1;
+		}
+		return driver.getMajorVersion();
+	}
+
+	public int getMinorVersion() {
+		if (driver == null) {
+			return 0;
+		}
+		return driver.getMinorVersion();
+	}
+
+	public boolean jdbcCompliant() {
+		return driver != null && driver.jdbcCompliant();
+	}
+
+	public Logger getParentLogger() {
 		try {
-		    driver = driver.trim();
-		    if (LOG.isInfoEnabled()) {
-			LOG.info("Log4jdbc DriverManager.Initialize: loading " + driver);
-		    }
-		    final Class clazz = Class.forName(driver);
-		    final java.sql.Driver d = (java.sql.Driver) clazz.newInstance();
-		    driverManager.registerDriver(d);
+			return driver.getParentLogger();
+		} catch (final Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+
+	private static java.sql.Driver getRealDriver(String url) throws SQLException {
+		if (url.startsWith(LOG4JDBC_PREFIX)) {
+			url = getRealUrl(url);
+
+			final Enumeration e = driverManager.getDrivers();
+
+			java.sql.Driver d;
+			while (e.hasMoreElements()) {
+				d = (java.sql.Driver) e.nextElement();
+
+				if (d.acceptsURL(url)) {
+					return d;
+				}
+			}
+		}
+		return null;
+	}
+
+	private static String getRealUrl(final String url) {
+		return url.substring(LOG4JDBC_PREFIX.length());
+	}
+
+	private static void loadAdditionalDrivers() {
+		String drivers = System.getProperty("log4jdbc.drivers");
+
+		if (LOG.isInfoEnabled()) {
+			LOG.info("Log4Jdbc DriverManager.Initialize: log4jdbc.drivers = " + drivers);
+		}
+
+		if (drivers != null) {
+			while (drivers.length() != 0) {
+				final int x = drivers.indexOf(':');
+				String driver;
+				if (x < 0) {
+					driver = drivers;
+					drivers = "";
+				} else {
+					driver = drivers.substring(0, x);
+					drivers = drivers.substring(x + 1);
+				}
+				if (driver.length() == 0) {
+					continue;
+				}
+				try {
+					driver = driver.trim();
+					if (LOG.isInfoEnabled()) {
+						LOG.info("Log4jdbc DriverManager.Initialize: loading " + driver);
+					}
+					final Class clazz = Class.forName(driver);
+					final java.sql.Driver d = (java.sql.Driver) clazz.newInstance();
+					driverManager.registerDriver(d);
+				} catch (final Exception ex) {
+					throw new RuntimeException("Log4jdbc DriverManager.Initialize: load " + driver + " failed", ex);
+				}
+			}
+		}
+	}
+
+	private static void loadDrivers() {
+		final Iterator providers = Service.providers(java.sql.Driver.class);
+
+		while (providers.hasNext()) {
+			final java.sql.Driver d = (java.sql.Driver) providers.next();
+			try {
+				final Class clazz = d.getClass();
+				if (!Driver.class.equals(clazz)) {
+					driverManager.registerDriver(d);
+				}
+			} catch (final Exception ex) {
+				throw new RuntimeException("Log4jdbc DriverManager.Initialize: load " + d + " failed", ex);
+			}
+		}
+
+		try {
+			driverManager.registerDriver(new Driver());
 		} catch (final Exception ex) {
-		    throw new RuntimeException("Log4jdbc DriverManager.Initialize: load " + driver + " failed", ex);
+			throw new RuntimeException("Log4jdbc DriverManager.Initialize: load " + Driver.class + " failed", ex);
 		}
-	    }
 	}
-    }
-
-    private static void loadDrivers() {
-	final Iterator providers = Service.providers(java.sql.Driver.class);
-
-	while (providers.hasNext()) {
-	    final java.sql.Driver d = (java.sql.Driver) providers.next();
-	    try {
-		final Class clazz = d.getClass();
-		if (!Driver.class.equals(clazz)) {
-		    driverManager.registerDriver(d);
-		}
-	    } catch (final Exception ex) {
-		throw new RuntimeException("Log4jdbc DriverManager.Initialize: load " + d + " failed", ex);
-	    }
-	}
-
-	try {
-	    driverManager.registerDriver(new Driver());
-	} catch (final Exception ex) {
-	    throw new RuntimeException("Log4jdbc DriverManager.Initialize: load " + Driver.class + " failed", ex);
-	}
-    }
 }

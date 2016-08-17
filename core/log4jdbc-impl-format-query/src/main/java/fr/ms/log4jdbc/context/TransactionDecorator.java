@@ -35,89 +35,90 @@ import fr.ms.log4jdbc.sql.QueryDecorator;
  */
 public class TransactionDecorator implements Transaction {
 
-    private final Transaction transaction;
+	private final Transaction transaction;
 
-    private final RdbmsSpecifics rdbms;
+	private final RdbmsSpecifics rdbms;
 
-    private final FormatQuery formatQuery;
+	private final FormatQuery formatQuery;
 
-    public TransactionDecorator(final Transaction transaction, final RdbmsSpecifics rdbms, final FormatQuery formatQuery) {
-	if (transaction == null || rdbms == null || formatQuery == null) {
-	    throw new NullPointerException();
-	}
-	this.transaction = transaction;
-	this.rdbms = rdbms;
-	this.formatQuery = formatQuery;
-    }
-
-    public Query[] getQueriesTransaction() {
-	final Query[] queries = transaction.getQueriesTransaction();
-	if (queries == null) {
-	    return null;
+	public TransactionDecorator(final Transaction transaction, final RdbmsSpecifics rdbms,
+			final FormatQuery formatQuery) {
+		if (transaction == null || rdbms == null || formatQuery == null) {
+			throw new NullPointerException();
+		}
+		this.transaction = transaction;
+		this.rdbms = rdbms;
+		this.formatQuery = formatQuery;
 	}
 
-	final Query[] result = new Query[queries.length];
-	for (int i = 0; i < queries.length; i++) {
-	    final Query query = queries[i];
-	    final Query wrap = new QueryDecorator(query, rdbms, formatQuery);
-	    result[i] = wrap;
+	public Query[] getQueriesTransaction() {
+		final Query[] queries = transaction.getQueriesTransaction();
+		if (queries == null) {
+			return null;
+		}
+
+		final Query[] result = new Query[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			final Query query = queries[i];
+			final Query wrap = new QueryDecorator(query, rdbms, formatQuery);
+			result[i] = wrap;
+		}
+
+		return result;
 	}
 
-	return result;
-    }
-
-    public String getTransactionState() {
-	return transaction.getTransactionState();
-    }
-
-    public long getTransactionNumber() {
-	return transaction.getTransactionNumber();
-    }
-
-    public long getOpenTransaction() {
-	return transaction.getOpenTransaction();
-    }
-
-    public String getTransactionType() {
-	return transaction.getTransactionType();
-    }
-
-    public int hashCode() {
-	return transaction.hashCode();
-    }
-
-    public boolean equals(final Object obj) {
-	if (obj instanceof TransactionDecorator) {
-	    return transaction.equals(((TransactionDecorator) obj).transaction);
+	public String getTransactionState() {
+		return transaction.getTransactionState();
 	}
-	return transaction.equals(obj);
-    }
 
-    public String toString() {
-	final String nl = System.getProperty("line.separator");
+	public long getTransactionNumber() {
+		return transaction.getTransactionNumber();
+	}
 
-	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
-	final StringMaker sb = stringFactory.newString();
+	public long getOpenTransaction() {
+		return transaction.getOpenTransaction();
+	}
 
-	sb.append(getTransactionNumber() + ". " + getOpenTransaction());
-	sb.append(nl);
-	sb.append("	Type  : " + getTransactionType());
-	sb.append(nl);
-	sb.append("	State  : " + getTransactionState());
-	sb.append(nl);
+	public String getTransactionType() {
+		return transaction.getTransactionType();
+	}
 
-	if (getQueriesTransaction() != null && getQueriesTransaction().length > 0) {
-	    sb.append("*********************");
-	    sb.append(nl);
-	    sb.append(getQueriesTransaction().length + " queries");
+	public int hashCode() {
+		return transaction.hashCode();
+	}
 
-	    for (int i = 0; i < getQueriesTransaction().length; i++) {
+	public boolean equals(final Object obj) {
+		if (obj instanceof TransactionDecorator) {
+			return transaction.equals(((TransactionDecorator) obj).transaction);
+		}
+		return transaction.equals(obj);
+	}
+
+	public String toString() {
+		final String nl = System.getProperty("line.separator");
+
+		final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+		final StringMaker sb = stringFactory.newString();
+
+		sb.append(getTransactionNumber() + ". " + getOpenTransaction());
 		sb.append(nl);
-		sb.append(getQueriesTransaction()[i]);
-	    }
-	}
+		sb.append("	Type  : " + getTransactionType());
+		sb.append(nl);
+		sb.append("	State  : " + getTransactionState());
+		sb.append(nl);
 
-	return sb.toString();
-    }
+		if (getQueriesTransaction() != null && getQueriesTransaction().length > 0) {
+			sb.append("*********************");
+			sb.append(nl);
+			sb.append(getQueriesTransaction().length + " queries");
+
+			for (int i = 0; i < getQueriesTransaction().length; i++) {
+				sb.append(nl);
+				sb.append(getQueriesTransaction()[i]);
+			}
+		}
+
+		return sb.toString();
+	}
 
 }

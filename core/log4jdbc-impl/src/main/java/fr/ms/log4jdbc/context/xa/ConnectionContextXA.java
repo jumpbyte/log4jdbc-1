@@ -30,12 +30,13 @@ import fr.ms.log4jdbc.context.jdbc.TransactionContextFactory;
  */
 public class ConnectionContextXA extends ConnectionContextJDBC {
 
-    public ConnectionContextXA(final TransactionContextFactory transactionContextFactory, final Class clazz, final String url) {
-	super(transactionContextFactory, clazz, url);
-    }
+	public ConnectionContextXA(final TransactionContextFactory transactionContextFactory, final Class clazz,
+			final String url) {
+		super(transactionContextFactory, clazz, url);
+	}
 
-    public void setTransactionContextXA(final TransactionContextXA transactionContextXA) {
-	setTransactionEnabled(transactionContextXA != null);
-	this.transactionContext = transactionContextXA;
-    }
+	public void setTransactionContextXA(final TransactionContextXA transactionContextXA) {
+		setTransactionEnabled(transactionContextXA != null);
+		this.transactionContext = transactionContextXA;
+	}
 }

@@ -27,29 +27,29 @@ package fr.ms.lang.ref;
  */
 public class StrongReferenceObject implements ReferenceObject {
 
-    private final Object referent;
+	private final Object referent;
 
-    public StrongReferenceObject(final Object referent) {
-	this.referent = referent;
-    }
+	public StrongReferenceObject(final Object referent) {
+		this.referent = referent;
+	}
 
-    public void clear() {
-	throw new UnsupportedOperationException();
-    }
+	public void clear() {
+		throw new UnsupportedOperationException();
+	}
 
-    public boolean enqueue() {
-	throw new UnsupportedOperationException();
-    }
+	public boolean enqueue() {
+		throw new UnsupportedOperationException();
+	}
 
-    public Object get() {
-	return referent;
-    }
+	public Object get() {
+		return referent;
+	}
 
-    public boolean isEnqueued() {
-	throw new UnsupportedOperationException();
-    }
+	public boolean isEnqueued() {
+		throw new UnsupportedOperationException();
+	}
 
-    public String toString() {
-	return referent.toString();
-    }
+	public String toString() {
+		return referent.toString();
+	}
 }

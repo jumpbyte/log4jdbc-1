@@ -40,128 +40,129 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  */
 public class SqlOperationContext extends SqlOperationDefault implements SqlOperation {
 
-    private final ConnectionContextJDBC connectionContext;
+	private final ConnectionContextJDBC connectionContext;
 
-    private final long openConnection;
+	private final long openConnection;
 
-    private QueryImpl query;
+	private QueryImpl query;
 
-    private QueryImpl[] queriesBatch;
+	private QueryImpl[] queriesBatch;
 
-    private TransactionContextJDBC transaction;
+	private TransactionContextJDBC transaction;
 
-    public SqlOperationContext(final TimeInvocation timeInvocation, final ConnectionContextJDBC connectionContext) {
-	super(timeInvocation);
+	public SqlOperationContext(final TimeInvocation timeInvocation, final ConnectionContextJDBC connectionContext) {
+		super(timeInvocation);
 
-	this.connectionContext = connectionContext;
-	this.openConnection = connectionContext.getOpenConnection().get();
+		this.connectionContext = connectionContext;
+		this.openConnection = connectionContext.getOpenConnection().get();
 
-	this.transaction = connectionContext.getTransactionContext();
+		this.transaction = connectionContext.getTransactionContext();
 
-	if (this.transaction != null) {
-	    try {
-		this.transaction = (TransactionContextJDBC) this.transaction.clone();
-	    } catch (final CloneNotSupportedException e) {
-		e.printStackTrace();
-	    }
-	}
-
-	connectionContext.cleanContext();
-    }
-
-    public SqlOperationContext(final TimeInvocation timeInvocation, final ConnectionContextJDBC connectionContext, final QueryImpl query) {
-	this(timeInvocation, connectionContext);
-
-	if (query != null) {
-	    try {
-		this.query = (QueryImpl) query.clone();
-	    } catch (final CloneNotSupportedException e) {
-		e.printStackTrace();
-	    }
-	}
-    }
-
-    public SqlOperationContext(final TimeInvocation timeInvocation, final ConnectionContextJDBC connectionContext, final QueryImpl query,
-	    final List queriesBatch) {
-	this(timeInvocation, connectionContext, query);
-
-	if (queriesBatch != null && !queriesBatch.isEmpty()) {
-	    try {
-		this.queriesBatch = new QueryImpl[queriesBatch.size()];
-		for (int i = 0; i < queriesBatch.size(); i++) {
-		    this.queriesBatch[i] = (QueryImpl) ((QueryImpl) queriesBatch.get(i)).clone();
+		if (this.transaction != null) {
+			try {
+				this.transaction = (TransactionContextJDBC) this.transaction.clone();
+			} catch (final CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
 		}
-	    } catch (final CloneNotSupportedException e) {
-		e.printStackTrace();
-	    }
+
+		connectionContext.cleanContext();
 	}
 
-    }
+	public SqlOperationContext(final TimeInvocation timeInvocation, final ConnectionContextJDBC connectionContext,
+			final QueryImpl query) {
+		this(timeInvocation, connectionContext);
 
-    public long getConnectionNumber() {
-	return connectionContext.getConnectionNumber();
-    }
-
-    public long getOpenConnection() {
-	return openConnection;
-    }
-
-    public String getDriverName() {
-	return connectionContext.getDriverName();
-    }
-
-    public RdbmsSpecifics getRdbms() {
-	return connectionContext.getRdbmsSpecifics();
-    }
-
-    public String getUrl() {
-	return connectionContext.getUrl();
-    }
-
-    public Query getQuery() {
-	return query;
-    }
-
-    public Query[] getQueriesBatch() {
-	return queriesBatch;
-    }
-
-    public void setQuery(final QueryImpl query) {
-	this.query = query;
-    }
-
-    public Transaction getTransaction() {
-	return transaction;
-    }
-
-    public String toString() {
-	final String nl = System.getProperty("line.separator");
-
-	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
-	final StringMaker sb = stringFactory.newString();
-
-	sb.append(getDate());
-	sb.append(nl);
-	sb.append(getConnectionNumber() + ". " + getOpenConnection() + " - executed : " + getExecTime() + " ms");
-	sb.append(nl);
-	sb.append("DriverName : " + getDriverName() + " - url : " + getUrl());
-	sb.append(nl);
-	if (getQuery() != null) {
-	    sb.append("*******************************************");
-	    sb.append(nl);
-	    sb.append("Query : ");
-	    sb.append(getQuery());
-	    sb.append(nl);
-	}
-	if (getTransaction() != null) {
-	    sb.append("*******************************************");
-	    sb.append(nl);
-	    sb.append("Transaction : ");
-	    sb.append(nl);
-	    sb.append(getTransaction());
-	    sb.append(nl);
+		if (query != null) {
+			try {
+				this.query = (QueryImpl) query.clone();
+			} catch (final CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
-	return sb.toString();
-    }
+	public SqlOperationContext(final TimeInvocation timeInvocation, final ConnectionContextJDBC connectionContext,
+			final QueryImpl query, final List queriesBatch) {
+		this(timeInvocation, connectionContext, query);
+
+		if (queriesBatch != null && !queriesBatch.isEmpty()) {
+			try {
+				this.queriesBatch = new QueryImpl[queriesBatch.size()];
+				for (int i = 0; i < queriesBatch.size(); i++) {
+					this.queriesBatch[i] = (QueryImpl) ((QueryImpl) queriesBatch.get(i)).clone();
+				}
+			} catch (final CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	public long getConnectionNumber() {
+		return connectionContext.getConnectionNumber();
+	}
+
+	public long getOpenConnection() {
+		return openConnection;
+	}
+
+	public String getDriverName() {
+		return connectionContext.getDriverName();
+	}
+
+	public RdbmsSpecifics getRdbms() {
+		return connectionContext.getRdbmsSpecifics();
+	}
+
+	public String getUrl() {
+		return connectionContext.getUrl();
+	}
+
+	public Query getQuery() {
+		return query;
+	}
+
+	public Query[] getQueriesBatch() {
+		return queriesBatch;
+	}
+
+	public void setQuery(final QueryImpl query) {
+		this.query = query;
+	}
+
+	public Transaction getTransaction() {
+		return transaction;
+	}
+
+	public String toString() {
+		final String nl = System.getProperty("line.separator");
+
+		final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+		final StringMaker sb = stringFactory.newString();
+
+		sb.append(getDate());
+		sb.append(nl);
+		sb.append(getConnectionNumber() + ". " + getOpenConnection() + " - executed : " + getExecTime() + " ms");
+		sb.append(nl);
+		sb.append("DriverName : " + getDriverName() + " - url : " + getUrl());
+		sb.append(nl);
+		if (getQuery() != null) {
+			sb.append("*******************************************");
+			sb.append(nl);
+			sb.append("Query : ");
+			sb.append(getQuery());
+			sb.append(nl);
+		}
+		if (getTransaction() != null) {
+			sb.append("*******************************************");
+			sb.append(nl);
+			sb.append("Transaction : ");
+			sb.append(nl);
+			sb.append(getTransaction());
+			sb.append(nl);
+		}
+
+		return sb.toString();
+	}
 }

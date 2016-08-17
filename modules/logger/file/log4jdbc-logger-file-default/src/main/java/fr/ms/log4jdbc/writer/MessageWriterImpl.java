@@ -43,120 +43,121 @@ import fr.ms.log4jdbc.writer.resultset.ResultSetPrinterIterator;
  */
 public class MessageWriterImpl implements MessageWriter {
 
-    private final static String DATE_PATTERN = "dd-MM-yyyy HH:mm:ss.SSS";
+	private final static String DATE_PATTERN = "dd-MM-yyyy HH:mm:ss.SSS";
 
-    private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
-    private final String threadName = Thread.currentThread().getName();
+	private final String threadName = Thread.currentThread().getName();
 
-    private final SqlOperation message;
+	private final SqlOperation message;
 
-    private final ResultSetPrinterFormatCell formatCell;
+	private final ResultSetPrinterFormatCell formatCell;
 
-    private ResultSetCollector resultSetCollector;
+	private ResultSetCollector resultSetCollector;
 
-    private final static int MAX = 10000;
+	private final static int MAX = 10000;
 
-    private final static String nl = System.getProperty("line.separator");
+	private final static String nl = System.getProperty("line.separator");
 
-    public MessageWriterImpl(final SqlOperation message) {
-	this.message = message;
-	this.formatCell = new DefaultResultSetPrinterFormatCell(message.getRdbms());
-    }
+	public MessageWriterImpl(final SqlOperation message) {
+		this.message = message;
+		this.formatCell = new DefaultResultSetPrinterFormatCell(message.getRdbms());
+	}
 
-    public void traceMessage(final String str) {
-	if (resultSetCollector != null && resultSetCollector.getRows() != null && MAX < resultSetCollector.getRows().length) {
-	    Trace.print(traceHeader());
-	    Trace.print(str);
-	    traceResultSet();
-	    Trace.print(traceFooter());
-	} else {
-	    final StringMaker sb = stringFactory.newString();
-	    sb.append(traceHeader());
-	    sb.append(nl);
-	    sb.append(str);
-	    sb.append(nl);
-	    final Iterator printResultSet = new ResultSetPrinterIterator(resultSetCollector, formatCell, MAX);
-	    if (printResultSet.hasNext()) {
-		sb.append(printResultSet.next());
+	public void traceMessage(final String str) {
+		if (resultSetCollector != null && resultSetCollector.getRows() != null
+				&& MAX < resultSetCollector.getRows().length) {
+			Trace.print(traceHeader());
+			Trace.print(str);
+			traceResultSet();
+			Trace.print(traceFooter());
+		} else {
+			final StringMaker sb = stringFactory.newString();
+			sb.append(traceHeader());
+			sb.append(nl);
+			sb.append(str);
+			sb.append(nl);
+			final Iterator printResultSet = new ResultSetPrinterIterator(resultSetCollector, formatCell, MAX);
+			if (printResultSet.hasNext()) {
+				sb.append(printResultSet.next());
+				sb.append(nl);
+			}
+			sb.append(traceFooter());
+			Trace.print(sb.toString());
+		}
+	}
+
+	public String traceHeader() {
+		final DateFormat df = new SimpleDateFormat(DATE_PATTERN);
+
+		Date dateMessage = null;
+
+		if (message.getQuery() == null) {
+			dateMessage = message.getDate();
+		} else {
+			dateMessage = message.getQuery().getDate();
+		}
+
+		final String dateQuery = df.format(dateMessage);
+
+		final StringMaker sb = stringFactory.newString();
+
+		sb.append(dateQuery);
+		sb.append(" - ");
+		sb.append(threadName);
+
 		sb.append(nl);
-	    }
-	    sb.append(traceFooter());
-	    Trace.print(sb.toString());
-	}
-    }
 
-    public String traceHeader() {
-	final DateFormat df = new SimpleDateFormat(DATE_PATTERN);
+		sb.append(message.getConnectionNumber());
+		sb.append(". Total ");
+		sb.append(message.getOpenConnection());
+		final String url = message.getUrl();
+		if (url != null) {
+			sb.append(" - ");
+			sb.append(url);
+		}
+		final String driverName = message.getDriverName();
+		if (driverName != null) {
+			sb.append(" - ");
+			sb.append(driverName);
+		}
 
-	Date dateMessage = null;
+		sb.append(nl);
 
-	if (message.getQuery() == null) {
-	    dateMessage = message.getDate();
-	} else {
-	    dateMessage = message.getQuery().getDate();
-	}
-
-	final String dateQuery = df.format(dateMessage);
-
-	final StringMaker sb = stringFactory.newString();
-
-	sb.append(dateQuery);
-	sb.append(" - ");
-	sb.append(threadName);
-
-	sb.append(nl);
-
-	sb.append(message.getConnectionNumber());
-	sb.append(". Total ");
-	sb.append(message.getOpenConnection());
-	final String url = message.getUrl();
-	if (url != null) {
-	    sb.append(" - ");
-	    sb.append(url);
-	}
-	final String driverName = message.getDriverName();
-	if (driverName != null) {
-	    sb.append(" - ");
-	    sb.append(driverName);
+		return sb.toString();
 	}
 
-	sb.append(nl);
+	public void traceResultSet() {
+		final Iterator iterator = new ResultSetPrinterIterator(resultSetCollector, formatCell, MAX);
 
-	return sb.toString();
-    }
-
-    public void traceResultSet() {
-	final Iterator iterator = new ResultSetPrinterIterator(resultSetCollector, formatCell, MAX);
-
-	while (iterator.hasNext()) {
-	    final String next = (String) iterator.next();
-	    Trace.print(next);
-	}
-    }
-
-    public String traceFooter() {
-	final long execTime;
-
-	final Query query = message.getQuery();
-	if (query != null) {
-	    execTime = query.getExecTime();
-	} else {
-	    execTime = message.getExecTime();
+		while (iterator.hasNext()) {
+			final String next = (String) iterator.next();
+			Trace.print(next);
+		}
 	}
 
-	final StringMaker sb = stringFactory.newString();
+	public String traceFooter() {
+		final long execTime;
 
-	sb.append("{executed in ");
-	sb.append(execTime);
-	sb.append(" ms} ");
-	sb.append(nl);
-	sb.append("****************************************************************");
+		final Query query = message.getQuery();
+		if (query != null) {
+			execTime = query.getExecTime();
+		} else {
+			execTime = message.getExecTime();
+		}
 
-	return sb.toString();
-    }
+		final StringMaker sb = stringFactory.newString();
 
-    public void setResultSetCollector(final ResultSetCollector resultSetCollector) {
-	this.resultSetCollector = resultSetCollector;
-    }
+		sb.append("{executed in ");
+		sb.append(execTime);
+		sb.append(" ms} ");
+		sb.append(nl);
+		sb.append("****************************************************************");
+
+		return sb.toString();
+	}
+
+	public void setResultSetCollector(final ResultSetCollector resultSetCollector) {
+		this.resultSetCollector = resultSetCollector;
+	}
 }

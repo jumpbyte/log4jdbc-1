@@ -37,98 +37,98 @@ import fr.ms.log4jdbc.resultset.ResultSetCollector;
  */
 public class QueryDecorator implements Query {
 
-    private final Query query;
+	private final Query query;
 
-    private final RdbmsSpecifics rdbms;
+	private final RdbmsSpecifics rdbms;
 
-    private final FormatQuery formatQuery;
+	private final FormatQuery formatQuery;
 
-    public QueryDecorator(final Query query, final RdbmsSpecifics rdbms, final FormatQuery formatQuery) {
-	if (query == null || rdbms == null || formatQuery == null) {
-	    throw new NullPointerException();
+	public QueryDecorator(final Query query, final RdbmsSpecifics rdbms, final FormatQuery formatQuery) {
+		if (query == null || rdbms == null || formatQuery == null) {
+			throw new NullPointerException();
+		}
+		this.query = query;
+		this.rdbms = rdbms;
+		this.formatQuery = formatQuery;
 	}
-	this.query = query;
-	this.rdbms = rdbms;
-	this.formatQuery = formatQuery;
-    }
 
-    public String getJDBCQuery() {
-	final String jdbcQuery = query.getJDBCQuery();
-	final String format = formatQuery.format(jdbcQuery, rdbms);
-	return format;
-    }
-
-    public String getSQLQuery() {
-	final String sqlQuery = query.getSQLQuery();
-	final String format = formatQuery.format(sqlQuery, rdbms);
-	return format;
-    }
-
-    public Date getDate() {
-	return query.getDate();
-    }
-
-    public long getExecTime() {
-	return query.getExecTime();
-    }
-
-    public long getQueryNumber() {
-	return query.getQueryNumber();
-    }
-
-    public String getMethodQuery() {
-	return query.getMethodQuery();
-    }
-
-    public Map getJDBCParameters() {
-	return query.getJDBCParameters();
-    }
-
-    public String getTypeQuery() {
-	return query.getTypeQuery();
-    }
-
-    public Integer getUpdateCount() {
-	return query.getUpdateCount();
-    }
-
-    public ResultSetCollector getResultSetCollector() {
-	return query.getResultSetCollector();
-    }
-
-    public String getState() {
-	return query.getState();
-    }
-
-    public Transaction getTransaction() {
-	return query.getTransaction();
-    }
-
-    public int hashCode() {
-	return query.hashCode();
-    }
-
-    public boolean equals(final Object obj) {
-	if (obj instanceof QueryDecorator) {
-	    return query.equals(((QueryDecorator) obj).query);
+	public String getJDBCQuery() {
+		final String jdbcQuery = query.getJDBCQuery();
+		final String format = formatQuery.format(jdbcQuery, rdbms);
+		return format;
 	}
-	return query.equals(obj);
-    }
 
-    public String toString() {
-	final String nl = System.getProperty("line.separator");
+	public String getSQLQuery() {
+		final String sqlQuery = query.getSQLQuery();
+		final String format = formatQuery.format(sqlQuery, rdbms);
+		return format;
+	}
 
-	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
-	final StringMaker sb = stringFactory.newString();
+	public Date getDate() {
+		return query.getDate();
+	}
 
-	sb.append(getQueryNumber() + ".");
-	sb.append(nl);
-	sb.append("	Method : " + getMethodQuery());
-	sb.append(nl);
-	sb.append("	State  : " + getState());
-	sb.append(nl);
-	sb.append("	Query  : " + getSQLQuery());
+	public long getExecTime() {
+		return query.getExecTime();
+	}
 
-	return sb.toString();
-    }
+	public long getQueryNumber() {
+		return query.getQueryNumber();
+	}
+
+	public String getMethodQuery() {
+		return query.getMethodQuery();
+	}
+
+	public Map getJDBCParameters() {
+		return query.getJDBCParameters();
+	}
+
+	public String getTypeQuery() {
+		return query.getTypeQuery();
+	}
+
+	public Integer getUpdateCount() {
+		return query.getUpdateCount();
+	}
+
+	public ResultSetCollector getResultSetCollector() {
+		return query.getResultSetCollector();
+	}
+
+	public String getState() {
+		return query.getState();
+	}
+
+	public Transaction getTransaction() {
+		return query.getTransaction();
+	}
+
+	public int hashCode() {
+		return query.hashCode();
+	}
+
+	public boolean equals(final Object obj) {
+		if (obj instanceof QueryDecorator) {
+			return query.equals(((QueryDecorator) obj).query);
+		}
+		return query.equals(obj);
+	}
+
+	public String toString() {
+		final String nl = System.getProperty("line.separator");
+
+		final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+		final StringMaker sb = stringFactory.newString();
+
+		sb.append(getQueryNumber() + ".");
+		sb.append(nl);
+		sb.append("	Method : " + getMethodQuery());
+		sb.append(nl);
+		sb.append("	State  : " + getState());
+		sb.append(nl);
+		sb.append("	Query  : " + getSQLQuery());
+
+		return sb.toString();
+	}
 }

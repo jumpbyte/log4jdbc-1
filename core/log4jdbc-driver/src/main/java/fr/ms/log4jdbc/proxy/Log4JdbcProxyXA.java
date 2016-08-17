@@ -37,15 +37,16 @@ import fr.ms.log4jdbc.utils.ServicesJDBC;
  *
  */
 public final class Log4JdbcProxyXA {
-    public static XAResource proxyXAResource(final XAResource xaResource, final Log4JdbcContextXA log4JdbcContext) {
-	final SqlOperationLogger[] logs = ServicesJDBC.getMessageLogger(SqlOperationLogger.XA_RESOURCE);
 
-	final ProxyOperationFactory factory = new XAResourceOperationFactory(log4JdbcContext);
+	public static XAResource proxyXAResource(final XAResource xaResource, final Log4JdbcContextXA log4JdbcContext) {
+		final SqlOperationLogger[] logs = ServicesJDBC.getMessageLogger(SqlOperationLogger.XA_RESOURCE);
 
-	final InvocationHandler handler = Log4JdbcProxy.createHandler(xaResource, logs, factory);
+		final ProxyOperationFactory factory = new XAResourceOperationFactory(log4JdbcContext);
 
-	final XAResource instance = (XAResource) ProxyUtils.newProxyInstance(xaResource, handler);
+		final InvocationHandler handler = Log4JdbcProxy.createHandler(xaResource, logs, factory);
 
-	return instance;
-    }
+		final XAResource instance = (XAResource) ProxyUtils.newProxyInstance(xaResource, handler);
+
+		return instance;
+	}
 }

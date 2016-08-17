@@ -33,88 +33,89 @@ import fr.ms.lang.SystemPropertyUtils;
  */
 public final class Log4JdbcStackTrace {
 
-    private final static boolean stacktrace_filter = SystemPropertyUtils.getProperty("log4jdbc.stacktrace.filter", true);
+	private final static boolean stacktrace_filter = SystemPropertyUtils.getProperty("log4jdbc.stacktrace.filter",
+			true);
 
-    private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+	private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-    private final static String nl = System.getProperty("line.separator");
+	private final static String nl = System.getProperty("line.separator");
 
-    public static String getStackTraceFilter(StackTraceElement[] stackTrace) {
+	public static String getStackTraceFilter(StackTraceElement[] stackTrace) {
 
-	final StringBuilder sb = new StringBuilder();
-	if (props.logStackTrace()) {
+		final StringBuilder sb = new StringBuilder();
+		if (props.logStackTrace()) {
 
-	    final List<String> logStackTraceStartPackages = logStackTraceStartPackages();
-	    if (!logStackTraceStartPackages.isEmpty()) {
-		stackTrace = Log4JdbcStackTrace.getStackTrace(stackTrace, logStackTraceStartPackages);
-	    }
-	    for (final StackTraceElement stackTraceElement : stackTrace) {
-		sb.append(stackTraceElement);
-		sb.append(nl);
-	    }
-	}
-	return sb.toString();
-    }
-
-    private static List<String> logStackTraceStartPackages() {
-	final String property = props.getStacktraceStartPackages();
-	if (property == null || property.isEmpty()) {
-	    return new ArrayList<String>();
-	}
-	final String[] split = property.split(",");
-	final List<String> asList = Arrays.asList(split);
-	return asList;
-    }
-
-    public static StackTraceElement[] getStackTrace(final StackTraceElement[] stackTrace, final List<String> packages) {
-
-	final List<StackTraceElement> stackTracePackage = new ArrayList<StackTraceElement>();
-
-	for (final StackTraceElement stackTraceElement : stackTrace) {
-	    final String className = stackTraceElement.getClassName();
-	    for (final String p : packages) {
-		final boolean matches = className.startsWith(p.trim());
-		if (matches) {
-		    stackTracePackage.add(stackTraceElement);
-		    break;
+			final List<String> logStackTraceStartPackages = logStackTraceStartPackages();
+			if (!logStackTraceStartPackages.isEmpty()) {
+				stackTrace = Log4JdbcStackTrace.getStackTrace(stackTrace, logStackTraceStartPackages);
+			}
+			for (final StackTraceElement stackTraceElement : stackTrace) {
+				sb.append(stackTraceElement);
+				sb.append(nl);
+			}
 		}
-	    }
+		return sb.toString();
 	}
 
-	return stackTracePackage.toArray(new StackTraceElement[0]);
-    }
-
-    public static StackTraceElement[] getStackTrace() {
-	final Throwable t = new Throwable();
-	t.fillInStackTrace();
-
-	final StackTraceElement[] stackTrace = t.getStackTrace();
-
-	final StackTraceElement[] stackTraceDump = getStackTrace(stackTrace);
-	return stackTraceDump;
-    }
-
-    private static StackTraceElement[] getStackTrace(final StackTraceElement[] stackTrace) {
-	if (stackTrace == null || !stacktrace_filter) {
-	    return stackTrace;
+	private static List<String> logStackTraceStartPackages() {
+		final String property = props.getStacktraceStartPackages();
+		if (property == null || property.isEmpty()) {
+			return new ArrayList<String>();
+		}
+		final String[] split = property.split(",");
+		final List<String> asList = Arrays.asList(split);
+		return asList;
 	}
-	int position = 0;
-	for (position = 0; position < stackTrace.length; position++) {
-	    final String className = stackTrace[position].getClassName();
-	    if (!className.startsWith("fr.ms.log4jdbc")) {
-		break;
-	    }
+
+	public static StackTraceElement[] getStackTrace(final StackTraceElement[] stackTrace, final List<String> packages) {
+
+		final List<StackTraceElement> stackTracePackage = new ArrayList<StackTraceElement>();
+
+		for (final StackTraceElement stackTraceElement : stackTrace) {
+			final String className = stackTraceElement.getClassName();
+			for (final String p : packages) {
+				final boolean matches = className.startsWith(p.trim());
+				if (matches) {
+					stackTracePackage.add(stackTraceElement);
+					break;
+				}
+			}
+		}
+
+		return stackTracePackage.toArray(new StackTraceElement[0]);
 	}
-	position = position + 2;
-	final int stackTraceLength = stackTrace.length - position;
 
-	if (stackTraceLength < 1) {
-	    return stackTrace;
+	public static StackTraceElement[] getStackTrace() {
+		final Throwable t = new Throwable();
+		t.fillInStackTrace();
+
+		final StackTraceElement[] stackTrace = t.getStackTrace();
+
+		final StackTraceElement[] stackTraceDump = getStackTrace(stackTrace);
+		return stackTraceDump;
 	}
-	final StackTraceElement[] stackTraceDump = new StackTraceElement[stackTraceLength];
 
-	System.arraycopy(stackTrace, position, stackTraceDump, 0, stackTraceLength);
+	private static StackTraceElement[] getStackTrace(final StackTraceElement[] stackTrace) {
+		if (stackTrace == null || !stacktrace_filter) {
+			return stackTrace;
+		}
+		int position = 0;
+		for (position = 0; position < stackTrace.length; position++) {
+			final String className = stackTrace[position].getClassName();
+			if (!className.startsWith("fr.ms.log4jdbc")) {
+				break;
+			}
+		}
+		position = position + 2;
+		final int stackTraceLength = stackTrace.length - position;
 
-	return stackTraceDump;
-    }
+		if (stackTraceLength < 1) {
+			return stackTrace;
+		}
+		final StackTraceElement[] stackTraceDump = new StackTraceElement[stackTraceLength];
+
+		System.arraycopy(stackTrace, position, stackTraceDump, 0, stackTraceLength);
+
+		return stackTraceDump;
+	}
 }

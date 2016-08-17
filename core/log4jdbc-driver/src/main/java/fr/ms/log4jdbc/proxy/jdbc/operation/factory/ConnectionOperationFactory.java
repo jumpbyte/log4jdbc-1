@@ -36,37 +36,38 @@ import fr.ms.log4jdbc.proxy.jdbc.operation.ConnectionOperation;
  */
 public class ConnectionOperationFactory implements ProxyOperationFactory {
 
-    private boolean autoCommit = true;
+	private boolean autoCommit = true;
 
-    private final ConnectionContextJDBC connectionContext;
+	private final ConnectionContextJDBC connectionContext;
 
-    public ConnectionOperationFactory(final ConnectionContextJDBC connectionContext, final Connection connection) {
-	this.connectionContext = connectionContext;
-    }
-
-    public ProxyOperation newOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
-	final ProxyOperation operation = new ConnectionOperation(this, connectionContext, timeInvocation, method, args);
-
-	return operation;
-    }
-
-    public boolean isAutoCommit() {
-	return autoCommit;
-    }
-
-    public void setAutoCommit(final boolean autoCommit) {
-	this.autoCommit = autoCommit;
-    }
-
-    public boolean executeAutoCommit(final boolean autoCommit) {
-	boolean commit = false;
-
-	if (autoCommit && !this.autoCommit) {
-	    commit = true;
+	public ConnectionOperationFactory(final ConnectionContextJDBC connectionContext, final Connection connection) {
+		this.connectionContext = connectionContext;
 	}
 
-	this.autoCommit = autoCommit;
+	public ProxyOperation newOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method,
+			final Object[] args) {
+		final ProxyOperation operation = new ConnectionOperation(this, connectionContext, timeInvocation, method, args);
 
-	return commit;
-    }
+		return operation;
+	}
+
+	public boolean isAutoCommit() {
+		return autoCommit;
+	}
+
+	public void setAutoCommit(final boolean autoCommit) {
+		this.autoCommit = autoCommit;
+	}
+
+	public boolean executeAutoCommit(final boolean autoCommit) {
+		boolean commit = false;
+
+		if (autoCommit && !this.autoCommit) {
+			commit = true;
+		}
+
+		this.autoCommit = autoCommit;
+
+		return commit;
+	}
 }

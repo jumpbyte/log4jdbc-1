@@ -30,5 +30,5 @@ import fr.ms.log4jdbc.SqlOperation;
  */
 public interface Log4JdbcOperation extends ProxyOperation {
 
-    SqlOperation getOperation();
+	SqlOperation getOperation();
 }

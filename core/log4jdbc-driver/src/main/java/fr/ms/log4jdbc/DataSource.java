@@ -38,71 +38,71 @@ import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
  */
 public class DataSource extends AbstractRewriteDataSource implements javax.sql.DataSource {
 
-    private final static String PROPERTY = "fr.ms.log4jdbc.DataSource";
+	private final static String PROPERTY = "fr.ms.log4jdbc.DataSource";
 
-    private final Log4JdbcContext log4JdbcContext = new Log4JdbcContextJDBC();
+	private final Log4JdbcContext log4JdbcContext = new Log4JdbcContextJDBC();
 
-    private final javax.sql.DataSource dataSource;
+	private final javax.sql.DataSource dataSource;
 
-    public DataSource() {
-	this.dataSource = (javax.sql.DataSource) newInstanceDataSource();
-    }
-
-    public DataSource(final javax.sql.DataSource dataSource) {
-	this.dataSource = dataSource;
-    }
-
-    protected Object getImpl() {
-	return dataSource;
-    }
-
-    protected String getDataSourceClassName() {
-	final String className = System.getProperty(PROPERTY);
-	if (className == null) {
-	    throw new IllegalArgumentException("System property " + PROPERTY + " is not set !!!");
+	public DataSource() {
+		this.dataSource = (javax.sql.DataSource) newInstanceDataSource();
 	}
-	return className;
-    }
 
-    public Connection getConnection() throws SQLException {
-	final Connection c = dataSource.getConnection();
-	final Connection wrap = Log4JdbcProxy.proxyConnection(c, log4JdbcContext, dataSource.getClass());
+	public DataSource(final javax.sql.DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
 
-	return wrap;
-    }
+	protected Object getImpl() {
+		return dataSource;
+	}
 
-    public Connection getConnection(final String username, final String password) throws SQLException {
-	final Connection c = dataSource.getConnection(username, password);
-	final Connection wrap = Log4JdbcProxy.proxyConnection(c, log4JdbcContext, dataSource.getClass());
+	protected String getDataSourceClassName() {
+		final String className = System.getProperty(PROPERTY);
+		if (className == null) {
+			throw new IllegalArgumentException("System property " + PROPERTY + " is not set !!!");
+		}
+		return className;
+	}
 
-	return wrap;
-    }
+	public Connection getConnection() throws SQLException {
+		final Connection c = dataSource.getConnection();
+		final Connection wrap = Log4JdbcProxy.proxyConnection(c, log4JdbcContext, dataSource.getClass());
 
-    public PrintWriter getLogWriter() throws SQLException {
-	return dataSource.getLogWriter();
-    }
+		return wrap;
+	}
 
-    public Object unwrap(final Class iface) throws SQLException {
-	return dataSource.unwrap(iface);
-    }
+	public Connection getConnection(final String username, final String password) throws SQLException {
+		final Connection c = dataSource.getConnection(username, password);
+		final Connection wrap = Log4JdbcProxy.proxyConnection(c, log4JdbcContext, dataSource.getClass());
 
-    public void setLogWriter(final PrintWriter out) throws SQLException {
-	dataSource.setLogWriter(out);
-    }
+		return wrap;
+	}
 
-    public boolean isWrapperFor(final Class iface) throws SQLException {
-	return dataSource.isWrapperFor(iface);
-    }
+	public PrintWriter getLogWriter() throws SQLException {
+		return dataSource.getLogWriter();
+	}
 
-    public void setLoginTimeout(final int seconds) throws SQLException {
-	dataSource.setLoginTimeout(seconds);
-    }
+	public Object unwrap(final Class iface) throws SQLException {
+		return dataSource.unwrap(iface);
+	}
 
-    public int getLoginTimeout() throws SQLException {
-	return dataSource.getLoginTimeout();
-    }
+	public void setLogWriter(final PrintWriter out) throws SQLException {
+		dataSource.setLogWriter(out);
+	}
 
-    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-	return dataSource.getParentLogger();
-    }
+	public boolean isWrapperFor(final Class iface) throws SQLException {
+		return dataSource.isWrapperFor(iface);
+	}
+
+	public void setLoginTimeout(final int seconds) throws SQLException {
+		dataSource.setLoginTimeout(seconds);
+	}
+
+	public int getLoginTimeout() throws SQLException {
+		return dataSource.getLoginTimeout();
+	}
+
+	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+		return dataSource.getParentLogger();
+	}
 }

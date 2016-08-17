@@ -36,30 +36,32 @@ import fr.ms.log4jdbc.sql.internal.QueryFactory;
  */
 public class PreparedStatementOperationFactory extends StatementOperationFactory {
 
-    private final String sql;
+	private final String sql;
 
-    private boolean newQuery;
+	private boolean newQuery;
 
-    public PreparedStatementOperationFactory(final ConnectionContextJDBC connectionContext, final PreparedStatement statement, final QueryFactory queryFactory,
-	    final String sql) {
-	super(connectionContext, statement, queryFactory);
-	this.sql = sql;
-	query = queryFactory.newQuery(connectionContext, sql);
-    }
-
-    public ProxyOperation newOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method, final Object[] args) {
-	final ProxyOperation operation = new PreparedStatementOperation(queryFactory, this, statement, connectionContext, timeInvocation, method, args);
-
-	return operation;
-    }
-
-    public void createNewQuery() {
-	this.newQuery = true;
-    }
-
-    public void newQuery() {
-	if (newQuery) {
-	    query = queryFactory.newQuery(connectionContext, sql, query.getJDBCParameters());
+	public PreparedStatementOperationFactory(final ConnectionContextJDBC connectionContext,
+			final PreparedStatement statement, final QueryFactory queryFactory, final String sql) {
+		super(connectionContext, statement, queryFactory);
+		this.sql = sql;
+		query = queryFactory.newQuery(connectionContext, sql);
 	}
-    }
+
+	public ProxyOperation newOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method,
+			final Object[] args) {
+		final ProxyOperation operation = new PreparedStatementOperation(queryFactory, this, statement,
+				connectionContext, timeInvocation, method, args);
+
+		return operation;
+	}
+
+	public void createNewQuery() {
+		this.newQuery = true;
+	}
+
+	public void newQuery() {
+		if (newQuery) {
+			query = queryFactory.newQuery(connectionContext, sql, query.getJDBCParameters());
+		}
+	}
 }

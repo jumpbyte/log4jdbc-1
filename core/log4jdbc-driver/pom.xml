@@ -45,6 +45,11 @@
 			<artifactId>service-provider</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.marcosemiao</groupId>
+			<artifactId>extend-lang</artifactId>
+		</dependency>
+
 		<!-- Tests -->
 		<dependency>
 			<groupId>junit</groupId>

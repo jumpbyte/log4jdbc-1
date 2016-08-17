@@ -5,7 +5,7 @@ import fr.ms.log4jdbc.context.jdbc.TransactionContextJDBC;
 
 public class TransactionContextXAFactory implements TransactionContextFactory {
 
-    public TransactionContextJDBC newTransactionContext() {
-	return new TransactionContextXA();
-    }
+	public TransactionContextJDBC newTransactionContext() {
+		return new TransactionContextXA();
+	}
 }

@@ -38,82 +38,82 @@ import fr.ms.util.logging.LoggerManager;
  */
 public class ImplementationDecorator implements InvocationHandler {
 
-    private final static Logger LOG = LoggerManager.getLogger(ImplementationDecorator.class);
+	private final static Logger LOG = LoggerManager.getLogger(ImplementationDecorator.class);
 
-    private final Object impl;
+	private final Object impl;
 
-    private final ImplementationProxy ip;
+	private final ImplementationProxy ip;
 
-    public ImplementationDecorator(final Object impl, final ImplementationProxy ip) {
-	if (ip == null) {
-	    throw new NullPointerException();
-	}
-	this.impl = impl;
-	this.ip = ip;
-    }
-
-    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-	if (LOG.isDebugEnabled()) {
-	    final String declaringClass = method.getDeclaringClass().getName();
-	    final String name = method.getName();
-
-	    LOG.debug(declaringClass + "." + name);
-	}
-
-	final Object invoke = method.invoke(impl, args);
-
-	final Object createProxy = ip.createProxy(this, invoke);
-	if (createProxy != invoke) {
-	    return createProxy;
-	}
-
-	if (invoke != null) {
-	    final Class clazz = invoke.getClass();
-	    final Class returnType = method.getReturnType();
-	    final boolean isPrimitive = clazz.isPrimitive() && returnType.isPrimitive();
-	    final boolean isInterface = returnType.isInterface();
-	    if (!isPrimitive && isInterface) {
-		final boolean isArray = returnType.isArray();
-		if (isArray) {
-		    final Object[] invokes = (Object[]) invoke;
-		    if (invokes.length == 0) {
-			return invokes;
-		    }
-
-		    final List liste = new ArrayList();
-		    for (int i = 0; i < invokes.length; i++) {
-			final Object invokeOnly = invokes[i];
-			final Object wrapObject = createProxy(invokeOnly);
-			liste.add(wrapObject);
-		    }
-
-		    return liste.toArray((Object[]) Array.newInstance(returnType.getComponentType(), liste.size()));
-		} else {
-		    final Object wrapObject = createProxy(invoke);
-		    return wrapObject;
+	public ImplementationDecorator(final Object impl, final ImplementationProxy ip) {
+		if (ip == null) {
+			throw new NullPointerException();
 		}
-	    }
+		this.impl = impl;
+		this.ip = ip;
 	}
 
-	return invoke;
-    }
+	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+		if (LOG.isDebugEnabled()) {
+			final String declaringClass = method.getDeclaringClass().getName();
+			final String name = method.getName();
 
-    private Object createProxy(final Object impl) {
-	final Class clazz = impl.getClass();
-	final ClassLoader classLoader = clazz.getClassLoader();
-	final Class[] interfaces = ClassUtils.findInterfaces(clazz);
+			LOG.debug(declaringClass + "." + name);
+		}
 
-	if (interfaces == null || interfaces.length == 0) {
-	    return impl;
+		final Object invoke = method.invoke(impl, args);
+
+		final Object createProxy = ip.createProxy(this, invoke);
+		if (createProxy != invoke) {
+			return createProxy;
+		}
+
+		if (invoke != null) {
+			final Class clazz = invoke.getClass();
+			final Class returnType = method.getReturnType();
+			final boolean isPrimitive = clazz.isPrimitive() && returnType.isPrimitive();
+			final boolean isInterface = returnType.isInterface();
+			if (!isPrimitive && isInterface) {
+				final boolean isArray = returnType.isArray();
+				if (isArray) {
+					final Object[] invokes = (Object[]) invoke;
+					if (invokes.length == 0) {
+						return invokes;
+					}
+
+					final List liste = new ArrayList();
+					for (int i = 0; i < invokes.length; i++) {
+						final Object invokeOnly = invokes[i];
+						final Object wrapObject = createProxy(invokeOnly);
+						liste.add(wrapObject);
+					}
+
+					return liste.toArray((Object[]) Array.newInstance(returnType.getComponentType(), liste.size()));
+				} else {
+					final Object wrapObject = createProxy(invoke);
+					return wrapObject;
+				}
+			}
+		}
+
+		return invoke;
 	}
-	final InvocationHandler ih = new ImplementationDecorator(impl, ip);
 
-	final Object proxy = Proxy.newProxyInstance(classLoader, interfaces, ih);
+	private Object createProxy(final Object impl) {
+		final Class clazz = impl.getClass();
+		final ClassLoader classLoader = clazz.getClassLoader();
+		final Class[] interfaces = ClassUtils.findInterfaces(clazz);
 
-	return proxy;
-    }
+		if (interfaces == null || interfaces.length == 0) {
+			return impl;
+		}
+		final InvocationHandler ih = new ImplementationDecorator(impl, ip);
 
-    public static interface ImplementationProxy {
-	public Object createProxy(final ImplementationDecorator origine, final Object invoke);
-    }
+		final Object proxy = Proxy.newProxyInstance(classLoader, interfaces, ih);
+
+		return proxy;
+	}
+
+	public static interface ImplementationProxy {
+		public Object createProxy(final ImplementationDecorator origine, final Object invoke);
+	}
 }

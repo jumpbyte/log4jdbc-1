@@ -29,9 +29,9 @@ import fr.ms.lang.stringmaker.impl.StringMaker;
  */
 public interface StringMakerFactory {
 
-    StringMaker newString();
+	StringMaker newString();
 
-    StringMaker newString(int capacity);
+	StringMaker newString(int capacity);
 
-    StringMaker newString(String str);
+	StringMaker newString(String str);
 }

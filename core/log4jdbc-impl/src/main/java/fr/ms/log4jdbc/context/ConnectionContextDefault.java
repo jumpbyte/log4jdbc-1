@@ -37,82 +37,82 @@ import fr.ms.log4jdbc.utils.ServicesJDBC;
  */
 public class ConnectionContextDefault {
 
-    private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
+	private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
 
-    private final static SyncLong totalConnectionNumber = syncLongFactory.newLong();
+	private final static SyncLong totalConnectionNumber = syncLongFactory.newLong();
 
-    private final static SyncLong openConnection = syncLongFactory.newLong();
+	private final static SyncLong openConnection = syncLongFactory.newLong();
 
-    protected long connectionNumber;
+	protected long connectionNumber;
 
-    protected String driverName;
+	protected String driverName;
 
-    protected String url;
+	protected String url;
 
-    protected final RdbmsSpecifics rdbmsSpecifics;
+	protected final RdbmsSpecifics rdbmsSpecifics;
 
-    {
-	this.connectionNumber = totalConnectionNumber.incrementAndGet();
-	openConnection.incrementAndGet();
-    }
-
-    public ConnectionContextDefault(final Class clazz, final String url) {
-	driverName = clazz.getName();
-	this.rdbmsSpecifics = getRdbms(driverName);
-	this.url = url;
-    }
-
-    public void close() {
-	openConnection.decrementAndGet();
-    }
-
-    public long getConnectionNumber() {
-	return connectionNumber;
-    }
-
-    public SyncLong getTotalConnectionNumber() {
-	return totalConnectionNumber;
-    }
-
-    public SyncLong getOpenConnection() {
-	return openConnection;
-    }
-
-    public String getDriverName() {
-	return driverName;
-    }
-
-    public String getUrl() {
-	return url;
-    }
-
-    public RdbmsSpecifics getRdbmsSpecifics() {
-	return rdbmsSpecifics;
-    }
-
-    public String toString() {
-	final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
-	final StringMaker buffer = stringFactory.newString();
-
-	buffer.append("ConnectionContextDefault [driverName=");
-	buffer.append(driverName);
-	buffer.append(", url=");
-	buffer.append(url);
-	buffer.append(", connectionNumber=");
-	buffer.append(connectionNumber);
-	buffer.append(", rdbmsSpecifics=");
-	buffer.append(rdbmsSpecifics);
-	buffer.append("]");
-
-	return buffer.toString();
-    }
-
-    private final static RdbmsSpecifics getRdbms(final String driverClass) {
-	RdbmsSpecifics rdbmsSpecifics = ServicesJDBC.getRdbmsSpecifics(driverClass);
-	if (rdbmsSpecifics == null) {
-	    rdbmsSpecifics = GenericRdbmsSpecifics.getInstance();
+	{
+		this.connectionNumber = totalConnectionNumber.incrementAndGet();
+		openConnection.incrementAndGet();
 	}
 
-	return rdbmsSpecifics;
-    }
+	public ConnectionContextDefault(final Class clazz, final String url) {
+		driverName = clazz.getName();
+		this.rdbmsSpecifics = getRdbms(driverName);
+		this.url = url;
+	}
+
+	public void close() {
+		openConnection.decrementAndGet();
+	}
+
+	public long getConnectionNumber() {
+		return connectionNumber;
+	}
+
+	public SyncLong getTotalConnectionNumber() {
+		return totalConnectionNumber;
+	}
+
+	public SyncLong getOpenConnection() {
+		return openConnection;
+	}
+
+	public String getDriverName() {
+		return driverName;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public RdbmsSpecifics getRdbmsSpecifics() {
+		return rdbmsSpecifics;
+	}
+
+	public String toString() {
+		final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+		final StringMaker buffer = stringFactory.newString();
+
+		buffer.append("ConnectionContextDefault [driverName=");
+		buffer.append(driverName);
+		buffer.append(", url=");
+		buffer.append(url);
+		buffer.append(", connectionNumber=");
+		buffer.append(connectionNumber);
+		buffer.append(", rdbmsSpecifics=");
+		buffer.append(rdbmsSpecifics);
+		buffer.append("]");
+
+		return buffer.toString();
+	}
+
+	private final static RdbmsSpecifics getRdbms(final String driverClass) {
+		RdbmsSpecifics rdbmsSpecifics = ServicesJDBC.getRdbmsSpecifics(driverClass);
+		if (rdbmsSpecifics == null) {
+			rdbmsSpecifics = GenericRdbmsSpecifics.getInstance();
+		}
+
+		return rdbmsSpecifics;
+	}
 }

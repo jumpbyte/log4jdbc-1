@@ -38,63 +38,65 @@ import fr.ms.log4jdbc.datasource.XAConnectionDecorator;
  */
 public class XADataSource extends AbstractRewriteDataSource implements javax.sql.XADataSource {
 
-    private final static String PROPERTY = "fr.ms.log4jdbc.XADataSource";
+	private final static String PROPERTY = "fr.ms.log4jdbc.XADataSource";
 
-    private final Log4JdbcContextXA log4JdbcContext = new Log4JdbcContextXA();
+	private final Log4JdbcContextXA log4JdbcContext = new Log4JdbcContextXA();
 
-    private final javax.sql.XADataSource xaDataSource;
+	private final javax.sql.XADataSource xaDataSource;
 
-    public XADataSource() {
-	this.xaDataSource = (javax.sql.XADataSource) newInstanceDataSource();
-    }
-
-    public XADataSource(final javax.sql.XADataSource xaDataSource) {
-	this.xaDataSource = xaDataSource;
-    }
-
-    protected Object getImpl() {
-	return xaDataSource;
-    }
-
-    protected String getDataSourceClassName() {
-	final String className = System.getProperty(PROPERTY);
-	if (className == null) {
-	    throw new IllegalArgumentException("System property " + PROPERTY + " is not set !!!");
+	public XADataSource() {
+		this.xaDataSource = (javax.sql.XADataSource) newInstanceDataSource();
 	}
-	return className;
-    }
 
-    public XAConnection getXAConnection() throws SQLException {
-	final XAConnection xaConnection = xaDataSource.getXAConnection();
-	final XAConnection wrap = (XAConnection) XAConnectionDecorator.proxyConnection(log4JdbcContext, xaConnection, xaDataSource);
+	public XADataSource(final javax.sql.XADataSource xaDataSource) {
+		this.xaDataSource = xaDataSource;
+	}
 
-	return wrap;
-    }
+	protected Object getImpl() {
+		return xaDataSource;
+	}
 
-    public XAConnection getXAConnection(final String user, final String password) throws SQLException {
-	final XAConnection xaConnection = xaDataSource.getXAConnection(user, password);
-	final XAConnection wrap = (XAConnection) XAConnectionDecorator.proxyConnection(log4JdbcContext, xaConnection, xaDataSource);
+	protected String getDataSourceClassName() {
+		final String className = System.getProperty(PROPERTY);
+		if (className == null) {
+			throw new IllegalArgumentException("System property " + PROPERTY + " is not set !!!");
+		}
+		return className;
+	}
 
-	return wrap;
-    }
+	public XAConnection getXAConnection() throws SQLException {
+		final XAConnection xaConnection = xaDataSource.getXAConnection();
+		final XAConnection wrap = (XAConnection) XAConnectionDecorator.proxyConnection(log4JdbcContext, xaConnection,
+				xaDataSource);
 
-    public PrintWriter getLogWriter() throws SQLException {
-	return xaDataSource.getLogWriter();
-    }
+		return wrap;
+	}
 
-    public void setLogWriter(final PrintWriter out) throws SQLException {
-	xaDataSource.setLogWriter(out);
-    }
+	public XAConnection getXAConnection(final String user, final String password) throws SQLException {
+		final XAConnection xaConnection = xaDataSource.getXAConnection(user, password);
+		final XAConnection wrap = (XAConnection) XAConnectionDecorator.proxyConnection(log4JdbcContext, xaConnection,
+				xaDataSource);
 
-    public void setLoginTimeout(final int seconds) throws SQLException {
-	xaDataSource.setLoginTimeout(seconds);
-    }
+		return wrap;
+	}
 
-    public int getLoginTimeout() throws SQLException {
-	return xaDataSource.getLoginTimeout();
-    }
+	public PrintWriter getLogWriter() throws SQLException {
+		return xaDataSource.getLogWriter();
+	}
 
-    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-	return xaDataSource.getParentLogger();
-    }
+	public void setLogWriter(final PrintWriter out) throws SQLException {
+		xaDataSource.setLogWriter(out);
+	}
+
+	public void setLoginTimeout(final int seconds) throws SQLException {
+		xaDataSource.setLoginTimeout(seconds);
+	}
+
+	public int getLoginTimeout() throws SQLException {
+		return xaDataSource.getLoginTimeout();
+	}
+
+	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+		return xaDataSource.getParentLogger();
+	}
 }

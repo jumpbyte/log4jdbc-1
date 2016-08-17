@@ -36,118 +36,118 @@ import fr.ms.util.logging.Logger;
  */
 public class DefaultLogger implements Logger {
 
-    private final static StringMakerFactory stringMakerFactory = DefaultStringMakerFactory.getInstance();
+	private final static StringMakerFactory stringMakerFactory = DefaultStringMakerFactory.getInstance();
 
-    private final PrintHandler printHandler;
+	private final PrintHandler printHandler;
 
-    private final String name;
+	private final String name;
 
-    private String level;
+	private String level;
 
-    private boolean debug;
+	private boolean debug;
 
-    private boolean info;
+	private boolean info;
 
-    private boolean warn;
+	private boolean warn;
 
-    private boolean error;
+	private boolean error;
 
-    public DefaultLogger(final PrintHandler printHandler, final String level, final String name) {
+	public DefaultLogger(final PrintHandler printHandler, final String level, final String name) {
 
-	this.printHandler = printHandler;
+		this.printHandler = printHandler;
 
-	if (level != null) {
-	    if (level.equals("debug")) {
-		debug = true;
-		info = true;
-		error = true;
-	    } else if (level.equals("info")) {
-		info = true;
-		error = true;
-	    } else if (level.equals("warn")) {
-		warn = true;
-		error = true;
-	    } else if (level.equals("error")) {
-		error = true;
-	    }
+		if (level != null) {
+			if (level.equals("debug")) {
+				debug = true;
+				info = true;
+				error = true;
+			} else if (level.equals("info")) {
+				info = true;
+				error = true;
+			} else if (level.equals("warn")) {
+				warn = true;
+				error = true;
+			} else if (level.equals("error")) {
+				error = true;
+			}
 
-	    this.level = level.toUpperCase();
+			this.level = level.toUpperCase();
+		}
+
+		this.name = name;
 	}
 
-	this.name = name;
-    }
-
-    public boolean isDebugEnabled() {
-	return debug;
-    }
-
-    public boolean isInfoEnabled() {
-	return info;
-    }
-
-    public boolean isWarnEnabled() {
-	return warn;
-    }
-
-    public boolean isErrorEnabled() {
-	return error;
-    }
-
-    public void debug(final String message) {
-	if (isDebugEnabled()) {
-	    final String formatMessage = formatMessage(message);
-	    printHandler.debug(formatMessage);
+	public boolean isDebugEnabled() {
+		return debug;
 	}
-    }
 
-    public void info(final String message) {
-	if (isInfoEnabled()) {
-	    final String formatMessage = formatMessage(message);
-	    printHandler.info(formatMessage);
+	public boolean isInfoEnabled() {
+		return info;
 	}
-    }
 
-    public void warn(final String message) {
-	if (isWarnEnabled()) {
-	    final String formatMessage = formatMessage(message);
-	    printHandler.warn(formatMessage);
+	public boolean isWarnEnabled() {
+		return warn;
 	}
-    }
 
-    public void error(final String message) {
-	if (isErrorEnabled()) {
-	    final String formatMessage = formatMessage(message);
-	    printHandler.error(formatMessage);
+	public boolean isErrorEnabled() {
+		return error;
 	}
-    }
 
-    private String formatMessage(final String message) {
-	final Date now = new Date();
+	public void debug(final String message) {
+		if (isDebugEnabled()) {
+			final String formatMessage = formatMessage(message);
+			printHandler.debug(formatMessage);
+		}
+	}
 
-	final StringMaker newMessage = stringMakerFactory.newString();
-	newMessage.append("[");
-	newMessage.append(now);
-	newMessage.append("]");
+	public void info(final String message) {
+		if (isInfoEnabled()) {
+			final String formatMessage = formatMessage(message);
+			printHandler.info(formatMessage);
+		}
+	}
 
-	newMessage.append(" [");
-	newMessage.append(level);
-	newMessage.append("]");
+	public void warn(final String message) {
+		if (isWarnEnabled()) {
+			final String formatMessage = formatMessage(message);
+			printHandler.warn(formatMessage);
+		}
+	}
 
-	newMessage.append(" [");
-	newMessage.append(name);
-	newMessage.append("] ");
+	public void error(final String message) {
+		if (isErrorEnabled()) {
+			final String formatMessage = formatMessage(message);
+			printHandler.error(formatMessage);
+		}
+	}
 
-	newMessage.append(message);
+	private String formatMessage(final String message) {
+		final Date now = new Date();
 
-	return newMessage.toString();
-    }
+		final StringMaker newMessage = stringMakerFactory.newString();
+		newMessage.append("[");
+		newMessage.append(now);
+		newMessage.append("]");
 
-    public PrintWriter getPrintWriter() {
-	final Writer writerLogger = new WriterLogger(this);
-	return new PrintWriter(writerLogger);
-    }
+		newMessage.append(" [");
+		newMessage.append(level);
+		newMessage.append("]");
 
-    public String toString() {
-	return "DefaultLogger [name=" + name + ", level=" + level + "]";
-    }
+		newMessage.append(" [");
+		newMessage.append(name);
+		newMessage.append("] ");
+
+		newMessage.append(message);
+
+		return newMessage.toString();
+	}
+
+	public PrintWriter getPrintWriter() {
+		final Writer writerLogger = new WriterLogger(this);
+		return new PrintWriter(writerLogger);
+	}
+
+	public String toString() {
+		return "DefaultLogger [name=" + name + ", level=" + level + "]";
+	}
 }

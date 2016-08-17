@@ -37,40 +37,41 @@ import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
  */
 public class ConnectionDecorator implements ImplementationProxy {
 
-    protected final Log4JdbcContext log4JdbcContext;
+	protected final Log4JdbcContext log4JdbcContext;
 
-    private final Object sourceImpl;
+	private final Object sourceImpl;
 
-    protected ConnectionDecorator(final Log4JdbcContext log4JdbcContext, final Object sourceImpl) {
-	this.log4JdbcContext = log4JdbcContext;
-	this.sourceImpl = sourceImpl;
-    }
-
-    public static Object proxyConnection(final Log4JdbcContext log4JdbcContext, final Object impl, final Object sourceImpl) {
-	final ImplementationProxy ip = new ConnectionDecorator(log4JdbcContext, sourceImpl);
-
-	return proxyConnection(ip, impl, sourceImpl);
-    }
-
-    public static Object proxyConnection(final ImplementationProxy ip, final Object impl, final Object sourceImpl) {
-	final InvocationHandler ih = new ImplementationDecorator(impl, ip);
-
-	final Class clazz = impl.getClass();
-	final ClassLoader classLoader = clazz.getClassLoader();
-	final Class[] interfaces = ClassUtils.findInterfaces(clazz);
-	final Object wrap = Proxy.newProxyInstance(classLoader, interfaces, ih);
-
-	return wrap;
-    }
-
-    public Object createProxy(final ImplementationDecorator origine, final Object invoke) {
-	if (invoke instanceof Connection) {
-
-	    final Connection c = (Connection) invoke;
-
-	    final Connection wrapObject = Log4JdbcProxy.proxyConnection(c, log4JdbcContext, sourceImpl.getClass());
-	    return wrapObject;
+	protected ConnectionDecorator(final Log4JdbcContext log4JdbcContext, final Object sourceImpl) {
+		this.log4JdbcContext = log4JdbcContext;
+		this.sourceImpl = sourceImpl;
 	}
-	return invoke;
-    }
+
+	public static Object proxyConnection(final Log4JdbcContext log4JdbcContext, final Object impl,
+			final Object sourceImpl) {
+		final ImplementationProxy ip = new ConnectionDecorator(log4JdbcContext, sourceImpl);
+
+		return proxyConnection(ip, impl, sourceImpl);
+	}
+
+	public static Object proxyConnection(final ImplementationProxy ip, final Object impl, final Object sourceImpl) {
+		final InvocationHandler ih = new ImplementationDecorator(impl, ip);
+
+		final Class clazz = impl.getClass();
+		final ClassLoader classLoader = clazz.getClassLoader();
+		final Class[] interfaces = ClassUtils.findInterfaces(clazz);
+		final Object wrap = Proxy.newProxyInstance(classLoader, interfaces, ih);
+
+		return wrap;
+	}
+
+	public Object createProxy(final ImplementationDecorator origine, final Object invoke) {
+		if (invoke instanceof Connection) {
+
+			final Connection c = (Connection) invoke;
+
+			final Connection wrapObject = Log4JdbcProxy.proxyConnection(c, log4JdbcContext, sourceImpl.getClass());
+			return wrapObject;
+		}
+		return invoke;
+	}
 }

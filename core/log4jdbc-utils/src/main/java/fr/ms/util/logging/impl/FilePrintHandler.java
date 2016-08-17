@@ -31,29 +31,29 @@ import fr.ms.java.io.FilePrint;
  */
 public class FilePrintHandler implements PrintHandler {
 
-    private final FilePrint filePrint;
+	private final FilePrint filePrint;
 
-    public FilePrintHandler(final File file) {
-	filePrint = new FilePrint(file);
-    }
+	public FilePrintHandler(final File file) {
+		filePrint = new FilePrint(file);
+	}
 
-    public void debug(final String message) {
-	write(message);
-    }
+	public void debug(final String message) {
+		write(message);
+	}
 
-    public void info(final String message) {
-	write(message);
-    }
+	public void info(final String message) {
+		write(message);
+	}
 
-    public void error(final String message) {
-	write(message);
-    }
+	public void error(final String message) {
+		write(message);
+	}
 
-    public void warn(final String message) {
-	write(message);
-    }
+	public void warn(final String message) {
+		write(message);
+	}
 
-    private void write(final String message) {
-	filePrint.println(message);
-    }
+	private void write(final String message) {
+		filePrint.println(message);
+	}
 }

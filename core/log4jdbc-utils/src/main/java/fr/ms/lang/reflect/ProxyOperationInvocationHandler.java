@@ -30,50 +30,50 @@ import java.lang.reflect.Method;
  */
 public class ProxyOperationInvocationHandler implements InvocationHandler {
 
-    private final Object implementation;
+	private final Object implementation;
 
-    private final TimeInvocationHandler invocationHandler;
+	private final TimeInvocationHandler invocationHandler;
 
-    private final ProxyOperationFactory factory;
+	private final ProxyOperationFactory factory;
 
-    public ProxyOperationInvocationHandler(final Object implementation, final ProxyOperationFactory factory) {
-	this.implementation = implementation;
-	this.invocationHandler = new TimeInvocationHandler(this.implementation);
-	this.factory = factory;
-    }
-
-    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-	final TimeInvocation timeInvocation = (TimeInvocation) invocationHandler.invoke(proxy, method, args);
-
-	final Throwable targetException = timeInvocation.getTargetException();
-
-	final ProxyOperation operationContext = factory.newOperation(timeInvocation, proxy, method, args);
-
-	final boolean buildOperation = preProcess();
-	if (buildOperation) {
-	    postProcess(operationContext, timeInvocation, proxy, method, args);
+	public ProxyOperationInvocationHandler(final Object implementation, final ProxyOperationFactory factory) {
+		this.implementation = implementation;
+		this.invocationHandler = new TimeInvocationHandler(this.implementation);
+		this.factory = factory;
 	}
 
-	if (targetException != null) {
-	    throw targetException;
+	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+		final TimeInvocation timeInvocation = (TimeInvocation) invocationHandler.invoke(proxy, method, args);
+
+		final Throwable targetException = timeInvocation.getTargetException();
+
+		final ProxyOperation operationContext = factory.newOperation(timeInvocation, proxy, method, args);
+
+		final boolean buildOperation = preProcess();
+		if (buildOperation) {
+			postProcess(operationContext, timeInvocation, proxy, method, args);
+		}
+
+		if (targetException != null) {
+			throw targetException;
+		}
+
+		final Object wrapInvoke = operationContext.getInvoke();
+
+		return wrapInvoke;
 	}
 
-	final Object wrapInvoke = operationContext.getInvoke();
+	public boolean preProcess() {
+		return false;
+	}
 
-	return wrapInvoke;
-    }
+	public void postProcess(final ProxyOperation operationContext, final TimeInvocation timeInvocation,
+			final Object proxy, final Method method, final Object[] args) {
+		// NOOP
+	}
 
-    public boolean preProcess() {
-	return false;
-    }
-
-    public void postProcess(final ProxyOperation operationContext, final TimeInvocation timeInvocation, final Object proxy, final Method method,
-	    final Object[] args) {
-	// NOOP
-    }
-
-    public Object getImplementation() {
-	return implementation;
-    }
+	public Object getImplementation() {
+		return implementation;
+	}
 
 }

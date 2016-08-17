@@ -40,94 +40,96 @@ import fr.ms.log4jdbc.writer.MessageWriter;
  */
 public class ConnectionMessage extends AbstractMessage {
 
-    private final static String nl = System.getProperty("line.separator");
+	private final static String nl = System.getProperty("line.separator");
 
-    private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
-    private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+	private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-    private final MessageProcess generic = new GenericMessage();
+	private final MessageProcess generic = new GenericMessage();
 
-    public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args, final Object invoke,
-	    final Throwable exception) {
+	public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args,
+			final Object invoke, final Throwable exception) {
 
-	final boolean transactionEnabled = props.logTransaction();
-	final boolean batchEnabled = props.logBatch();
-	final boolean allMethodEnabled = props.logGenericMessage();
+		final boolean transactionEnabled = props.logTransaction();
+		final boolean batchEnabled = props.logBatch();
+		final boolean allMethodEnabled = props.logGenericMessage();
 
-	if (transactionEnabled || batchEnabled || allMethodEnabled) {
-	    final MessageWriter newMessageWriter = super.newMessageWriter(message, method, args, invoke, exception);
+		if (transactionEnabled || batchEnabled || allMethodEnabled) {
+			final MessageWriter newMessageWriter = super.newMessageWriter(message, method, args, invoke, exception);
 
-	    return newMessageWriter;
-	}
-
-	return null;
-    }
-
-    public void buildLog(final MessageWriter messageWriter, final SqlOperation sqlOperation, final Method method, final Object[] args, final Object invoke) {
-
-	final boolean transactionEnabled = props.logTransaction();
-	final boolean batchEnabled = props.logBatch();
-	final boolean allMethodEnabled = props.logGenericMessage();
-
-	if (transactionEnabled) {
-	    final Transaction transaction = sqlOperation.getTransaction();
-
-	    if (transaction != null && (transaction.getTransactionState().startsWith(Transaction.STATE_COMMIT)
-		    || transaction.getTransactionState().startsWith(Transaction.STATE_ROLLBACK))) {
-		final Query[] queriesTransaction = transaction.getQueriesTransaction();
-		int commit = 0;
-		int rollback = 0;
-
-		final StringMaker queries = stringFactory.newString();
-
-		for (int i = 0; i < queriesTransaction.length; i++) {
-		    final Query q = queriesTransaction[i];
-
-		    if (Query.STATE_ROLLBACK.equals(q.getState())) {
-			rollback = rollback + 1;
-		    } else if (Query.STATE_COMMIT.equals(q.getState())) {
-			commit = commit + 1;
-		    }
-
-		    queries.append(q.getQueryNumber());
-		    queries.append(". ");
-
-		    queries.append(q.getState());
-		    queries.append(" : ");
-
-		    queries.append(q.getSQLQuery());
-		    queries.append("  ");
-
-		    queries.append("{executed in ");
-		    queries.append(q.getExecTime());
-		    queries.append(" ms} ");
-
-		    queries.append(nl);
+			return newMessageWriter;
 		}
 
-		final StringMaker message = stringFactory.newString();
-
-		message.append("commit : " + commit + " - rollback : " + rollback);
-		message.append(nl);
-		message.append("Transaction " + transaction.getTransactionNumber());
-		message.append(". Total " + transaction.getOpenTransaction());
-		message.append(" - Type : " + transaction.getTransactionType());
-		message.append(" - State : " + transaction.getTransactionState());
-		message.append(nl);
-		message.append(nl);
-
-		messageWriter.traceMessage(message.toString() + queries.toString());
-	    }
-	} else if (batchEnabled) {
-	    // A implementer
-	} else if (allMethodEnabled) {
-	    generic.buildLog(messageWriter, sqlOperation, method, args, invoke);
+		return null;
 	}
 
-    }
+	public void buildLog(final MessageWriter messageWriter, final SqlOperation sqlOperation, final Method method,
+			final Object[] args, final Object invoke) {
 
-    public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method, final Object[] args, final Throwable exception) {
-	generic.buildLog(messageWriter, message, method, args, exception);
-    }
+		final boolean transactionEnabled = props.logTransaction();
+		final boolean batchEnabled = props.logBatch();
+		final boolean allMethodEnabled = props.logGenericMessage();
+
+		if (transactionEnabled) {
+			final Transaction transaction = sqlOperation.getTransaction();
+
+			if (transaction != null && (transaction.getTransactionState().startsWith(Transaction.STATE_COMMIT)
+					|| transaction.getTransactionState().startsWith(Transaction.STATE_ROLLBACK))) {
+				final Query[] queriesTransaction = transaction.getQueriesTransaction();
+				int commit = 0;
+				int rollback = 0;
+
+				final StringMaker queries = stringFactory.newString();
+
+				for (int i = 0; i < queriesTransaction.length; i++) {
+					final Query q = queriesTransaction[i];
+
+					if (Query.STATE_ROLLBACK.equals(q.getState())) {
+						rollback = rollback + 1;
+					} else if (Query.STATE_COMMIT.equals(q.getState())) {
+						commit = commit + 1;
+					}
+
+					queries.append(q.getQueryNumber());
+					queries.append(". ");
+
+					queries.append(q.getState());
+					queries.append(" : ");
+
+					queries.append(q.getSQLQuery());
+					queries.append("  ");
+
+					queries.append("{executed in ");
+					queries.append(q.getExecTime());
+					queries.append(" ms} ");
+
+					queries.append(nl);
+				}
+
+				final StringMaker message = stringFactory.newString();
+
+				message.append("commit : " + commit + " - rollback : " + rollback);
+				message.append(nl);
+				message.append("Transaction " + transaction.getTransactionNumber());
+				message.append(". Total " + transaction.getOpenTransaction());
+				message.append(" - Type : " + transaction.getTransactionType());
+				message.append(" - State : " + transaction.getTransactionState());
+				message.append(nl);
+				message.append(nl);
+
+				messageWriter.traceMessage(message.toString() + queries.toString());
+			}
+		} else if (batchEnabled) {
+			// A implementer
+		} else if (allMethodEnabled) {
+			generic.buildLog(messageWriter, sqlOperation, method, args, invoke);
+		}
+
+	}
+
+	public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method,
+			final Object[] args, final Throwable exception) {
+		generic.buildLog(messageWriter, message, method, args, exception);
+	}
 }

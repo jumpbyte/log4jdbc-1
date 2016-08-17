@@ -33,28 +33,28 @@ import java.util.Map;
  */
 public final class CollectionsUtil {
 
-    private CollectionsUtil() {
-    }
-
-    public final static List convert(final Iterator iterator) {
-	final List list = new ArrayList();
-	while (iterator.hasNext()) {
-	    try {
-		final Object e = iterator.next();
-		list.add(e);
-	    } catch (final Throwable t) {
-		t.printStackTrace();
-	    }
+	private CollectionsUtil() {
 	}
 
-	return list;
-    }
+	public final static List convert(final Iterator iterator) {
+		final List list = new ArrayList();
+		while (iterator.hasNext()) {
+			try {
+				final Object e = iterator.next();
+				list.add(e);
+			} catch (final Throwable t) {
+				t.printStackTrace();
+			}
+		}
 
-    public final static List synchronizedList(final List list) {
-	return Collections.synchronizedList(list);
-    }
+		return list;
+	}
 
-    public final static Map synchronizedMap(final Map map) {
-	return Collections.synchronizedMap(map);
-    }
+	public final static List synchronizedList(final List list) {
+		return Collections.synchronizedList(list);
+	}
+
+	public final static Map synchronizedMap(final Map map) {
+		return Collections.synchronizedMap(map);
+	}
 }

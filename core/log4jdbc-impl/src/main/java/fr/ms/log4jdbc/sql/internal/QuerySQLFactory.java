@@ -35,40 +35,41 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  */
 public class QuerySQLFactory implements QueryFactory {
 
-    private final static QueryFactory instance = new QuerySQLFactory();
+	private final static QueryFactory instance = new QuerySQLFactory();
 
-    private QuerySQLFactory() {
-    }
-
-    public final static QueryFactory getInstance() {
-	return instance;
-    }
-
-    public QueryImpl newQuery(final ConnectionContextJDBC connectionContext, final String jdbcQuery) {
-	if (jdbcQuery == null) {
-	    final QueryImpl wrapper = new QueryImpl(null);
-	    return wrapper;
+	private QuerySQLFactory() {
 	}
 
-	final RdbmsSpecifics rdbms = connectionContext.getRdbmsSpecifics();
-	final QuerySQL query = new QuerySQL(rdbms, jdbcQuery);
-	final QueryImpl wrapper = new QueryImpl(query);
-
-	return wrapper;
-    }
-
-    public QueryImpl newQuery(final ConnectionContextJDBC connectionContext, final String jdbcQuery, final Map jdbcParameters) {
-	final QueryImpl query = newQuery(connectionContext, jdbcQuery);
-
-	final Iterator entries = jdbcParameters.entrySet().iterator();
-	while (entries.hasNext()) {
-	    final Entry thisEntry = (Entry) entries.next();
-	    final Object key = thisEntry.getKey();
-	    final Object value = thisEntry.getValue();
-
-	    query.putParams(key, value);
+	public final static QueryFactory getInstance() {
+		return instance;
 	}
 
-	return query;
-    }
+	public QueryImpl newQuery(final ConnectionContextJDBC connectionContext, final String jdbcQuery) {
+		if (jdbcQuery == null) {
+			final QueryImpl wrapper = new QueryImpl(null);
+			return wrapper;
+		}
+
+		final RdbmsSpecifics rdbms = connectionContext.getRdbmsSpecifics();
+		final QuerySQL query = new QuerySQL(rdbms, jdbcQuery);
+		final QueryImpl wrapper = new QueryImpl(query);
+
+		return wrapper;
+	}
+
+	public QueryImpl newQuery(final ConnectionContextJDBC connectionContext, final String jdbcQuery,
+			final Map jdbcParameters) {
+		final QueryImpl query = newQuery(connectionContext, jdbcQuery);
+
+		final Iterator entries = jdbcParameters.entrySet().iterator();
+		while (entries.hasNext()) {
+			final Entry thisEntry = (Entry) entries.next();
+			final Object key = thisEntry.getKey();
+			final Object value = thisEntry.getValue();
+
+			query.putParams(key, value);
+		}
+
+		return query;
+	}
 }

@@ -29,7 +29,7 @@ import fr.ms.lang.sync.impl.SyncLong;
  */
 public interface SyncLongFactory {
 
-    SyncLong newLong();
+	SyncLong newLong();
 
-    SyncLong newLong(long initialValue);
+	SyncLong newLong(long initialValue);
 }

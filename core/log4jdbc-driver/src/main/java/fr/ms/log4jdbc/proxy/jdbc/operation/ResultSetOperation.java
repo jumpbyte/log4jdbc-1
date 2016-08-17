@@ -37,76 +37,78 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  */
 public class ResultSetOperation implements Log4JdbcOperation {
 
-    private final static String ERROR = "LOG4JDBC-ERROR";
+	private final static String ERROR = "LOG4JDBC-ERROR";
 
-    private final TimeInvocation timeInvocation;
-    private final Method method;
-    private final Object[] args;
+	private final TimeInvocation timeInvocation;
+	private final Method method;
+	private final Object[] args;
 
-    private final ResultSetOperationFactory context;
+	private final ResultSetOperationFactory context;
 
-    private final ConnectionContextJDBC connectionContext;
+	private final ConnectionContextJDBC connectionContext;
 
-    private QueryImpl query;
+	private QueryImpl query;
 
-    public ResultSetOperation(final ResultSetOperationFactory context, final ConnectionContextJDBC connectionContext, final TimeInvocation timeInvocation,
-	    final Method method, final Object[] args) {
-	this.timeInvocation = timeInvocation;
-	this.method = method;
-	this.args = args;
+	public ResultSetOperation(final ResultSetOperationFactory context, final ConnectionContextJDBC connectionContext,
+			final TimeInvocation timeInvocation, final Method method, final Object[] args) {
+		this.timeInvocation = timeInvocation;
+		this.method = method;
+		this.args = args;
 
-	this.context = context;
-	this.connectionContext = connectionContext;
-    }
-
-    public SqlOperation getOperation() {
-
-	final Object invoke = timeInvocation.getInvoke();
-	boolean valid = timeInvocation.getTargetException() == null;
-	final String nameMethod = method.getName();
-
-	if (nameMethod.equals("next") && invoke != null) {
-	    valid = valid && ((Boolean) invoke).booleanValue();
-	    query = context.next(valid);
-	} else if (nameMethod.equals("previous") && invoke != null) {
-	    valid = valid && ((Boolean) invoke).booleanValue();
-	    query = context.previous(valid);
-	} else if (nameMethod.equals("first") && invoke != null) {
-	    valid = valid && ((Boolean) invoke).booleanValue();
-	    query = context.first(valid);
-	} else if (nameMethod.equals("last") && invoke != null) {
-	    valid = valid && ((Boolean) invoke).booleanValue();
-	    query = context.last(valid);
-	} else if (nameMethod.equals("beforeFirst")) {
-	    context.beforeFirst();
-	} else if (nameMethod.equals("afterLast")) {
-	    context.afterLast();
-	} else if (nameMethod.equals("wasNull") && context.lastCell != null && invoke != null && ((Boolean) invoke).booleanValue()) {
-	    context.wasNull();
-	} else if (nameMethod.startsWith("getMetaData") && invoke != null) {
-	    context.getMetaData(invoke);
-	} else if (nameMethod.startsWith("close")) {
-	    query = context.close();
-	} else if (nameMethod.startsWith("get") && args != null && args.length > 0) {
-	    get(valid, invoke);
+		this.context = context;
+		this.connectionContext = connectionContext;
 	}
 
-	final SqlOperationContext sqlOperationContext = new SqlOperationContext(timeInvocation, connectionContext, query);
-	return sqlOperationContext;
-    }
+	public SqlOperation getOperation() {
 
-    private void get(final boolean valid, Object invoke) {
-	final Class clazz = method.getParameterTypes()[0];
+		final Object invoke = timeInvocation.getInvoke();
+		boolean valid = timeInvocation.getTargetException() == null;
+		final String nameMethod = method.getName();
 
-	if (!valid) {
-	    invoke = ERROR;
-	    query = context.close();
+		if (nameMethod.equals("next") && invoke != null) {
+			valid = valid && ((Boolean) invoke).booleanValue();
+			query = context.next(valid);
+		} else if (nameMethod.equals("previous") && invoke != null) {
+			valid = valid && ((Boolean) invoke).booleanValue();
+			query = context.previous(valid);
+		} else if (nameMethod.equals("first") && invoke != null) {
+			valid = valid && ((Boolean) invoke).booleanValue();
+			query = context.first(valid);
+		} else if (nameMethod.equals("last") && invoke != null) {
+			valid = valid && ((Boolean) invoke).booleanValue();
+			query = context.last(valid);
+		} else if (nameMethod.equals("beforeFirst")) {
+			context.beforeFirst();
+		} else if (nameMethod.equals("afterLast")) {
+			context.afterLast();
+		} else if (nameMethod.equals("wasNull") && context.lastCell != null && invoke != null
+				&& ((Boolean) invoke).booleanValue()) {
+			context.wasNull();
+		} else if (nameMethod.startsWith("getMetaData") && invoke != null) {
+			context.getMetaData(invoke);
+		} else if (nameMethod.startsWith("close")) {
+			query = context.close();
+		} else if (nameMethod.startsWith("get") && args != null && args.length > 0) {
+			get(valid, invoke);
+		}
+
+		final SqlOperationContext sqlOperationContext = new SqlOperationContext(timeInvocation, connectionContext,
+				query);
+		return sqlOperationContext;
 	}
-	context.addValueColumn(clazz, args, invoke);
-    }
 
-    public Object getInvoke() {
-	final Object invoke = timeInvocation.getInvoke();
-	return invoke;
-    }
+	private void get(final boolean valid, Object invoke) {
+		final Class clazz = method.getParameterTypes()[0];
+
+		if (!valid) {
+			invoke = ERROR;
+			query = context.close();
+		}
+		context.addValueColumn(clazz, args, invoke);
+	}
+
+	public Object getInvoke() {
+		final Object invoke = timeInvocation.getInvoke();
+		return invoke;
+	}
 }

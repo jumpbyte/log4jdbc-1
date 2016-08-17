@@ -35,33 +35,33 @@ import fr.ms.util.logging.Logger;
  */
 public class WriterLogger extends Writer {
 
-    private final static StringMakerFactory smf = DefaultStringMakerFactory.getInstance();
+	private final static StringMakerFactory smf = DefaultStringMakerFactory.getInstance();
 
-    private final Logger logger;
+	private final Logger logger;
 
-    private StringMaker line = smf.newString();
+	private StringMaker line = smf.newString();
 
-    public WriterLogger(final Logger logger) {
-	this.logger = logger;
-    }
-
-    public void write(final char[] cbuf, final int off, final int len) throws IOException {
-	if (logger.isInfoEnabled()) {
-	    line.append(cbuf, off, len);
+	public WriterLogger(final Logger logger) {
+		this.logger = logger;
 	}
-    }
 
-    public void flush() throws IOException {
-	if (logger.isInfoEnabled()) {
-
-	    String l = line.toString();
-	    l = l.trim();
-	    logger.info(l);
-	    line = smf.newString();
+	public void write(final char[] cbuf, final int off, final int len) throws IOException {
+		if (logger.isInfoEnabled()) {
+			line.append(cbuf, off, len);
+		}
 	}
-    }
 
-    public void close() throws IOException {
-	// NO-OP
-    }
+	public void flush() throws IOException {
+		if (logger.isInfoEnabled()) {
+
+			String l = line.toString();
+			l = l.trim();
+			logger.info(l);
+			line = smf.newString();
+		}
+	}
+
+	public void close() throws IOException {
+		// NO-OP
+	}
 }

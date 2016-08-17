@@ -31,36 +31,36 @@ import fr.ms.lang.sync.impl.SyncLong;
  */
 public class TransactionContextDefault {
 
-    private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
+	private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
 
-    private final static SyncLong totalTransactionNumber = syncLongFactory.newLong();
+	private final static SyncLong totalTransactionNumber = syncLongFactory.newLong();
 
-    private final static SyncLong openTransactionCurrent = syncLongFactory.newLong();
+	private final static SyncLong openTransactionCurrent = syncLongFactory.newLong();
 
-    private long transactionNumber;
+	private long transactionNumber;
 
-    private long openTransaction;
+	private long openTransaction;
 
-    protected String state = Transaction.STATE_NOT_EXECUTE;
+	protected String state = Transaction.STATE_NOT_EXECUTE;
 
-    {
-	transactionNumber = totalTransactionNumber.incrementAndGet();
-	openTransaction = openTransactionCurrent.incrementAndGet();
-    }
+	{
+		transactionNumber = totalTransactionNumber.incrementAndGet();
+		openTransaction = openTransactionCurrent.incrementAndGet();
+	}
 
-    public void close() {
-	openTransactionCurrent.decrementAndGet();
-    }
+	public void close() {
+		openTransactionCurrent.decrementAndGet();
+	}
 
-    public long getOpenTransaction() {
-	return openTransaction;
-    }
+	public long getOpenTransaction() {
+		return openTransaction;
+	}
 
-    public long getTransactionNumber() {
-	return transactionNumber;
-    }
+	public long getTransactionNumber() {
+		return transactionNumber;
+	}
 
-    public String getTransactionState() {
-	return state;
-    }
+	public String getTransactionState() {
+		return state;
+	}
 }

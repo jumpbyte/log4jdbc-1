@@ -35,67 +35,68 @@ import fr.ms.util.logging.LoggerManager;
  */
 public class TimeInvocationHandler implements InvocationHandler {
 
-    private final static Logger LOG = LoggerManager.getLogger(TimeInvocationHandler.class);
+	private final static Logger LOG = LoggerManager.getLogger(TimeInvocationHandler.class);
 
-    private final Object implementation;
+	private final Object implementation;
 
-    public TimeInvocationHandler(final Object implementation) {
-	this.implementation = implementation;
-    }
-
-    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-	final TimeInvocation timeInvoke = new TimeInvocation();
-	try {
-	    Object invoke = null;
-
-	    if (invoke == null) {
-		final Object[] argsUnProxy = unProxyLog4Jdbc(args);
-
-		invoke = method.invoke(implementation, argsUnProxy);
-	    }
-
-	    if (LOG.isDebugEnabled()) {
-		LOG.debug("Method : " + method + " - args Proxy : " + args + " - args  : " + args + " - invoke : " + invoke);
-	    }
-
-	    timeInvoke.setInvoke(invoke);
-	} catch (final InvocationTargetException s) {
-	    final Throwable targetException = s.getTargetException();
-	    if (targetException == null) {
-		throw s;
-	    }
-	    if (LOG.isErrorEnabled()) {
-		LOG.error("Method : " + method + " - args Proxy : " + args + " - targetException : " + targetException);
-	    }
-	    timeInvoke.setTargetException(targetException);
-	} finally {
-	    timeInvoke.finish();
+	public TimeInvocationHandler(final Object implementation) {
+		this.implementation = implementation;
 	}
 
-	return timeInvoke;
-    }
+	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+		final TimeInvocation timeInvoke = new TimeInvocation();
+		try {
+			Object invoke = null;
 
-    private final Object[] unProxyLog4Jdbc(final Object[] args) {
-	Object[] dest = args;
-	if (dest != null && dest.length > 0) {
-	    dest = new Object[args.length];
-	    for (int i = 0; i < args.length; i++) {
-		Object obj = args[i];
-		if (args[i] != null && Proxy.isProxyClass(args[i].getClass())) {
-		    final InvocationHandler invocationHandler = Proxy.getInvocationHandler(args[i]);
-		    if (invocationHandler instanceof ProxyOperationInvocationHandler) {
-			final ProxyOperationInvocationHandler handler = (ProxyOperationInvocationHandler) invocationHandler;
-			obj = handler.getImplementation();
-		    }
+			if (invoke == null) {
+				final Object[] argsUnProxy = unProxyLog4Jdbc(args);
+
+				invoke = method.invoke(implementation, argsUnProxy);
+			}
+
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Method : " + method + " - args Proxy : " + args + " - args  : " + args + " - invoke : "
+						+ invoke);
+			}
+
+			timeInvoke.setInvoke(invoke);
+		} catch (final InvocationTargetException s) {
+			final Throwable targetException = s.getTargetException();
+			if (targetException == null) {
+				throw s;
+			}
+			if (LOG.isErrorEnabled()) {
+				LOG.error("Method : " + method + " - args Proxy : " + args + " - targetException : " + targetException);
+			}
+			timeInvoke.setTargetException(targetException);
+		} finally {
+			timeInvoke.finish();
 		}
-		dest[i] = obj;
-	    }
+
+		return timeInvoke;
 	}
 
-	return dest;
-    }
+	private final Object[] unProxyLog4Jdbc(final Object[] args) {
+		Object[] dest = args;
+		if (dest != null && dest.length > 0) {
+			dest = new Object[args.length];
+			for (int i = 0; i < args.length; i++) {
+				Object obj = args[i];
+				if (args[i] != null && Proxy.isProxyClass(args[i].getClass())) {
+					final InvocationHandler invocationHandler = Proxy.getInvocationHandler(args[i]);
+					if (invocationHandler instanceof ProxyOperationInvocationHandler) {
+						final ProxyOperationInvocationHandler handler = (ProxyOperationInvocationHandler) invocationHandler;
+						obj = handler.getImplementation();
+					}
+				}
+				dest[i] = obj;
+			}
+		}
 
-    public String toString() {
-	return "TimeInvocationHandler [implementation=" + implementation + "]";
-    }
+		return dest;
+	}
+
+	public String toString() {
+		return "TimeInvocationHandler [implementation=" + implementation + "]";
+	}
 }

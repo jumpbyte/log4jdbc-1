@@ -35,44 +35,45 @@ import fr.ms.log4jdbc.context.jdbc.TransactionContextFactory;
  */
 public class Log4JdbcContextXA implements Log4JdbcContext {
 
-    private final static TransactionContextFactory transactionContextFactory = new TransactionContextXAFactory();
+	private final static TransactionContextFactory transactionContextFactory = new TransactionContextXAFactory();
 
-    private ConnectionContextXA connectionContext;
+	private ConnectionContextXA connectionContext;
 
-    private TransactionContextXA transactionContext;
+	private TransactionContextXA transactionContext;
 
-    public ConnectionContextJDBC newConnectionContext(final Connection connection, final Class clazz) {
-	String url = null;
-	try {
-	    url = connection.getMetaData().getURL();
-	} catch (final SQLException e) {
+	public ConnectionContextJDBC newConnectionContext(final Connection connection, final Class clazz) {
+		String url = null;
+		try {
+			url = connection.getMetaData().getURL();
+		} catch (final SQLException e) {
+		}
+
+		connectionContext = new ConnectionContextXA(transactionContextFactory, clazz, url);
+
+		connectionContext.setTransactionContextXA(transactionContext);
+
+		return connectionContext;
 	}
 
-	connectionContext = new ConnectionContextXA(transactionContextFactory, clazz, url);
+	public ConnectionContextJDBC newConnectionContext(final Connection connection, final Driver driver,
+			final String url) {
+		final Class clazz = driver.getClass();
+		connectionContext = new ConnectionContextXA(transactionContextFactory, clazz, url);
 
-	connectionContext.setTransactionContextXA(transactionContext);
+		connectionContext.setTransactionContextXA(transactionContext);
 
-	return connectionContext;
-    }
+		return connectionContext;
+	}
 
-    public ConnectionContextJDBC newConnectionContext(final Connection connection, final Driver driver, final String url) {
-	final Class clazz = driver.getClass();
-	connectionContext = new ConnectionContextXA(transactionContextFactory, clazz, url);
+	public ConnectionContextXA getConnectionContext() {
+		return connectionContext;
+	}
 
-	connectionContext.setTransactionContextXA(transactionContext);
+	public TransactionContextXA getTransactionContext() {
+		return transactionContext;
+	}
 
-	return connectionContext;
-    }
-
-    public ConnectionContextXA getConnectionContext() {
-	return connectionContext;
-    }
-
-    public TransactionContextXA getTransactionContext() {
-	return transactionContext;
-    }
-
-    public void setTransactionContext(final TransactionContextXA transactionContext) {
-	this.transactionContext = transactionContext;
-    }
+	public void setTransactionContext(final TransactionContextXA transactionContext) {
+		this.transactionContext = transactionContext;
+	}
 }

@@ -27,23 +27,23 @@ package fr.ms.util.logging.impl;
  */
 public class SystemOutPrintHandler implements PrintHandler {
 
-    public void debug(final String message) {
-	write(message);
-    }
+	public void debug(final String message) {
+		write(message);
+	}
 
-    public void info(final String message) {
-	write(message);
-    }
+	public void info(final String message) {
+		write(message);
+	}
 
-    public void warn(final String message) {
-	write(message);
-    }
+	public void warn(final String message) {
+		write(message);
+	}
 
-    public void error(final String message) {
-	write(message);
-    }
+	public void error(final String message) {
+		write(message);
+	}
 
-    private void write(final String message) {
-	System.out.println(message);
-    }
+	private void write(final String message) {
+		System.out.println(message);
+	}
 }

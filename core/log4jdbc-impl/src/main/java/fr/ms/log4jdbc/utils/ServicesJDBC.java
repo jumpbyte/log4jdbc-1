@@ -36,61 +36,63 @@ import fr.ms.util.Service;
  */
 public final class ServicesJDBC {
 
-    public static SqlOperationLogger[] getMessageLogger(final String typeLogger) {
-	final List results = new ArrayList();
+	public static SqlOperationLogger[] getMessageLogger(final String typeLogger) {
+		final List results = new ArrayList();
 
-	for (int i = 0; i < MessageLoggerHolder.messageLogger.length; i++) {
-	    final SqlOperationLogger m = MessageLoggerHolder.messageLogger[i];
-	    final boolean type = m.isLogger(typeLogger);
-	    if (type) {
-		results.add(m);
-	    }
+		for (int i = 0; i < MessageLoggerHolder.messageLogger.length; i++) {
+			final SqlOperationLogger m = MessageLoggerHolder.messageLogger[i];
+			final boolean type = m.isLogger(typeLogger);
+			if (type) {
+				results.add(m);
+			}
+		}
+
+		return (SqlOperationLogger[]) results.toArray(new SqlOperationLogger[results.size()]);
 	}
 
-	return (SqlOperationLogger[]) results.toArray(new SqlOperationLogger[results.size()]);
-    }
+	public static RdbmsSpecifics getRdbmsSpecifics(final String classType) {
 
-    public static RdbmsSpecifics getRdbmsSpecifics(final String classType) {
-
-	for (int i = 0; i < RdbmsSpecificsHolder.rdbmsSpecifics.length; i++) {
-	    final RdbmsSpecifics r = RdbmsSpecificsHolder.rdbmsSpecifics[i];
-	    final boolean rdbms = r.isRdbms(classType);
-	    if (rdbms) {
-		return r;
-	    }
+		for (int i = 0; i < RdbmsSpecificsHolder.rdbmsSpecifics.length; i++) {
+			final RdbmsSpecifics r = RdbmsSpecificsHolder.rdbmsSpecifics[i];
+			final boolean rdbms = r.isRdbms(classType);
+			if (rdbms) {
+				return r;
+			}
+		}
+		return null;
 	}
-	return null;
-    }
 
-    private static class MessageLoggerHolder {
-	private final static SqlOperationLogger[] messageLogger = getMessageLogger();
+	private static class MessageLoggerHolder {
+		private final static SqlOperationLogger[] messageLogger = getMessageLogger();
 
-	private final static SqlOperationLogger[] getMessageLogger() {
-	    SqlOperationLogger[] messageLogger;
+		private final static SqlOperationLogger[] getMessageLogger() {
+			SqlOperationLogger[] messageLogger;
 
-	    final Iterator providers = Service.providers(SqlOperationLogger.class, RdbmsSpecificsHolder.class.getClassLoader());
+			final Iterator providers = Service.providers(SqlOperationLogger.class,
+					RdbmsSpecificsHolder.class.getClassLoader());
 
-	    final List list = CollectionsUtil.convert(providers);
+			final List list = CollectionsUtil.convert(providers);
 
-	    messageLogger = (SqlOperationLogger[]) list.toArray(new SqlOperationLogger[list.size()]);
+			messageLogger = (SqlOperationLogger[]) list.toArray(new SqlOperationLogger[list.size()]);
 
-	    return messageLogger;
+			return messageLogger;
+		}
 	}
-    }
 
-    private static class RdbmsSpecificsHolder {
-	private final static RdbmsSpecifics[] rdbmsSpecifics = getRdbmsSpecifics();
+	private static class RdbmsSpecificsHolder {
+		private final static RdbmsSpecifics[] rdbmsSpecifics = getRdbmsSpecifics();
 
-	private final static RdbmsSpecifics[] getRdbmsSpecifics() {
-	    RdbmsSpecifics[] rdbmsSpecifics;
+		private final static RdbmsSpecifics[] getRdbmsSpecifics() {
+			RdbmsSpecifics[] rdbmsSpecifics;
 
-	    final Iterator providers = Service.providers(RdbmsSpecifics.class, RdbmsSpecificsHolder.class.getClassLoader());
+			final Iterator providers = Service.providers(RdbmsSpecifics.class,
+					RdbmsSpecificsHolder.class.getClassLoader());
 
-	    final List list = CollectionsUtil.convert(providers);
+			final List list = CollectionsUtil.convert(providers);
 
-	    rdbmsSpecifics = (RdbmsSpecifics[]) list.toArray(new RdbmsSpecifics[list.size()]);
+			rdbmsSpecifics = (RdbmsSpecifics[]) list.toArray(new RdbmsSpecifics[list.size()]);
 
-	    return rdbmsSpecifics;
+			return rdbmsSpecifics;
+		}
 	}
-    }
 }
