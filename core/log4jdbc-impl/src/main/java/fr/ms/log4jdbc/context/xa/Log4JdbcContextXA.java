@@ -46,6 +46,7 @@ public class Log4JdbcContextXA implements Log4JdbcContext {
 		try {
 			url = connection.getMetaData().getURL();
 		} catch (final SQLException e) {
+			// NO-OP
 		}
 
 		connectionContext = new ConnectionContextXA(transactionContextFactory, clazz, url);

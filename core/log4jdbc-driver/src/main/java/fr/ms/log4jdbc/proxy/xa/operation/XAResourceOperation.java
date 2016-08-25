@@ -33,6 +33,8 @@ import fr.ms.log4jdbc.context.xa.Log4JdbcContextXA;
 import fr.ms.log4jdbc.context.xa.TransactionContextXA;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.util.CollectionsUtil;
+import fr.ms.util.logging.Logger;
+import fr.ms.util.logging.LoggerManager;
 
 /**
  *
@@ -43,6 +45,8 @@ import fr.ms.util.CollectionsUtil;
  *
  */
 public class XAResourceOperation implements Log4JdbcOperation {
+
+	private final static Logger LOG = LoggerManager.getLogger(XAResourceOperation.class);
 
 	private final static Map transactions = CollectionsUtil.synchronizedMap(new WeakHashMap());
 
@@ -93,6 +97,9 @@ public class XAResourceOperation implements Log4JdbcOperation {
 
 	public void postOperation() {
 		if (resetTransaction) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Reset Transaction : " + connectionContext.getTransactionContext().getTransactionNumber());
+			}
 			connectionContext.resetTransaction();
 			resetTransaction = false;
 		}
@@ -112,6 +119,10 @@ public class XAResourceOperation implements Log4JdbcOperation {
 		transactionContextXA.setFlags(flags);
 		connectionContext.setTransactionContextXA(transactionContextXA);
 		log4JdbcContext.setTransactionContext(transactionContextXA);
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Start Transaction : " + transactionContextXA);
+		}
 	}
 
 	public void end(final Object[] args) {
@@ -123,6 +134,10 @@ public class XAResourceOperation implements Log4JdbcOperation {
 		transactionContextXA.setFlags(flags);
 		connectionContext.setTransactionContextXA(transactionContextXA);
 		log4JdbcContext.setTransactionContext(transactionContextXA);
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("End Transaction : " + transactionContextXA);
+		}
 	}
 
 	public void prepare(final Object[] args, final Object invoke) {
@@ -134,6 +149,10 @@ public class XAResourceOperation implements Log4JdbcOperation {
 		transactionContextXA.setFlags(flags);
 		connectionContext.setTransactionContextXA(transactionContextXA);
 		log4JdbcContext.setTransactionContext(transactionContextXA);
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Prepare Transaction : " + transactionContextXA);
+		}
 	}
 
 	public void rollback(final Object[] args) {
@@ -149,11 +168,15 @@ public class XAResourceOperation implements Log4JdbcOperation {
 
 		connectionContext.rollback(null);
 		resetTransaction = true;
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Rollback Transaction : " + transactionContextXA);
+		}
 	}
 
 	public void commit(final Object[] args) {
 		final Xid xid = ((Xid) args[0]);
-		final boolean onePhase = ((Boolean) args[1]).booleanValue();
+		// final boolean onePhase = ((Boolean) args[1]).booleanValue();
 
 		final TransactionContextXA transactionContextXA = (TransactionContextXA) transactions.get(xid);
 
@@ -164,6 +187,10 @@ public class XAResourceOperation implements Log4JdbcOperation {
 
 		connectionContext.commit();
 		resetTransaction = true;
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Commit Transaction : " + transactionContextXA);
+		}
 	}
 
 	public Object getInvoke() {
