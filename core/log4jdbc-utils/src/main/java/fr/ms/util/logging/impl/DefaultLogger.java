@@ -44,6 +44,8 @@ public class DefaultLogger implements Logger {
 
 	private String level;
 
+	private boolean trace;
+
 	private boolean debug;
 
 	private boolean info;
@@ -52,12 +54,19 @@ public class DefaultLogger implements Logger {
 
 	private boolean error;
 
+	private boolean fatal;
+
 	public DefaultLogger(final PrintHandler printHandler, final String level, final String name) {
 
 		this.printHandler = printHandler;
 
 		if (level != null) {
-			if (level.equals("debug")) {
+			if (level.equals("trace")) {
+				trace = true;
+				debug = true;
+				info = true;
+				error = true;
+			} else if (level.equals("debug")) {
 				debug = true;
 				info = true;
 				error = true;
@@ -69,12 +78,18 @@ public class DefaultLogger implements Logger {
 				error = true;
 			} else if (level.equals("error")) {
 				error = true;
+			} else if (level.equals("fatal")) {
+				fatal = true;
 			}
 
 			this.level = level.toUpperCase();
 		}
 
 		this.name = name;
+	}
+
+	public boolean isTraceEnabled() {
+		return trace;
 	}
 
 	public boolean isDebugEnabled() {
@@ -91,6 +106,17 @@ public class DefaultLogger implements Logger {
 
 	public boolean isErrorEnabled() {
 		return error;
+	}
+
+	public boolean isFatalEnabled() {
+		return fatal;
+	}
+
+	public void trace(final String message) {
+		if (isTraceEnabled()) {
+			final String formatMessage = formatMessage(message);
+			printHandler.trace(formatMessage);
+		}
 	}
 
 	public void debug(final String message) {
@@ -118,6 +144,13 @@ public class DefaultLogger implements Logger {
 		if (isErrorEnabled()) {
 			final String formatMessage = formatMessage(message);
 			printHandler.error(formatMessage);
+		}
+	}
+
+	public void fatal(final String message) {
+		if (isFatalEnabled()) {
+			final String formatMessage = formatMessage(message);
+			printHandler.fatal(formatMessage);
 		}
 	}
 

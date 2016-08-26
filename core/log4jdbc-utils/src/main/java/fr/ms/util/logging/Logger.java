@@ -29,21 +29,29 @@ import java.io.PrintWriter;
  */
 public interface Logger {
 
-    boolean isDebugEnabled();
+	boolean isTraceEnabled();
 
-    boolean isInfoEnabled();
+	boolean isDebugEnabled();
 
-    boolean isWarnEnabled();
+	boolean isInfoEnabled();
 
-    boolean isErrorEnabled();
+	boolean isWarnEnabled();
 
-    void debug(String message);
+	boolean isErrorEnabled();
 
-    void info(String message);
+	boolean isFatalEnabled();
 
-    void warn(String message);
+	void trace(String message);
 
-    void error(String message);
+	void debug(String message);
 
-    PrintWriter getPrintWriter();
+	void info(String message);
+
+	void warn(String message);
+
+	void error(String message);
+
+	void fatal(String message);
+
+	PrintWriter getPrintWriter();
 }

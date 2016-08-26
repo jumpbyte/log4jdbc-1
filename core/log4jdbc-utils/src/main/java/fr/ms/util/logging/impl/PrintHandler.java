@@ -27,11 +27,15 @@ package fr.ms.util.logging.impl;
  */
 public interface PrintHandler {
 
-    public void debug(final String message);
+	void trace(final String message);
 
-    public void info(final String message);
+	void debug(final String message);
 
-    public void warn(final String message);
+	void info(final String message);
 
-    public void error(final String message);
+	void warn(final String message);
+
+	void error(final String message);
+
+	void fatal(final String message);
 }
