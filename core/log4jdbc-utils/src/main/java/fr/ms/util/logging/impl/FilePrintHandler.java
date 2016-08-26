@@ -37,6 +37,10 @@ public class FilePrintHandler implements PrintHandler {
 		filePrint = new FilePrint(file);
 	}
 
+	public void trace(final String message) {
+		write(message);
+	}
+
 	public void debug(final String message) {
 		write(message);
 	}
@@ -45,11 +49,15 @@ public class FilePrintHandler implements PrintHandler {
 		write(message);
 	}
 
+	public void warn(final String message) {
+		write(message);
+	}
+
 	public void error(final String message) {
 		write(message);
 	}
 
-	public void warn(final String message) {
+	public void fatal(final String message) {
 		write(message);
 	}
 
