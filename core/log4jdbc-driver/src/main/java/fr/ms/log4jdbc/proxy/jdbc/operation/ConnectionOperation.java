@@ -30,6 +30,8 @@ import fr.ms.log4jdbc.context.jdbc.TransactionContextJDBC;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.log4jdbc.proxy.jdbc.operation.factory.ConnectionOperationFactory;
+import fr.ms.util.logging.Logger;
+import fr.ms.util.logging.LoggerManager;
 
 /**
  *
@@ -40,6 +42,8 @@ import fr.ms.log4jdbc.proxy.jdbc.operation.factory.ConnectionOperationFactory;
  *
  */
 public class ConnectionOperation implements Log4JdbcOperation {
+
+	private final static Logger LOG = LoggerManager.getLogger(ConnectionOperation.class);
 
 	private final ConnectionContextJDBC connectionContext;
 
@@ -88,16 +92,28 @@ public class ConnectionOperation implements Log4JdbcOperation {
 		if (commit) {
 			commit();
 		}
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Set Auto Commit : " + autoCommit);
+		}
 	}
 
 	private void commit() {
 		connectionContext.commit();
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Commit Transaction");
+		}
 	}
 
 	private void setSavepoint(final Object savePoint) {
 		final TransactionContextJDBC transactionContext = connectionContext.getTransactionContext();
 		if (transactionContext != null) {
 			transactionContext.setSavePoint(savePoint);
+		}
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("savepoint : " + savePoint);
 		}
 	}
 
@@ -107,6 +123,10 @@ public class ConnectionOperation implements Log4JdbcOperation {
 			savePoint = args[0];
 		}
 		rollback(savePoint);
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("rollback : " + args);
+		}
 	}
 
 	private void rollback(final Object savePoint) {

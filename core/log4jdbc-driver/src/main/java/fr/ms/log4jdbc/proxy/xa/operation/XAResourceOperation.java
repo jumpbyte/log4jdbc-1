@@ -120,8 +120,10 @@ public class XAResourceOperation implements Log4JdbcOperation {
 		connectionContext.setTransactionContextXA(transactionContextXA);
 		log4JdbcContext.setTransactionContext(transactionContextXA);
 
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Start Transaction : " + transactionContextXA);
+		if (LOG.isTraceEnabled()) {
+			LOG.debug("Start Transaction : " + transactionContextXA + " - xid : " + xid);
+		} else if (LOG.isDebugEnabled()) {
+			LOG.debug("Start Transaction xid : " + xid);
 		}
 	}
 
@@ -135,8 +137,10 @@ public class XAResourceOperation implements Log4JdbcOperation {
 		connectionContext.setTransactionContextXA(transactionContextXA);
 		log4JdbcContext.setTransactionContext(transactionContextXA);
 
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("End Transaction : " + transactionContextXA);
+		if (LOG.isTraceEnabled()) {
+			LOG.debug("End Transaction : " + transactionContextXA + " - xid : " + xid);
+		} else if (LOG.isDebugEnabled()) {
+			LOG.debug("End Transaction xid : " + xid);
 		}
 	}
 
@@ -150,8 +154,10 @@ public class XAResourceOperation implements Log4JdbcOperation {
 		connectionContext.setTransactionContextXA(transactionContextXA);
 		log4JdbcContext.setTransactionContext(transactionContextXA);
 
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Prepare Transaction : " + transactionContextXA);
+		if (LOG.isTraceEnabled()) {
+			LOG.debug("Prepare Transaction : " + transactionContextXA + " - xid : " + xid);
+		} else if (LOG.isDebugEnabled()) {
+			LOG.debug("Prepare Transaction xid : " + xid);
 		}
 	}
 
@@ -169,8 +175,10 @@ public class XAResourceOperation implements Log4JdbcOperation {
 		connectionContext.rollback(null);
 		resetTransaction = true;
 
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Rollback Transaction : " + transactionContextXA);
+		if (LOG.isTraceEnabled()) {
+			LOG.debug("Rollback Transaction : " + transactionContextXA + " - xid : " + xid);
+		} else if (LOG.isDebugEnabled()) {
+			LOG.debug("Rollback Transaction xid : " + xid);
 		}
 	}
 
@@ -188,8 +196,10 @@ public class XAResourceOperation implements Log4JdbcOperation {
 		connectionContext.commit();
 		resetTransaction = true;
 
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Commit Transaction : " + transactionContextXA);
+		if (LOG.isTraceEnabled()) {
+			LOG.debug("Commit Transaction : " + transactionContextXA + " - xid : " + xid);
+		} else if (LOG.isDebugEnabled()) {
+			LOG.debug("Commit Transaction xid : " + xid);
 		}
 	}
 
