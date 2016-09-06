@@ -1,3 +1,5 @@
+[![Build Status](https://api.travis-ci.org/marcosemiao/log4jdbc.png?branch=refacto)](https://travis-ci.org/marcosemiao/log4jdbc)
+
 # Log4Jdbc
 
 ## Fonctionnalités générales
