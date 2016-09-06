@@ -4,7 +4,6 @@ sudo: required
 script: "sh ./travis.sh"
 
 jdk:
-- openjdk6
 - oraclejdk7
 - oraclejdk8
 
