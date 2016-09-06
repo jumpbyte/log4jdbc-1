@@ -91,7 +91,7 @@ public class OracleRdbmsSpecificsTest {
 
 		Assert.assertEquals(data.getValue(), "10/28/2015 13:55:43.364");
 		Assert.assertEquals(data.getParameter(),
-				"to_timestamp('10/28/2015 13:55:43.364', 'mm/dd/yyyy hh24:mi:ss.ff3')");
+				"to_timestamp('10/28/2015 14:55:43.364', 'mm/dd/yyyy hh24:mi:ss.ff3')");
 	}
 
 	@Test
