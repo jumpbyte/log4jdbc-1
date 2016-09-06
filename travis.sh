@@ -2,4 +2,4 @@
 
 env
 
-mvn clean verify --settings target/travis/settings.xml
+mvn clean install
