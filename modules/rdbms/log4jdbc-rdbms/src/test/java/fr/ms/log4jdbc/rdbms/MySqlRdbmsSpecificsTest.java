@@ -19,8 +19,10 @@ package fr.ms.log4jdbc.rdbms;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -34,6 +36,11 @@ import org.junit.Test;
 public class MySqlRdbmsSpecificsTest {
 
 	private final static RdbmsSpecifics instance = new MySqlRdbmsSpecifics();
+
+	@BeforeClass
+	public static void setTimeZone() {
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+	}
 
 	@Test
 	public void isRdbmsTest() {
@@ -82,8 +89,8 @@ public class MySqlRdbmsSpecificsTest {
 
 		final DataRdbms data = instance.getData(timestamp);
 
-		Assert.assertEquals(data.getValue(), "2015-10-28 14:55:43");
-		Assert.assertEquals(data.getParameter(), "'2015-10-28 14:55:43'");
+		Assert.assertEquals(data.getValue(), "2015-10-28 13:55:43");
+		Assert.assertEquals(data.getParameter(), "'2015-10-28 13:55:43'");
 	}
 
 	@Test
@@ -92,8 +99,8 @@ public class MySqlRdbmsSpecificsTest {
 
 		final DataRdbms data = instance.getData(date);
 
-		Assert.assertEquals(data.getValue(), "14:55:43");
-		Assert.assertEquals(data.getParameter(), "'14:55:43'");
+		Assert.assertEquals(data.getValue(), "13:55:43");
+		Assert.assertEquals(data.getParameter(), "'13:55:43'");
 	}
 
 	@Test
@@ -112,8 +119,8 @@ public class MySqlRdbmsSpecificsTest {
 
 		final DataRdbms data = instance.getData(date);
 
-		Assert.assertEquals(data.getValue(), "2015-10-28 14:55:43");
-		Assert.assertEquals(data.getParameter(), "'2015-10-28 14:55:43'");
+		Assert.assertEquals(data.getValue(), "2015-10-28 13:55:43");
+		Assert.assertEquals(data.getParameter(), "'2015-10-28 13:55:43'");
 	}
 
 	@Test

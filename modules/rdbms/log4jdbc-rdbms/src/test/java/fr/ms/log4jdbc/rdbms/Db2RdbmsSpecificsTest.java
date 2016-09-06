@@ -19,8 +19,10 @@ package fr.ms.log4jdbc.rdbms;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -34,6 +36,11 @@ import org.junit.Test;
 public class Db2RdbmsSpecificsTest {
 
 	private final static RdbmsSpecifics instance = new Db2RdbmsSpecifics();
+
+	@BeforeClass
+	public static void setTimeZone() {
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+	}
 
 	@Test
 	public void isRdbmsTest() {
@@ -85,8 +92,8 @@ public class Db2RdbmsSpecificsTest {
 
 		final DataRdbms data = instance.getData(timestamp);
 
-		Assert.assertEquals(data.getValue(), "2015-10-28 14:55:43.364000000");
-		Assert.assertEquals(data.getParameter(), "'2015-10-28 14:55:43.364000000'");
+		Assert.assertEquals(data.getValue(), "2015-10-28 13:55:43.364000000");
+		Assert.assertEquals(data.getParameter(), "'2015-10-28 13:55:43.364000000'");
 	}
 
 	@Test
@@ -95,8 +102,8 @@ public class Db2RdbmsSpecificsTest {
 
 		final DataRdbms data = instance.getData(date);
 
-		Assert.assertEquals(data.getValue(), "2015-10-28 14:55:43.364");
-		Assert.assertEquals(data.getParameter(), "'2015-10-28 14:55:43.364'");
+		Assert.assertEquals(data.getValue(), "2015-10-28 13:55:43.364");
+		Assert.assertEquals(data.getParameter(), "'2015-10-28 13:55:43.364'");
 	}
 
 	@Test
